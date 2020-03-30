@@ -31,12 +31,12 @@ add these dependencies to your `pom.xml`:
 
     <dependency>
         <groupId>com.hivemq</groupId>
-        <artifactId>hivemq-extension-sdk</artifactId>
+        <artifactId>hivemq-hivemq-extension-sdk</artifactId>
         <version>4.3.0</version>
     </dependency>
     <dependency>
         <groupId>com.hivemq</groupId>
-        <artifactId>testcontainer-junit4</artifactId>
+        <artifactId>hivemq-testcontainer-junit4</artifactId>
         <version>1.0-SNAPSHOT</version>
         <scope>test</scope>
     </dependency>
