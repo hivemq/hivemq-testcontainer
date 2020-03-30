@@ -6,7 +6,6 @@ You are able to:
 - add a custom hivemq config
 - load an extension from a folder
 - load an extension directly from your code
-- load an enterprise extension directly from your code
 - set logging level
 - debug a directly loaded extension that is running inside the container
 - put files into the container
