@@ -56,6 +56,16 @@ task allJar (type: Jar) {
 }
 
 publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/OWNER/REPOSITORY")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_PUBLISH_USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_PUBLISH_TOKEN")
+            }
+        }
+    }
     publications {
         all(MavenPublication) {
             artifact allJar
