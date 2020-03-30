@@ -31,8 +31,8 @@ add these dependencies to your `pom.xml`:
 
     <dependency>
         <groupId>com.hivemq</groupId>
-        <artifactId>hivemq-enterprise-extension-sdk</artifactId>
-        <version>4.3.2</version>
+        <artifactId>hivemq-extension-sdk</artifactId>
+        <version>4.3.0</version>
     </dependency>
     <dependency>
         <groupId>com.hivemq</groupId>
@@ -54,8 +54,8 @@ add these dependencies to your `pom.xml`:
 
     <dependency>
         <groupId>com.hivemq</groupId>
-        <artifactId>hivemq-enterprise-extension-sdk</artifactId>
-        <version>4.3.2</version>
+        <artifactId>hivemq-extension-sdk</artifactId>
+        <version>4.3.0</version>
     </dependency>
     <dependency>
         <groupId>com.hivemq</groupId>
