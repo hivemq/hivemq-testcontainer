@@ -2,28 +2,19 @@
 
 This enables the use of automatic starting HiveMQ docker containers inside JUnit4 and JUnit5 tests.
 You are able to:
-- to test your MQTT 3 and MQTT 5 client applications
-- add a custom hivemq config
-- load an extension from a folder
-- load an extension directly from your code
-- set logging level
-- debug a directly loaded extension that is running inside the container
-- put files into the container
-    - put files into hivemq home
-    - put files into extension home
-    - put license files into the license folder
+- [load user defined HiveMQ images and tags](#add-to-your-project)
+- [to test your MQTT 3 and MQTT 5 client applications](#test-your-mqtt-3-and-mqtt-5-client-application)
+- [add a custom hivemq config](#add-a-custom-hivemq-configuration)
+- [load an extension from a folder](#load-an-extension-from-a-folder)
+- [load an extension directly from your code](#load-an-extension-directly-from-code)
+- [set logging level](#set-logging-level)
+- [debug a directly loaded extension that is running inside the container](#debug-directly-loaded-extensions)
+- [put files into the container](#put-files-into-the-container)
+    - [put files into hivemq home](#put-a-file-into-hivemq-home)
+    - [put files into extension home](#put-files-into-extension-home)
+    - [put license files into the license folder](#put-license-files-into-the-container)
     
 ## Add to your project
-
-First checkout this project and publish your desired artifact to mavenLocal:
-
-JUnit 4
-
-    ./gradlew publishJunit4PublicationToMavenLocal
-    
-JUnit 5
-
-    ./gradlew publishJunit5PublicationToMavenLocal
 
 ### Maven + JUnit 4
 
@@ -75,6 +66,23 @@ add these dependencies to your `pom.xml`:
         <version>5.6.1</version>
         <scope>test</scope>
     </dependency>
+    
+## User defined HiveMQ image and tag
+
+Per default the 'hivemq/hivemq4' image and the 'latest' tags are used.
+You can define a custom image and tag in the constructor:
+
+### JUnit 4
+
+    @Rule
+    final public @NotNull HiveMQEnterpriseTestContainerRule rule 
+        = new HiveMQEnterpriseTestContainerRule("hivemq/hivemq-ce", "2020.2");
+
+### JUnit 5
+
+    @RegisterExtension
+    final public @NotNull HiveMQEnterpriseTestContainerExtension extension 
+        = new HiveMQEnterpriseTestContainerExtension("hivemq/hivemq-ce", "2020.2");
 
 ## Test your MQTT 3 and MQTT 5 client application
 
@@ -175,9 +183,9 @@ The extension will be packaged properly und put into the container before startu
                     1000,
                     MyExtension.class);
                     
-## Set debug level
+## Set logging level
 
-You can set the debug level of the HiveMQ instance running inside the container.
+You can set the logging level of the HiveMQ instance running inside the container.
 
 ### JUnit 4
 

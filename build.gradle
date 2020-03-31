@@ -70,7 +70,7 @@ publishing {
         all(MavenPublication) {
             artifact allJar
             pom {
-                name = 'HiveMQ Enterprise Extension SDK'
+                name = 'HiveMQ Testcontainer All'
                 description = 'API for testing HiveMQ Extensions and Java MQTT Applications.'
                 url = 'http://www.hivemq.com/'
                 groupId = 'com.hivemq'
@@ -100,7 +100,7 @@ publishing {
         junit5(MavenPublication) {
             artifact junit5Jar
             pom {
-                name = 'HiveMQ Enterprise Extension SDK'
+                name = 'HiveMQ Testcontainer JUnit5'
                 description = 'API for testing HiveMQ Extensions and Java MQTT Applications.'
                 url = 'http://www.hivemq.com/'
                 groupId = 'com.hivemq'
@@ -133,7 +133,7 @@ publishing {
             artifactId = 'hivemq-testcontainer-junit4'
             version = project.version
             pom {
-                name = 'HiveMQ Enterprise Extension SDK'
+                name = 'HiveMQ Testcontainer JUnit4'
                 description = 'API for testing HiveMQ Extensions and Java MQTT Applications.'
                 url = 'http://www.hivemq.com/'
                 developers {
