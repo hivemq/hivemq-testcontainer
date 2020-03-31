@@ -13,6 +13,7 @@ jobs:
     - stage: after_success
       if: type = push AND branch = master
       script: ./gradlew publish
+      skip_cleanup: true
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
