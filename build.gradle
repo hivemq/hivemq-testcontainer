@@ -61,8 +61,8 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://maven.pkg.github.com/hivemq")
             credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_PUBLISH_USERNAME")
-                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_PUBLISH_TOKEN")
+                username = project.findProperty("gpr.user") ?: System.getenv("GITHUB_PACKAGES_USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("GITHUB_PACKAGES_TOKEN")
             }
         }
     }

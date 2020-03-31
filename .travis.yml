@@ -1,22 +1,27 @@
 language: java
+
 jdk:
   - openjdk11
+
 stages:
   - test
+
 jobs:
   include:
     - stage: test
       script: ./gradlew check
     - stage: after_success
-      if: branch = master
+      if: type = push AND branch = master
       script: ./gradlew publish
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
 cache:
   directories:
     - $HOME/.gradle/caches/
     - $HOME/.gradle/wrapper/
+
 services:
   - docker
