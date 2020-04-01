@@ -1,9 +1,19 @@
 # HiveMQ Test Container
 
-This enables the use of automatic starting HiveMQ docker containers inside JUnit4 and JUnit5 tests.
-You are able to:
+[![Build Status](https://travis-ci.com/hivemq/hivemq-testcontainer.svg?token=PkzYtWZuTHcNUHFtmC24&branch=master)](https://travis-ci.org/hivemq/hivemq-testcontainer)
+
+Automatic starting HiveMQ docker containers for JUnit4 and JUnit5 tests.
+This enables testing MQTT client applications and integration testing of custom HiveMQ extensions. 
+
+- Community forum: https://community.hivemq.com/
+- HiveMQ website: https://www.hivemq.com/
+- MQTT resources:
+  - [MQTT Essentials](https://www.hivemq.com/mqtt-essentials/)
+  - [MQTT 5 Essentials](https://www.hivemq.com/mqtt-5/)
+
+## Features
 - [load user defined HiveMQ images and tags](#add-to-your-project)
-- [to test your MQTT 3 and MQTT 5 client applications](#test-your-mqtt-3-and-mqtt-5-client-application)
+- [test your MQTT 3 and MQTT 5 client applications](#test-your-mqtt-3-and-mqtt-5-client-application)
 - [add a custom hivemq config](#add-a-custom-hivemq-configuration)
 - [load an extension from a folder](#load-an-extension-from-a-folder)
 - [load an extension directly from your code](#load-an-extension-directly-from-code)
