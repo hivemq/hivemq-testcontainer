@@ -16,6 +16,28 @@ You are able to:
     
 ## Add to your project
 
+Acquire your GitHub [ACCESS_TOKEN](https://help.github.com/en/packages/publishing-and-managing-packages/about-github-packages#about-tokens) and add it to your `~/.m2/settings.xml`:
+
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+    <settings>
+        <servers>
+            <server>
+                <id>github</id>
+                <username>GITHUB_USERNAME</username>
+                <password>GITHUB_TOKEN</password>
+            </server>
+        </servers>
+    </settings>
+    
+Add this repository to your `pom.xml`:
+
+    <repositories>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/hivemq/hivemq-testcontainer</url>
+        </repository>
+    </repositories>
+
 ### Maven + JUnit 4
 
 add these dependencies to your `pom.xml`:
