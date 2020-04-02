@@ -6,6 +6,7 @@ plugins {
 ext {
     shrinkWrapVersion = '1.2.6'
     junit5Version = '5.6.1'
+    extensionSDKVersion = '4.3.0'
 }
 
 version '1.0-SNAPSHOT'
@@ -27,11 +28,12 @@ dependencies {
     implementation group: 'org.javassist', name: 'javassist', version: '3.27.0-GA'
     implementation group: 'com.hivemq', name: 'hivemq-mqtt-client', version: '1.1.4'
 
-    compileOnly group: 'com.hivemq', name: 'hivemq-extension-sdk', version: '4.3.0'
+    compileOnly group: 'com.hivemq', name: 'hivemq-extension-sdk', version: extensionSDKVersion
     compileOnly group: 'junit', name: 'junit', version: '4.12'
     compileOnly group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junit5Version
 
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junit5Version
+    testImplementation group: 'com.hivemq', name: 'hivemq-extension-sdk', version: extensionSDKVersion
 }
 
 task junit5Jar (type: Jar) {
