@@ -15,13 +15,17 @@ public interface HiveMQTestContainer {
     /**
      * Enables the possibility for remote debugging clients to connect.
      *
-     * @param debuggingPortHost the exposed post on the host for debugging clients to connect.
+     * Must be called before the container is started.
+     *
+     * @param debuggingPortHost the host port for debugging clients to connect
      * @return self
      */
     @NotNull HiveMQTestContainer withDebugging(final int debuggingPortHost);
 
     /**
-     * Enables the possibility for remote debugging clients to connect on port 9000.
+     * Enables the possibility for remote debugging clients to connect on host port 9000.
+     *
+     * Must be called before the container is started.
      *
      * @return self
      */
@@ -30,12 +34,17 @@ public interface HiveMQTestContainer {
     /**
      * Sets the logging {@link Level} inside the container.
      *
+     * Must be called before the container is started.
+     *
      * @param level the {@link Level}
      */
     @NotNull HiveMQTestContainer withLogLevel(final @NotNull Level level);
 
     /**
-     * Wraps the given class into an extension and puts it into '/opt/hivemq/extensions/' inside the container.
+     * Wraps the given class and all its subclasses into an extension
+     * and puts it into '/opt/hivemq/extensions/{@param id}' inside the container.
+     *
+     * Must be called before the container is started.
      *
      * @param id        the extension id
      * @param name      the extension name
@@ -53,80 +62,97 @@ public interface HiveMQTestContainer {
             final @NotNull Class<? extends ExtensionMain> mainClazz);
 
     /**
-     * Puts the given extension folder into '/opt/hivemq/extensions' inside the container.
+     * Puts the given extension folder into '/opt/hivemq/extensions/{extension-id}' inside the container.
      * It must at least contain a valid hivemq-extension.xml and a valid extension.jar in order to be executed.
      *
-     * @param extensionDir the extension folder.
+     * Must be called before the container is started.
+     *
+     * @param extensionDir the extension folder on the host machine
      * @return self
      */
     @NotNull HiveMQTestContainer withExtension(final @NotNull File extensionDir);
 
     /**
-     * Puts the given license into '/opt/hivemq/license/'.
+     * Puts the given license into '/opt/hivemq/license/' inside the container.
      * It must end with '.lic' or '.elic'.
      *
-     * @param license the license file
+     * Must be called before the container is started.
+     *
+     * @param license the license file on the host machine
      * @return self
      */
     @NotNull HiveMQTestContainer withLicense(final @NotNull File license);
 
     /**
-     * Overwrites the HiveMQ configuration in '/opt/hivemq/conf/'.
+     * Overwrites the HiveMQ configuration in '/opt/hivemq/conf/' inside the container.
      *
-     * @param config the config file.
+     * Must be called before the container is started.
+     *
+     * @param config the config file on the host machine
      * @return self
      */
     @NotNull HiveMQTestContainer withHiveMQConfig(final @NotNull File config);
 
     /**
-     * Puts the given file into the root of the extension home of {@param extensionId}.
+     * Puts the given file into the root of the extension's home '/opt/hivemq/extensions/{@param extensionId}/'.
      * Note: the extension must be loaded before the file is put.
      *
-     * @param file the file
+     * Must be called before the container is started.
+     *
+     * @param file the file on the host machine
      * @param extensionId the extension
-     * @return self.
+     * @return self
      */
     @NotNull HiveMQTestContainer withFileInExtensionHomeFolder(
             final @NotNull File file,
             final @NotNull String extensionId);
 
     /**
-     * Puts the given file into given subdirectory {@param pathInExtensionHome} of the extension home of {@param extensionId}.
+     * Puts the given file into given subdirectory of the extensions's home '/opt/hivemq/extensions/{@param id}/{@param pathInExtensionHome}/'
      * Note: the extension must be loaded before the file is put.
      *
-     * @param file the file
+     * Must be called before the container is started.
+     *
+     * @param file the file on the host machine
      * @param extensionId the extension
      * @param pathInExtensionHome the path
-     * @return self.
+     * @return self
      */
     @NotNull HiveMQTestContainer withFileInExtensionHomeFolder(
             final @NotNull File file,
             final @NotNull String extensionId,
             final @NotNull String pathInExtensionHome);
+
     /**
-     * Puts the given file into the root of the HiveMQ home folder.
+     * Puts the given file into the root of the HiveMQ home folder '/opt/hivemq/'.
      *
-     * @param file the file
-     * @return self.
+     * Must be called before the container is started.
+     *
+     * @param file the file on the host machine
+     * @return self
      */
     @NotNull HiveMQTestContainer withFileInHomeFolder(
             final @NotNull File file);
 
     /**
-     * Puts the given file into the given subdirectory {@param pathInHomeFolder} of the HiveMQ home folder.
+     * Puts the given file into the given subdirectory of the HiveMQ home folder '/opt/hivemq/{@param pathInHomeFolder}'.
      *
-     * @param file the file
+     * Must be called before the container is started.
+     *
+     * @param file the file on the host machine
      * @param pathInHomeFolder the path
-     * @return self.
+     * @return self
      */
     @NotNull HiveMQTestContainer withFileInHomeFolder(
             final @NotNull File file,
             final @NotNull String pathInHomeFolder);
 
     /**
-     * Get the actual mapped port for the MQTT port of the container.
+     * Get the mapped port for the MQTT port of the container.
      *
-     * @return the port.
+     * Must be called after the container is started.
+     *
+     * @return the port on the host machine for mqtt clients to connect
      */
     int getMqttPort();
     
