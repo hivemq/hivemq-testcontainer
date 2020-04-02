@@ -18,21 +18,20 @@ repositories {
 }
 
 dependencies {
-    compile group: 'com.hivemq', name: 'hivemq-extension-sdk', version: '4.3.0'
-    compile group: 'com.hivemq', name: 'hivemq-mqtt-client', version: '1.1.4'
-    compile group: 'junit', name: 'junit', version: '4.12'
-    compile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junit5Version
-
     // exported dependencies
-    api group: 'commons-io', name: 'commons-io', version: '2.6'
     api group: 'org.slf4j', name: 'slf4j-simple', version: '1.7.30'
-    api group: 'org.jboss.shrinkwrap', name: 'shrinkwrap-api', version: shrinkWrapVersion
-    api group: 'org.jboss.shrinkwrap', name: 'shrinkwrap-impl-base', version: shrinkWrapVersion
-    api group: 'org.javassist', name: 'javassist', version: '3.27.0-GA'
     api group: 'org.testcontainers', name: 'testcontainers', version: '1.13.0'
-    api group: 'com.hivemq', name: 'hivemq-mqtt-client', version: '1.1.4'
+    implementation group: 'commons-io', name: 'commons-io', version: '2.6'
+    implementation group: 'org.jboss.shrinkwrap', name: 'shrinkwrap-api', version: shrinkWrapVersion
+    implementation group: 'org.jboss.shrinkwrap', name: 'shrinkwrap-impl-base', version: shrinkWrapVersion
+    implementation group: 'org.javassist', name: 'javassist', version: '3.27.0-GA'
+    implementation group: 'com.hivemq', name: 'hivemq-mqtt-client', version: '1.1.4'
 
-    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junit5Version
+    compileOnly group: 'com.hivemq', name: 'hivemq-extension-sdk', version: '4.3.0'
+    compileOnly group: 'junit', name: 'junit', version: '4.12'
+    compileOnly group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junit5Version
+
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junit5Version
 }
 
 task junit5Jar (type: Jar) {
@@ -90,10 +89,19 @@ publishing {
                 def dependenciesNode = asNode().appendNode('dependencies')
                 configurations.api.dependencies.each {
                     def dependencyNode = dependenciesNode.appendNode('dependency')
-                    println 'exporting dependency ' + it.group + ':' + it.name + ':' + it.version + ' to pom.xml'
+                    println 'exporting dependency ' + it.group + ':' + it.name + ':' + it.version + ' as compile to pom.xml'
                     dependencyNode.appendNode('groupId', it.group)
                     dependencyNode.appendNode('artifactId', it.name)
                     dependencyNode.appendNode('version', it.version)
+                    dependencyNode.appendNode('scope', 'compile')
+                }
+                configurations.implementation.dependencies.each {
+                    def dependencyNode = dependenciesNode.appendNode('dependency')
+                    println 'exporting dependency ' + it.group + ':' + it.name + ':' + it.version + ' as runtime to pom.xml'
+                    dependencyNode.appendNode('groupId', it.group)
+                    dependencyNode.appendNode('artifactId', it.name)
+                    dependencyNode.appendNode('version', it.version)
+                    dependencyNode.appendNode('scope', 'runtime')
                 }
             }
         }
@@ -120,10 +128,19 @@ publishing {
                 def dependenciesNode = asNode().appendNode('dependencies')
                 configurations.api.dependencies.each {
                     def dependencyNode = dependenciesNode.appendNode('dependency')
-                    println 'exporting dependency ' + it.group + ':' + it.name + ':' + it.version + ' to pom.xml'
+                    println 'exporting dependency ' + it.group + ':' + it.name + ':' + it.version + ' as compile to pom.xml'
                     dependencyNode.appendNode('groupId', it.group)
                     dependencyNode.appendNode('artifactId', it.name)
                     dependencyNode.appendNode('version', it.version)
+                    dependencyNode.appendNode('scope', 'compile')
+                }
+                configurations.implementation.dependencies.each {
+                    def dependencyNode = dependenciesNode.appendNode('dependency')
+                    println 'exporting dependency ' + it.group + ':' + it.name + ':' + it.version + ' as runtime to pom.xml'
+                    dependencyNode.appendNode('groupId', it.group)
+                    dependencyNode.appendNode('artifactId', it.name)
+                    dependencyNode.appendNode('version', it.version)
+                    dependencyNode.appendNode('scope', 'runtime')
                 }
             }
         }
@@ -148,12 +165,21 @@ publishing {
             }
             pom.withXml {
                 def dependenciesNode = asNode().appendNode('dependencies')
-                configurations.compile.allDependencies.each {
+                configurations.api.dependencies.each {
                     def dependencyNode = dependenciesNode.appendNode('dependency')
-                    println 'exporting dependency ' + it.group + ':' + it.name + ':' + it.version + ' to pom.xml'
+                    println 'exporting dependency ' + it.group + ':' + it.name + ':' + it.version + ' as compile to pom.xml'
                     dependencyNode.appendNode('groupId', it.group)
                     dependencyNode.appendNode('artifactId', it.name)
                     dependencyNode.appendNode('version', it.version)
+                    dependencyNode.appendNode('scope', 'compile')
+                }
+                configurations.implementation.dependencies.each {
+                    def dependencyNode = dependenciesNode.appendNode('dependency')
+                    println 'exporting dependency ' + it.group + ':' + it.name + ':' + it.version + ' as runtime to pom.xml'
+                    dependencyNode.appendNode('groupId', it.group)
+                    dependencyNode.appendNode('artifactId', it.name)
+                    dependencyNode.appendNode('version', it.version)
+                    dependencyNode.appendNode('scope', 'runtime')
                 }
             }
         }
