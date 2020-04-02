@@ -20,6 +20,33 @@ repositories {
     mavenLocal()
 }
 
+test {
+    useJUnitPlatform()
+    testLogging.events("failed")
+    testLogging.exceptionFormat("full")
+}
+
+/* Log stdout for failed tests */
+project.test {
+    def outputCache = new LinkedList<String>()
+
+    beforeTest { TestDescriptor td -> outputCache.clear() }    // clear everything right before the test starts
+
+    onOutput { TestDescriptor td, TestOutputEvent toe ->       // when output is coming put it in the cache
+        outputCache.add(toe.getMessage())
+        while (outputCache.size() > 1000) outputCache.remove() // if we have more than 1000 lines -> drop first
+    }
+
+    /** after test -> decide what to print */
+    afterTest { TestDescriptor td, TestResult tr ->
+        if (tr.resultType == TestResult.ResultType.FAILURE && outputCache.size() > 0) {
+            println()
+            println(" Output of ${td.className}.${td.name}:")
+            outputCache.each { print(" > $it") }
+        }
+    }
+}
+
 dependencies {
     // exported dependencies
     api group: 'org.testcontainers', name: 'testcontainers', version: '1.13.0'
