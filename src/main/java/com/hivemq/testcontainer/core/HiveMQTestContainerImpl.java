@@ -334,7 +334,7 @@ public class HiveMQTestContainerImpl extends FixedHostPortGenericContainer<HiveM
     }
 
     @Override
-    public @NotNull HiveMQTestContainer disableExtension(@NotNull String id, @NotNull String name) {
+    public @NotNull HiveMQTestContainer disableExtension(final @NotNull String id, final @NotNull String name) {
         return disableExtension(id, name, Duration.ofSeconds(60));
     }
 
