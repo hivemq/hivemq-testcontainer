@@ -160,6 +160,15 @@ public class HiveMQTestContainerRule extends TestWatcher implements HiveMQTestCo
      * {@inheritDoc}
      */
     @Override
+    public @NotNull HiveMQTestContainer disableExtension(@NotNull String id, @NotNull String name) {
+        container.disableExtension(id, name);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public int getMqttPort() {
         return container.getMqttPort();
     }
