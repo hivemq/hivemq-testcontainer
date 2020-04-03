@@ -148,6 +148,21 @@ public interface HiveMQTestContainer {
             final @NotNull String pathInHomeFolder);
 
     /**
+     * Disables the extension with the corresponding {@param id}.
+     *
+     * Note: Disabling Extensions is a HiveMQ Enterprise feature, it will not work when using HiveMQ Community Edition.
+     *
+     * This can only be called once the container is started.
+     *
+     * @param id the extension id
+     * @param name the name of the extension
+     * @return self
+     */
+    @NotNull HiveMQTestContainer disableExtension(
+            final @NotNull String id,
+            final @NotNull String name);
+
+    /**
      * Get the mapped port for the MQTT port of the container.
      *
      * Must be called after the container is started.

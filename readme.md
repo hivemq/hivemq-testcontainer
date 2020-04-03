@@ -17,6 +17,7 @@ This enables testing MQTT client applications and integration testing of custom 
 - [add a custom hivemq config](#add-a-custom-hivemq-configuration)
 - [load an extension from a folder](#load-an-extension-from-a-folder)
 - [load an extension directly from your code](#load-an-extension-directly-from-code)
+- [disable an extension](#disable-an-extension)
 - [set logging level](#set-logging-level)
 - [debug a directly loaded extension that is running inside the container](#debug-directly-loaded-extensions)
 - [put files into the container](#put-files-into-the-container)
@@ -214,6 +215,44 @@ The extension will be packaged properly und put into the container before startu
                     100,
                     1000,
                     MyExtension.class);
+                    
+## Disable an extension
+
+This disables an extension by placing an empty DISABLED filed into its extension home folder.
+
+### JUnit 4
+
+    @Rule
+    public final @NotNull HiveMQTestContainerRule rule =
+        new HiveMQTestContainerRule()
+            .withExtension(
+                "extension-1",
+                "my-extension",
+                100,
+                1000,
+                MyEnterpriseExtension.class);
+
+    @Test()
+    void test_disable_extension() {
+        rule.disableExtension("extension-1", "my-extension");
+    }
+
+### JUnit 5
+
+    @RegisterExtension
+    public final @NotNull HiveMQTestContainerExtension extension =
+        new HiveMQTestContainerExtension()
+            .withExtension(
+                "extension-1",
+                "my-extension",
+                100,
+                1000,
+                MyEnterpriseExtension.class);
+
+    @Test()
+    void test_disable_extension() {
+        extension.disableExtension("extension-1", "my-extension");
+    }
                     
 ## Set logging level
 

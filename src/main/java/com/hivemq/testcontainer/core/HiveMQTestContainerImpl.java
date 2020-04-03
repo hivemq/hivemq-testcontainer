@@ -15,8 +15,11 @@ import org.testcontainers.shaded.com.google.common.io.Files;
 import org.testcontainers.utility.MountableFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * @author Yannick Weber
@@ -37,9 +40,11 @@ public class HiveMQTestContainerImpl extends FixedHostPortGenericContainer<HiveM
 
     private static final @NotNull String DEFAULT_HIVEMQ_IMAGE = "hivemq/hivemq-ce";
     private static final @NotNull String DEFAULT_HIVEMQ_TAG = "latest";
-
     public static final int DEBUGGING_PORT = 9000;
     public static final int MQTT_PORT = 1883;
+
+    private final @NotNull ConcurrentHashMap<String, CountDownLatch> containerOutputLatches = new ConcurrentHashMap<>();
+    private volatile boolean silenceContainer = false;
 
     public HiveMQTestContainerImpl() {
         this(DEFAULT_HIVEMQ_IMAGE, DEFAULT_HIVEMQ_TAG);
@@ -52,7 +57,23 @@ public class HiveMQTestContainerImpl extends FixedHostPortGenericContainer<HiveM
         final MqttWaitStrategy mqttWaitStrategy = new MqttWaitStrategy();
         waitingFor(mqttWaitStrategy);
 
-        withLogConsumer(outputFrame -> System.out.print(outputFrame.getUtf8String()));
+        withLogConsumer(outputFrame -> {
+            if (!silenceContainer) {
+                System.out.print(outputFrame.getUtf8String());
+            }
+        });
+        withLogConsumer((outputFrame) -> {
+            if (!containerOutputLatches.isEmpty()) {
+                containerOutputLatches.forEach((regEx, latch) -> {
+                    if (outputFrame.getUtf8String().matches("(?s)" + regEx)) {
+                        logger.debug("Contanier Output '{}' matched RegEx '{}'", outputFrame.getUtf8String(), regEx);
+                        latch.countDown();
+                    } else {
+                        logger.debug("Contanier Output '{}' did not match RegEx '{}'", outputFrame.getUtf8String(), regEx);
+                    }
+                });
+            }
+        });
     }
 
     /**
@@ -268,6 +289,43 @@ public class HiveMQTestContainerImpl extends FixedHostPortGenericContainer<HiveM
         final String containerPath = "/opt/hivemq" + PathUtil.preparePath(pathInHomeFolder) + file.getName();
         withCopyFileToContainer(mountableFile, containerPath);
         logger.info("Putting file {} into container path {}", file.getAbsolutePath(), containerPath);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull HiveMQTestContainer disableExtension(
+            final @NotNull String id,
+            final @NotNull String name) {
+
+        final File tempDir = Files.createTempDir();
+        final File disabled = new File(tempDir, "DISABLED");
+        try {
+            //noinspection ResultOfMethodCallIgnored
+            disabled.createNewFile();
+        } catch (final IOException e) {
+            logger.warn("Unable to create DISABLED file on host machine.", e);
+            return this;
+        }
+        final String regEX = "(.*)Extension \"" + name + "\" version (.*) stopped successfully(.*)";
+        try {
+            final MountableFile mountableFile = MountableFile.forHostPath(disabled.getAbsolutePath());
+            final String containerPath = "/opt/hivemq/extensions" + PathUtil.preparePath(id) + disabled.getName();
+
+            final CountDownLatch latch = new CountDownLatch(1);
+            containerOutputLatches.put(regEX, latch);
+
+            this.copyFileToContainer(mountableFile, containerPath);
+            logger.info("Putting file {} into container path {}", disabled.getAbsolutePath(), containerPath);
+
+            latch.await();
+        } catch (final InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            containerOutputLatches.remove(regEX);
+        }
         return this;
     }
 
