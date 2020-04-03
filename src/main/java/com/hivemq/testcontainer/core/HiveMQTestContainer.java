@@ -165,7 +165,7 @@ public interface HiveMQTestContainer {
 
     /**
      * Disables the extension with the corresponding {@param id}.
-     * This method blocks until the HiveMQ log for successful disabling is consumed or it times out after 60 seconds.
+     * This method blocks until the HiveMQ log for successful disabling is consumed or it times out after {@param timeOut}.
      * Note: Disabling Extensions is a HiveMQ Enterprise feature, it will not work when using HiveMQ Community Edition.
      *
      * This can only be called once the container is started.
