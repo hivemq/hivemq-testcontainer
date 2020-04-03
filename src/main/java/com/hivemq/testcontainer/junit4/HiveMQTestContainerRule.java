@@ -9,6 +9,7 @@ import org.junit.runner.Description;
 import org.slf4j.event.Level;
 
 import java.io.File;
+import java.time.Duration;
 
 /**
  * @author Yannick Weber
@@ -160,8 +161,21 @@ public class HiveMQTestContainerRule extends TestWatcher implements HiveMQTestCo
      * {@inheritDoc}
      */
     @Override
-    public @NotNull HiveMQTestContainer disableExtension(@NotNull String id, @NotNull String name) {
+    public @NotNull HiveMQTestContainer disableExtension(final @NotNull String id, final @NotNull String name) {
         container.disableExtension(id, name);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull HiveMQTestContainer disableExtension(
+            final @NotNull String id,
+            final @NotNull String name,
+            final @NotNull Duration timeOut) {
+
+        container.disableExtension(id, name, timeOut);
         return this;
     }
 
