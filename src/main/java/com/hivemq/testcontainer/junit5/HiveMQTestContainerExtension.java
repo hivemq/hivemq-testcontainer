@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.slf4j.event.Level;
 
 import java.io.File;
+import java.time.Duration;
 
 /**
  * @author Yannick Weber
@@ -154,6 +155,19 @@ public class HiveMQTestContainerExtension implements HiveMQTestContainer, Before
             final @NotNull File file) {
 
         container.withFileInHomeFolder(file);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull HiveMQTestContainer disableExtension(
+            final @NotNull String id,
+            final @NotNull String name,
+            final @NotNull Duration timeOut) {
+
+        container.disableExtension(id, name, timeOut);
         return this;
     }
 
