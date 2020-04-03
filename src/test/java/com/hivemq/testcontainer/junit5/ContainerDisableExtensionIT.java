@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class ContainerDisableExtension {
+public class ContainerDisableExtensionIT {
 
     @RegisterExtension
     public final @NotNull HiveMQTestContainerExtension extension =

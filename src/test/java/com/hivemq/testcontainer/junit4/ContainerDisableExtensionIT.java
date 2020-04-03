@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class ContainerDisableExtension {
+public class ContainerDisableExtensionIT {
 
     @Rule
     public final @NotNull HiveMQTestContainerRule rule =
