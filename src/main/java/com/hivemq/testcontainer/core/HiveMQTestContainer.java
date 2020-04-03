@@ -5,6 +5,7 @@ import com.hivemq.extension.sdk.api.annotations.NotNull;
 import org.slf4j.event.Level;
 
 import java.io.File;
+import java.time.Duration;
 
 /**
  * @author Yannick Weber
@@ -149,7 +150,7 @@ public interface HiveMQTestContainer {
 
     /**
      * Disables the extension with the corresponding {@param id}.
-     *
+     * This method blocks until the HiveMQ log for successful disabling is consumed or it times out after 60 seconds.
      * Note: Disabling Extensions is a HiveMQ Enterprise feature, it will not work when using HiveMQ Community Edition.
      *
      * This can only be called once the container is started.
@@ -161,6 +162,22 @@ public interface HiveMQTestContainer {
     @NotNull HiveMQTestContainer disableExtension(
             final @NotNull String id,
             final @NotNull String name);
+
+    /**
+     * Disables the extension with the corresponding {@param id}.
+     * This method blocks until the HiveMQ log for successful disabling is consumed or it times out after 60 seconds.
+     * Note: Disabling Extensions is a HiveMQ Enterprise feature, it will not work when using HiveMQ Community Edition.
+     *
+     * This can only be called once the container is started.
+     *
+     * @param id the extension id
+     * @param name the name of the extension
+     * @return self
+     */
+    @NotNull HiveMQTestContainer disableExtension(
+            final @NotNull String id,
+            final @NotNull String name,
+            final @NotNull Duration timeOut);
 
     /**
      * Get the mapped port for the MQTT port of the container.

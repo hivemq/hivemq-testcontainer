@@ -17,9 +17,11 @@ import org.testcontainers.utility.MountableFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.time.Duration;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Yannick Weber
@@ -293,7 +295,8 @@ public class HiveMQTestContainerImpl extends FixedHostPortGenericContainer<HiveM
     @Override
     public @NotNull HiveMQTestContainer disableExtension(
             final @NotNull String id,
-            final @NotNull String name) {
+            final @NotNull String name,
+            final @NotNull Duration timeout) {
 
         final File tempDir = Files.createTempDir();
         final File disabled = new File(tempDir, "DISABLED");
@@ -315,13 +318,24 @@ public class HiveMQTestContainerImpl extends FixedHostPortGenericContainer<HiveM
             this.copyFileToContainer(mountableFile, containerPath);
             logger.info("Putting file {} into container path {}", disabled.getAbsolutePath(), containerPath);
 
-            latch.await();
+            final boolean await = latch.await(timeout.getSeconds(), TimeUnit.SECONDS);
+            if (!await) {
+                logger.warn("Extension disabling timed out after {} seconds. " +
+                        "Maybe you are using a HiveMQ Community Edition image, " +
+                        "which does not support disabling of extensions", timeout.getSeconds());
+            }
+
         } catch (final InterruptedException e) {
             e.printStackTrace();
         } finally {
             containerOutputLatches.remove(regEX);
         }
         return this;
+    }
+
+    @Override
+    public @NotNull HiveMQTestContainer disableExtension(@NotNull String id, @NotNull String name) {
+        return disableExtension(id, name, Duration.ofSeconds(60));
     }
 
     /**
