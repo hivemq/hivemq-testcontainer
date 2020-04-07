@@ -32,7 +32,7 @@ public class MqttWaitStrategy extends AbstractWaitStrategy {
         }
 
         retryClient.connect()
-                .retryWhen(flowable -> flowable.delay(retryInterval.getSeconds(), TimeUnit.SECONDS))
+                .retryWhen(flowable -> flowable.delay(retryInterval.getNano(), TimeUnit.NANOSECONDS))
                 .timeout(startupTimeout.getSeconds(), TimeUnit.SECONDS)
                 .ignoreElement()
                 .andThen(retryClient.disconnect())
