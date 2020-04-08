@@ -3,7 +3,7 @@ package com.hivemq.testcontainer.junit5;
 import com.hivemq.extension.sdk.api.ExtensionMain;
 import com.hivemq.extension.sdk.api.annotations.NotNull;
 import com.hivemq.testcontainer.core.HiveMQTestContainer;
-import com.hivemq.testcontainer.core.HiveMQTestContainerImpl;
+import com.hivemq.testcontainer.core.HiveMQTestContainerCore;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -17,27 +17,27 @@ import java.time.Duration;
  */
 public class HiveMQTestContainerExtension implements HiveMQTestContainer, BeforeEachCallback, AfterEachCallback {
 
-    private final @NotNull HiveMQTestContainerImpl container;
+    private final @NotNull HiveMQTestContainerCore core;
 
     public HiveMQTestContainerExtension(
             final @NotNull String image,
             final @NotNull String tag) {
 
-        container = new HiveMQTestContainerImpl(image, tag);
+        core = new HiveMQTestContainerCore(image, tag);
     }
 
     public HiveMQTestContainerExtension() {
-        container = new HiveMQTestContainerImpl();
+        core = new HiveMQTestContainerCore();
     }
 
     @Override
     public void afterEach(final @NotNull ExtensionContext context) {
-        container.stop();
+        core.stop();
     }
 
     @Override
     public void beforeEach(final @NotNull ExtensionContext context) {
-        container.start();
+        core.start();
     }
 
     /**
@@ -52,7 +52,7 @@ public class HiveMQTestContainerExtension implements HiveMQTestContainer, Before
             final int startPriority,
             final @NotNull Class<? extends ExtensionMain> mainClazz) {
 
-        container.withExtension(id, name, version, priority, startPriority, mainClazz);
+        core.withExtension(id, name, version, priority, startPriority, mainClazz);
         return this;
     }
 
@@ -61,7 +61,7 @@ public class HiveMQTestContainerExtension implements HiveMQTestContainer, Before
      */
     @Override
     public @NotNull HiveMQTestContainerExtension withExtension(final @NotNull File extensionDirectory) {
-        container.withExtension(extensionDirectory);
+        core.withExtension(extensionDirectory);
         return this;
     }
 
@@ -70,7 +70,7 @@ public class HiveMQTestContainerExtension implements HiveMQTestContainer, Before
      */
     @Override
     public @NotNull HiveMQTestContainerExtension withLogLevel(final @NotNull Level logLevel) {
-        container.withLogLevel(logLevel);
+        core.withLogLevel(logLevel);
         return this;
     }
 
@@ -79,7 +79,7 @@ public class HiveMQTestContainerExtension implements HiveMQTestContainer, Before
      */
     @Override
     public @NotNull HiveMQTestContainerExtension withDebugging(final int debuggingPortHost) {
-        container.withDebugging(debuggingPortHost);
+        core.withDebugging(debuggingPortHost);
         return this;
     }
 
@@ -88,7 +88,7 @@ public class HiveMQTestContainerExtension implements HiveMQTestContainer, Before
      */
     @Override
     public @NotNull HiveMQTestContainerExtension withDebugging() {
-        container.withDebugging();
+        core.withDebugging();
         return this;
     }
 
@@ -97,7 +97,7 @@ public class HiveMQTestContainerExtension implements HiveMQTestContainer, Before
      */
     @Override
     public @NotNull HiveMQTestContainerExtension withLicense(final @NotNull File licence) {
-        container.withLicense(licence);
+        core.withLicense(licence);
         return this;
     }
 
@@ -106,7 +106,7 @@ public class HiveMQTestContainerExtension implements HiveMQTestContainer, Before
      */
     @Override
     public @NotNull HiveMQTestContainerExtension withHiveMQConfig(final @NotNull File config) {
-        container.withHiveMQConfig(config);
+        core.withHiveMQConfig(config);
         return this;
     }
 
@@ -119,7 +119,7 @@ public class HiveMQTestContainerExtension implements HiveMQTestContainer, Before
             final @NotNull String extensionId,
             final @NotNull String pathInExtensionHome) {
 
-        container.withFileInExtensionHomeFolder(file, extensionId, pathInExtensionHome);
+        core.withFileInExtensionHomeFolder(file, extensionId, pathInExtensionHome);
         return this;
     }
 
@@ -131,7 +131,7 @@ public class HiveMQTestContainerExtension implements HiveMQTestContainer, Before
             final @NotNull File file,
             final @NotNull String extensionId) {
 
-        container.withFileInExtensionHomeFolder(file, extensionId);
+        core.withFileInExtensionHomeFolder(file, extensionId);
         return this;
     }
 
@@ -143,7 +143,7 @@ public class HiveMQTestContainerExtension implements HiveMQTestContainer, Before
             final @NotNull File file,
             final @NotNull String pathInExtensionHome) {
 
-        container.withFileInHomeFolder(file, pathInExtensionHome);
+        core.withFileInHomeFolder(file, pathInExtensionHome);
         return this;
     }
 
@@ -154,7 +154,7 @@ public class HiveMQTestContainerExtension implements HiveMQTestContainer, Before
     public @NotNull HiveMQTestContainerExtension withFileInHomeFolder(
             final @NotNull File file) {
 
-        container.withFileInHomeFolder(file);
+        core.withFileInHomeFolder(file);
         return this;
     }
 
@@ -185,6 +185,16 @@ public class HiveMQTestContainerExtension implements HiveMQTestContainer, Before
      */
     @Override
     public int getMqttPort() {
-        return container.getMqttPort();
+        return core.getMqttPort();
+    }
+
+    /**
+     * Returns the underlying {@link HiveMQTestContainerCore}.
+     * This is useful for extending the behaviour of the container.
+     *
+     * @return the HiveMQTestContainerCore
+     */
+    public @NotNull HiveMQTestContainerCore getCore() {
+        return core;
     }
 }

@@ -27,9 +27,9 @@ import java.util.concurrent.TimeUnit;
  * @author Yannick Weber
  */
 @SuppressWarnings("UnusedReturnValue")
-public class HiveMQTestContainerImpl extends FixedHostPortGenericContainer<HiveMQTestContainerImpl> implements HiveMQTestContainer {
+public class HiveMQTestContainerCore extends FixedHostPortGenericContainer<HiveMQTestContainerCore> implements HiveMQTestContainer {
 
-    private final static @NotNull Logger logger = LoggerFactory.getLogger(HiveMQTestContainerImpl.class);
+    private final static @NotNull Logger logger = LoggerFactory.getLogger(HiveMQTestContainerCore.class);
 
     private static final @NotNull String validPluginXML =
             "<hivemq-extension>" + //
@@ -47,11 +47,11 @@ public class HiveMQTestContainerImpl extends FixedHostPortGenericContainer<HiveM
 
     private final @NotNull ConcurrentHashMap<String, CountDownLatch> containerOutputLatches = new ConcurrentHashMap<>();
 
-    public HiveMQTestContainerImpl() {
+    public HiveMQTestContainerCore() {
         this(DEFAULT_HIVEMQ_IMAGE, DEFAULT_HIVEMQ_TAG);
     }
 
-    public HiveMQTestContainerImpl(final @NotNull String image, final @NotNull String tag) {
+    public HiveMQTestContainerCore(final @NotNull String image, final @NotNull String tag) {
         super(image + ":" + tag);
         withExposedPorts(MQTT_PORT);
 
@@ -77,7 +77,7 @@ public class HiveMQTestContainerImpl extends FixedHostPortGenericContainer<HiveM
      * {@inheritDoc}
      */
     @Override
-    public @NotNull HiveMQTestContainerImpl withDebugging(final int debuggingPortHost) {
+    public @NotNull HiveMQTestContainerCore withDebugging(final int debuggingPortHost) {
         withExposedPorts(DEBUGGING_PORT);
         withFixedExposedPort(debuggingPortHost, DEBUGGING_PORT);
         withEnv("JAVA_OPTS", "-agentlib:jdwp=transport=dt_socket,address=0.0.0.0:" + DEBUGGING_PORT + ",server=y,suspend=n");
@@ -88,7 +88,7 @@ public class HiveMQTestContainerImpl extends FixedHostPortGenericContainer<HiveM
      * {@inheritDoc}
      */
     @Override
-    public @NotNull HiveMQTestContainerImpl withDebugging() {
+    public @NotNull HiveMQTestContainerCore withDebugging() {
         withDebugging(DEBUGGING_PORT);
         return this;
     }
@@ -97,12 +97,12 @@ public class HiveMQTestContainerImpl extends FixedHostPortGenericContainer<HiveM
      * {@inheritDoc}
      */
     @Override
-    public @NotNull HiveMQTestContainerImpl withLogLevel(final @NotNull Level level) {
+    public @NotNull HiveMQTestContainerCore withLogLevel(final @NotNull Level level) {
         this.withEnv("HIVEMQ_LOG_LEVEL", level.name());
         return this;
     }
 
-    public @NotNull HiveMQTestContainerImpl withExtension(
+    public @NotNull HiveMQTestContainerCore withExtension(
             final @NotNull String id,
             final @NotNull String name,
             final @NotNull String version,
@@ -124,7 +124,7 @@ public class HiveMQTestContainerImpl extends FixedHostPortGenericContainer<HiveM
      * {@inheritDoc}
      */
     @Override
-    public @NotNull HiveMQTestContainerImpl withExtension(
+    public @NotNull HiveMQTestContainerCore withExtension(
             final @NotNull String id,
             final @NotNull String name,
             final @NotNull String version,
@@ -139,7 +139,7 @@ public class HiveMQTestContainerImpl extends FixedHostPortGenericContainer<HiveM
      * {@inheritDoc}
      */
     @Override
-    public @NotNull HiveMQTestContainerImpl withExtension(final @NotNull File extensionDir) {
+    public @NotNull HiveMQTestContainerCore withExtension(final @NotNull File extensionDir) {
         if (!extensionDir.exists()) {
             logger.warn("Extension {} could not be mounted. It does not exist", extensionDir.getAbsolutePath());
             return this;
@@ -205,7 +205,7 @@ public class HiveMQTestContainerImpl extends FixedHostPortGenericContainer<HiveM
      * {@inheritDoc}
      */
     @Override
-    public @NotNull HiveMQTestContainerImpl withLicense(final @NotNull File license) {
+    public @NotNull HiveMQTestContainerCore withLicense(final @NotNull File license) {
         if (!license.exists()) {
             logger.warn("License file {} does not exist.", license.getAbsolutePath());
             return this;
@@ -225,7 +225,7 @@ public class HiveMQTestContainerImpl extends FixedHostPortGenericContainer<HiveM
      * {@inheritDoc}
      */
     @Override
-    public @NotNull HiveMQTestContainerImpl withHiveMQConfig(final @NotNull File config) {
+    public @NotNull HiveMQTestContainerCore withHiveMQConfig(final @NotNull File config) {
         if (!config.exists()) {
             logger.warn("HiveMQ config file {} does not exist.", config.getAbsolutePath());
             return this;
@@ -241,7 +241,7 @@ public class HiveMQTestContainerImpl extends FixedHostPortGenericContainer<HiveM
      * {@inheritDoc}
      */
     @Override
-    public @NotNull HiveMQTestContainerImpl withFileInExtensionHomeFolder(
+    public @NotNull HiveMQTestContainerCore withFileInExtensionHomeFolder(
             final @NotNull File file,
             final @NotNull String extensionId) {
 
@@ -252,7 +252,7 @@ public class HiveMQTestContainerImpl extends FixedHostPortGenericContainer<HiveM
      * {@inheritDoc}
      */
     @Override
-    public @NotNull HiveMQTestContainerImpl withFileInExtensionHomeFolder(
+    public @NotNull HiveMQTestContainerCore withFileInExtensionHomeFolder(
             final @NotNull File file,
             final @NotNull String extensionId,
             final @NotNull String pathInExtensionHome) {
@@ -264,7 +264,7 @@ public class HiveMQTestContainerImpl extends FixedHostPortGenericContainer<HiveM
      * {@inheritDoc}
      */
     @Override
-    public @NotNull HiveMQTestContainerImpl withFileInHomeFolder(
+    public @NotNull HiveMQTestContainerCore withFileInHomeFolder(
             final @NotNull File file) {
 
         return withFileInHomeFolder(file, "");
@@ -274,7 +274,7 @@ public class HiveMQTestContainerImpl extends FixedHostPortGenericContainer<HiveM
      * {@inheritDoc}
      */
     @Override
-    public @NotNull HiveMQTestContainerImpl withFileInHomeFolder(
+    public @NotNull HiveMQTestContainerCore withFileInHomeFolder(
             final @NotNull File file,
             final @NotNull String pathInHomeFolder) {
 
