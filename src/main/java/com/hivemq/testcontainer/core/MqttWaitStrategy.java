@@ -8,7 +8,7 @@ import org.testcontainers.containers.wait.strategy.AbstractWaitStrategy;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
-import static com.hivemq.testcontainer.core.HiveMQTestContainerImpl.MQTT_PORT;
+import static com.hivemq.testcontainer.core.HiveMQTestContainerCore.MQTT_PORT;
 
 public class MqttWaitStrategy extends AbstractWaitStrategy {
 
@@ -32,7 +32,7 @@ public class MqttWaitStrategy extends AbstractWaitStrategy {
         }
 
         retryClient.connect()
-                .retryWhen(flowable -> flowable.delay(retryInterval.getSeconds(), TimeUnit.SECONDS))
+                .retryWhen(flowable -> flowable.delay(retryInterval.toNanos(), TimeUnit.NANOSECONDS))
                 .timeout(startupTimeout.getSeconds(), TimeUnit.SECONDS)
                 .ignoreElement()
                 .andThen(retryClient.disconnect())

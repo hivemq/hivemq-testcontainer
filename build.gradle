@@ -11,7 +11,7 @@ ext {
     logbackVersion = '1.2.3'
 }
 
-version '1.0-SNAPSHOT'
+version '1.0-SNAPSHOT-2'
 
 sourceCompatibility = 1.8
 
@@ -81,10 +81,11 @@ task junit4Jar (type: Jar) {
     archiveAppendix = "junit4"
 }
 
-task allJar (type: Jar) {
+task coreJar (type: Jar) {
     group 'build'
     from sourceSets.main.output
-    archiveAppendix = "all"
+    exclude("/com/hivemq/testcontainer/junit5", "/com/hivemq/testcontainer/junit4")
+    archiveAppendix = "core"
 }
 
 publishing {
@@ -99,14 +100,14 @@ publishing {
         }
     }
     publications {
-        all(MavenPublication) {
-            artifact allJar
+        core(MavenPublication) {
+            artifact coreJar
             pom {
                 name = 'HiveMQ Testcontainer All'
                 description = 'API for testing HiveMQ Extensions and Java MQTT Applications.'
                 url = 'http://www.hivemq.com/'
                 groupId = 'com.hivemq'
-                artifactId = 'hivemq-testcontainer-all'
+                artifactId = 'hivemq-testcontainer-core'
                 version = project.version
                 developers {
                     developer {

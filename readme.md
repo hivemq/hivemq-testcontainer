@@ -1,4 +1,5 @@
 # HiveMQ Test Container
+![image](readme/logo.png)
 
 [![Build Status](https://travis-ci.com/hivemq/hivemq-testcontainer.svg?token=PkzYtWZuTHcNUHFtmC24&branch=master)](https://travis-ci.org/hivemq/hivemq-testcontainer)
 
@@ -33,7 +34,7 @@ Acquire your GitHub [ACCESS_TOKEN](https://help.github.com/en/packages/publishin
     <settings>
         <servers>
             <server>
-                <id>github</id>
+                <id>hivemq-testcontainer</id>
                 <username>GITHUB_USERNAME</username>
                 <password>GITHUB_TOKEN</password>
             </server>
@@ -44,7 +45,7 @@ Add this repository to your `pom.xml`:
 
     <repositories>
         <repository>
-            <id>github</id>
+            <id>hivemq-testcontainer</id>
             <url>https://maven.pkg.github.com/hivemq/hivemq-testcontainer</url>
         </repository>
     </repositories>

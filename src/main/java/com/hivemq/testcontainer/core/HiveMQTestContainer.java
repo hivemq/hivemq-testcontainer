@@ -11,7 +11,7 @@ import java.time.Duration;
  * @author Yannick Weber
  */
 @SuppressWarnings("UnusedReturnValue")
-public interface HiveMQTestContainer {
+public interface HiveMQTestContainer<SELF> {
 
     /**
      * Enables the possibility for remote debugging clients to connect.
@@ -21,7 +21,7 @@ public interface HiveMQTestContainer {
      * @param debuggingPortHost the host port for debugging clients to connect
      * @return self
      */
-    @NotNull HiveMQTestContainer withDebugging(final int debuggingPortHost);
+    @NotNull SELF withDebugging(final int debuggingPortHost);
 
     /**
      * Enables the possibility for remote debugging clients to connect on host port 9000.
@@ -30,7 +30,7 @@ public interface HiveMQTestContainer {
      *
      * @return self
      */
-    @NotNull HiveMQTestContainer withDebugging();
+    @NotNull SELF withDebugging();
 
     /**
      * Sets the logging {@link Level} inside the container.
@@ -39,7 +39,7 @@ public interface HiveMQTestContainer {
      *
      * @param level the {@link Level}
      */
-    @NotNull HiveMQTestContainer withLogLevel(final @NotNull Level level);
+    @NotNull SELF withLogLevel(final @NotNull Level level);
 
     /**
      * Wraps the given class and all its subclasses into an extension
@@ -54,7 +54,7 @@ public interface HiveMQTestContainer {
      * @param mainClazz the {@link ExtensionMain} of the extension
      * @return self
      */
-    @NotNull HiveMQTestContainer withExtension(
+    @NotNull SELF withExtension(
             final @NotNull String id,
             final @NotNull String name,
             final @NotNull String version,
@@ -71,7 +71,7 @@ public interface HiveMQTestContainer {
      * @param extensionDir the extension folder on the host machine
      * @return self
      */
-    @NotNull HiveMQTestContainer withExtension(final @NotNull File extensionDir);
+    @NotNull SELF withExtension(final @NotNull File extensionDir);
 
     /**
      * Puts the given license into '/opt/hivemq/license/' inside the container.
@@ -82,7 +82,7 @@ public interface HiveMQTestContainer {
      * @param license the license file on the host machine
      * @return self
      */
-    @NotNull HiveMQTestContainer withLicense(final @NotNull File license);
+    @NotNull SELF withLicense(final @NotNull File license);
 
     /**
      * Overwrites the HiveMQ configuration in '/opt/hivemq/conf/' inside the container.
@@ -92,7 +92,7 @@ public interface HiveMQTestContainer {
      * @param config the config file on the host machine
      * @return self
      */
-    @NotNull HiveMQTestContainer withHiveMQConfig(final @NotNull File config);
+    @NotNull SELF withHiveMQConfig(final @NotNull File config);
 
     /**
      * Puts the given file into the root of the extension's home '/opt/hivemq/extensions/{@param extensionId}/'.
@@ -104,7 +104,7 @@ public interface HiveMQTestContainer {
      * @param extensionId the extension
      * @return self
      */
-    @NotNull HiveMQTestContainer withFileInExtensionHomeFolder(
+    @NotNull SELF withFileInExtensionHomeFolder(
             final @NotNull File file,
             final @NotNull String extensionId);
 
@@ -119,7 +119,7 @@ public interface HiveMQTestContainer {
      * @param pathInExtensionHome the path
      * @return self
      */
-    @NotNull HiveMQTestContainer withFileInExtensionHomeFolder(
+    @NotNull SELF withFileInExtensionHomeFolder(
             final @NotNull File file,
             final @NotNull String extensionId,
             final @NotNull String pathInExtensionHome);
@@ -132,7 +132,7 @@ public interface HiveMQTestContainer {
      * @param file the file on the host machine
      * @return self
      */
-    @NotNull HiveMQTestContainer withFileInHomeFolder(
+    @NotNull SELF withFileInHomeFolder(
             final @NotNull File file);
 
     /**
@@ -144,7 +144,7 @@ public interface HiveMQTestContainer {
      * @param pathInHomeFolder the path
      * @return self
      */
-    @NotNull HiveMQTestContainer withFileInHomeFolder(
+    @NotNull SELF withFileInHomeFolder(
             final @NotNull File file,
             final @NotNull String pathInHomeFolder);
 
@@ -159,7 +159,7 @@ public interface HiveMQTestContainer {
      * @param name the name of the extension
      * @return self
      */
-    @NotNull HiveMQTestContainer disableExtension(
+    @NotNull SELF disableExtension(
             final @NotNull String id,
             final @NotNull String name);
 
@@ -174,7 +174,7 @@ public interface HiveMQTestContainer {
      * @param name the name of the extension
      * @return self
      */
-    @NotNull HiveMQTestContainer disableExtension(
+    @NotNull SELF disableExtension(
             final @NotNull String id,
             final @NotNull String name,
             final @NotNull Duration timeOut);
