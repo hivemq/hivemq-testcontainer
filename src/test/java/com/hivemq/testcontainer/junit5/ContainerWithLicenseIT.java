@@ -9,6 +9,8 @@ import com.hivemq.extension.sdk.api.parameter.ExtensionStopInput;
 import com.hivemq.extension.sdk.api.parameter.ExtensionStopOutput;
 import com.hivemq.extension.sdk.api.services.Services;
 import com.hivemq.extension.sdk.api.services.intializer.ClientInitializer;
+import com.hivemq.testcontainer.core.HiveMQExtension;
+import com.hivemq.testcontainer.util.MyExtension;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
@@ -28,13 +30,11 @@ public class ContainerWithLicenseIT {
     @RegisterExtension
     public final @NotNull HiveMQTestContainerExtension extension =
             new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
-                    .withExtension(
-                            "extension-1",
-                            "my-extension",
-                            "1.0",
-                            100,
-                            1000,
-                            LicenceCheckerExtension.class)
+                    .withExtension(HiveMQExtension.builder()
+                            .id("extension-1")
+                            .name("my-extension")
+                            .version("1.0")
+                            .mainClass(LicenceCheckerExtension.class).build())
             .withLicense(new File("src/test/resources/myLicense.lic"))
             .withLicense(new File("src/test/resources/myExtensionLicense.elic"))
             .withDebugging();

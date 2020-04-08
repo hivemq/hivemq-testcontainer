@@ -1,6 +1,7 @@
 package com.hivemq.testcontainer.junit4;
 
 import com.hivemq.extension.sdk.api.annotations.NotNull;
+import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.util.MyExtension;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
 import org.junit.Rule;
@@ -16,13 +17,11 @@ public class ContainerDisableExtensionIT {
     @Rule
     public final @NotNull HiveMQTestContainerRule rule =
             new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
-                    .withExtension(
-                            "extension-1",
-                            "my-extension",
-                            "1.0",
-                            100,
-                            1000,
-                            MyExtension.class)
+                    .withExtension(HiveMQExtension.builder()
+                            .id("extension-1")
+                            .name("my-extension")
+                            .version("1.0")
+                            .mainClass(MyExtension.class).build())
                     .withLogLevel(Level.DEBUG);
 
     @Test(timeout = 500_000)

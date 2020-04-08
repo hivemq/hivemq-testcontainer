@@ -9,6 +9,7 @@ ext {
     extensionSDKVersion = '4.3.0'
     junit4Version = '4.12'
     logbackVersion = '1.2.3'
+    daggerVersion = '2.27'
 }
 
 version '1.0-SNAPSHOT-2'
@@ -65,6 +66,9 @@ dependencies {
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junit5Version
     testImplementation group: 'junit', name: 'junit', version: junit4Version
     testImplementation group: 'ch.qos.logback', name: 'logback-classic', version: logbackVersion
+    testImplementation group: 'com.google.dagger', name: 'dagger', version: '2.27'
+    testAnnotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: '2.27'
+
 }
 
 task junit5Jar (type: Jar) {

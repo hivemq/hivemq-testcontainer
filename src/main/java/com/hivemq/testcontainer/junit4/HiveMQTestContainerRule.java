@@ -2,6 +2,8 @@ package com.hivemq.testcontainer.junit4;
 
 import com.hivemq.extension.sdk.api.ExtensionMain;
 import com.hivemq.extension.sdk.api.annotations.NotNull;
+import com.hivemq.extension.sdk.api.annotations.Nullable;
+import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.core.HiveMQTestContainer;
 import com.hivemq.testcontainer.core.HiveMQTestContainerCore;
 import org.junit.runner.Description;
@@ -43,15 +45,8 @@ public class HiveMQTestContainerRule extends FailureDetectingExternalResource im
      * {@inheritDoc}
      */
     @Override
-    public @NotNull HiveMQTestContainerRule withExtension(
-            final @NotNull String id,
-            final @NotNull String name,
-            final @NotNull String version,
-            final int priority,
-            final int startPriority,
-            final @NotNull Class<? extends ExtensionMain> mainClazz) {
-
-        core.withExtension(id, name, version, priority, startPriority, mainClazz);
+    public @NotNull HiveMQTestContainerRule withExtension(final @NotNull HiveMQExtension hiveMQExtension) {
+        core.withExtension(hiveMQExtension);
         return this;
     }
 

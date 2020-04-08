@@ -27,8 +27,10 @@
         <appender-ref ref="CONSOLE"/>
     </root>
 
-    <root level="INFO">
+    <root level="DEBUG">
         <appender-ref ref="CONSOLE"/>
     </root>
+
+    <logger name="com.hivemq.client" level="OFF"/>
 
 </configuration>

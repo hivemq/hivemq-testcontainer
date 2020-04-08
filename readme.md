@@ -197,30 +197,27 @@ The extension will be packaged properly und put into the container before startu
     @Rule
     public final @NotNull HiveMQTestContainerRule rule =
         new HiveMQTestContainerRule()
-            .withExtension(
-                "extension-1",
-                "my-extension",
-                "1.0",
-                100,
-                1000,
-                MyExtension.class);
+            .withExtension(HiveMQExtension.builder()
+                .id("extension-1")
+                .name("my-extension")
+                .version("1.0")
+                .mainClass(MyExtension.class).build())
 
 ### JUnit 5
 
     @RegisterExtension
     public final @NotNull HiveMQTestContainerExtension extension =
-            new HiveMQTestContainerExtension()
-                .withExtension(
-                    "extension-1",
-                    "my-extension",
-                    "1.0",
-                    100,
-                    1000,
-                    MyExtension.class);
+        new HiveMQTestContainerExtension()
+            .withExtension(HiveMQExtension.builder()
+                .id("extension-1")
+                .name("my-extension")
+                .version("1.0")
+                .mainClass(MyExtension.class).build())
                     
 ## Disable an extension
 
 This disables an extension by placing an empty DISABLED filed into its extension home folder.
+Note that disabling of extension is only supported in HiveMQ 4 Enterprise Edition Containers.
 
 ### JUnit 4
 
@@ -228,11 +225,11 @@ This disables an extension by placing an empty DISABLED filed into its extension
     public final @NotNull HiveMQTestContainerRule rule =
         new HiveMQTestContainerRule()
             .withExtension(
-                "extension-1",
-                "my-extension",
-                100,
-                1000,
-                MyEnterpriseExtension.class);
+            .withExtension(HiveMQExtension.builder()
+                .id("extension-1")
+                .name("my-extension")
+                .version("1.0")
+                .mainClass(MyExtension.class).build())
 
     @Test()
     void test_disable_extension() {
@@ -244,12 +241,11 @@ This disables an extension by placing an empty DISABLED filed into its extension
     @RegisterExtension
     public final @NotNull HiveMQTestContainerExtension extension =
         new HiveMQTestContainerExtension()
-            .withExtension(
-                "extension-1",
-                "my-extension",
-                100,
-                1000,
-                MyEnterpriseExtension.class);
+        .withExtension(HiveMQExtension.builder()
+            .id("extension-1")
+            .name("my-extension")
+            .version("1.0")
+            .mainClass(MyExtension.class).build())
 
     @Test()
     void test_disable_extension() {
@@ -334,13 +330,11 @@ You can debug extensions that are directly loaded from your code.
     @Rule
     public final @NotNull HiveMQTestContainerRule rule =
         new HiveMQTestContainerRule()
-            .withExtension(
-            "extension-1",
-            "my-extension",
-            "1.0",
-            100,
-            1000,
-            MyExtension.class)
+        .withExtension(HiveMQExtension.builder()
+            .id("extension-1")
+            .name("my-extension")
+            .version("1.0")
+            .mainClass(MyExtension.class).build())
         .withFileInExtensionHomeFolder(
             new File("src/test/resources/additionalFile.txt"),
             "extension-1",
@@ -351,13 +345,11 @@ You can debug extensions that are directly loaded from your code.
     @RegisterExtension
     public final @NotNull HiveMQTestContainerExtension extension =
         new HiveMQTestContainerExtension()
-            .withExtension(
-            "extension-1",
-            "my-extension",
-            "1.0",
-            100,
-            1000,
-            MyExtension.class)
+        .withExtension(HiveMQExtension.builder()
+            .id("extension-1")
+            .name("my-extension")
+            .version("1.0")
+            .mainClass(MyExtension.class).build())
         .withFileInExtensionHomeFolder(
             new File("src/test/resources/additionalFile.txt"),
             "extension-1",
