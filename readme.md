@@ -1,5 +1,7 @@
 # HiveMQ Test Container
 
+![image](readme/logo.png)
+
 [![Build Status](https://travis-ci.com/hivemq/hivemq-testcontainer.svg?token=PkzYtWZuTHcNUHFtmC24&branch=master)](https://travis-ci.org/hivemq/hivemq-testcontainer)
 
 Automatic starting HiveMQ docker containers for JUnit4 and JUnit5 tests.
