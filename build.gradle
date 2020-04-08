@@ -84,7 +84,8 @@ task junit4Jar (type: Jar) {
 task coreJar (type: Jar) {
     group 'build'
     from sourceSets.main.output
-    archiveAppendix = "all"
+    exclude("/com/hivemq/testcontainer/junit5", "/com/hivemq/testcontainer/junit4")
+    archiveAppendix = "core"
 }
 
 publishing {
