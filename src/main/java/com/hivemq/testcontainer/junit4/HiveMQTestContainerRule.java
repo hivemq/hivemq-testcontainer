@@ -162,7 +162,7 @@ public class HiveMQTestContainerRule extends FailureDetectingExternalResource im
      */
     @Override
     public @NotNull HiveMQTestContainer disableExtension(final @NotNull String id, final @NotNull String name) {
-        container.disableExtension(id, name);
+        core.disableExtension(id, name);
         return this;
     }
 
@@ -175,7 +175,7 @@ public class HiveMQTestContainerRule extends FailureDetectingExternalResource im
             final @NotNull String name,
             final @NotNull Duration timeOut) {
 
-        container.disableExtension(id, name, timeOut);
+        core.disableExtension(id, name, timeOut);
         return this;
     }
 
