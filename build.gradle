@@ -12,7 +12,7 @@ ext {
     daggerVersion = '2.27'
 }
 
-version '1.0-SNAPSHOT-2'
+version '0.1'
 
 sourceCompatibility = 1.8
 
