@@ -2,7 +2,9 @@ package com.hivemq.testcontainer.core;
 
 import com.hivemq.extension.sdk.api.ExtensionMain;
 import com.hivemq.extension.sdk.api.annotations.NotNull;
+import com.hivemq.extension.sdk.api.annotations.Nullable;
 import javassist.ClassPool;
+import javassist.NotFoundException;
 import org.apache.commons.io.FileUtils;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
@@ -102,37 +104,19 @@ public class HiveMQTestContainerCore extends FixedHostPortGenericContainer<HiveM
         return this;
     }
 
-    public @NotNull HiveMQTestContainerCore withExtension(
-            final @NotNull String id,
-            final @NotNull String name,
-            final @NotNull String version,
-            final int priority,
-            final int startPriority,
-            final boolean sign,
-            final @NotNull Class<? extends ExtensionMain> mainClazz) {
-        try {
-            final File extension = createExtension(id, name, version, priority, startPriority, sign, mainClazz);
-            final MountableFile mountableExtension = MountableFile.forHostPath(extension.getPath());
-            withCopyFileToContainer(mountableExtension, "/opt/hivemq/extensions/" + id);
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
-        return this;
-    }
-
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull HiveMQTestContainerCore withExtension(
-            final @NotNull String id,
-            final @NotNull String name,
-            final @NotNull String version,
-            final int priority,
-            final int startPriority,
-            final @NotNull Class<? extends ExtensionMain> mainClazz) {
-
-        return withExtension(id, name, version, priority, startPriority, false, mainClazz);
+    public @NotNull HiveMQTestContainerCore withExtension(final @NotNull HiveMQExtension hiveMQExtension) {
+        try {
+            final File extension = createExtension(hiveMQExtension);
+            final MountableFile mountableExtension = MountableFile.forHostPath(extension.getPath());
+            withCopyFileToContainer(mountableExtension, "/opt/hivemq/extensions/" + hiveMQExtension.getId());
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+        return this;
     }
 
     /**
@@ -159,33 +143,30 @@ public class HiveMQTestContainerCore extends FixedHostPortGenericContainer<HiveM
         return this;
     }
 
-    private @NotNull File createExtension(
-            final @NotNull String id,
-            final @NotNull String name,
-            final @NotNull String version,
-            final int priority,
-            final int startPriority,
-            final boolean sign,
-            final @NotNull Class<? extends ExtensionMain> mainClazz)
+    private @NotNull File createExtension(final @NotNull HiveMQExtension hiveMQExtension)
             throws Exception {
 
         final File tempDir = Files.createTempDir();
 
-        final File extensionDir = new File(tempDir, id);
+        final File extensionDir = new File(tempDir, hiveMQExtension.getId());
         FileUtils.writeStringToFile(new File(extensionDir, "hivemq-extension.xml"),
-                String.format(validPluginXML, id, name, version, priority, startPriority), Charset.defaultCharset());
+                String.format(
+                        validPluginXML,
+                        hiveMQExtension.getId(),
+                        hiveMQExtension.getName(),
+                        hiveMQExtension.getVersion(),
+                        hiveMQExtension.getPriority(),
+                        hiveMQExtension.getStartPriority()),
+                Charset.defaultCharset());
 
         final JavaArchive javaArchive =
                 ShrinkWrap.create(JavaArchive.class)
-                        .addAsServiceProviderAndClasses(ExtensionMain.class, mainClazz);
+                        .addAsServiceProviderAndClasses(ExtensionMain.class, hiveMQExtension.getMainClass());
 
-
-        //try to add all inner and anonymous classes of extension main to the extension jar
         try {
-            final Set<String> subClassNames =
-                    ClassPool.getDefault().get(mainClazz.getName()).getClassFile().getConstPool().getClassNames();
-            for (final String subClassName : subClassNames) {
-                javaArchive.addClass(subClassName.replaceAll("/", "."));
+            putSubclassesIntoJar(hiveMQExtension.getId(), hiveMQExtension.getMainClass(), javaArchive);
+            for (final Class<?> additionalClass : hiveMQExtension.getAdditionalClasses()) {
+                putSubclassesIntoJar(hiveMQExtension.getId(), additionalClass, javaArchive);
             }
         } catch (final Exception e) {
             //ignore
@@ -194,11 +175,27 @@ public class HiveMQTestContainerCore extends FixedHostPortGenericContainer<HiveM
         javaArchive.as(ZipExporter.class).exportTo(new File(extensionDir, "extension.jar"));
 
         final File jar = new File(extensionDir, "extension.jar");
-        if (sign) {
-            signExtension(id, jar);
+        if (hiveMQExtension.sign()) {
+            signExtension(hiveMQExtension.getId(), jar);
         }
 
         return extensionDir;
+    }
+
+    private void putSubclassesIntoJar(
+            final @NotNull String extensionId,
+            final @Nullable Class<?> clazz,
+            final @NotNull JavaArchive javaArchive) throws NotFoundException {
+
+        if (clazz != null) {
+            final Set<String> subClassNames =
+                    ClassPool.getDefault().get(clazz.getName()).getClassFile().getConstPool().getClassNames();
+            for (final String subClassName : subClassNames) {
+                final String className = subClassName.replaceAll("/", ".");
+                logger.debug("Packaging subclass {} into extension {}.", className, extensionId);
+                javaArchive.addClass(className);
+            }
+        }
     }
 
     /**

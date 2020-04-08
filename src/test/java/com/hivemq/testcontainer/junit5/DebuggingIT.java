@@ -1,6 +1,7 @@
 package com.hivemq.testcontainer.junit5;
 
 import com.hivemq.extension.sdk.api.annotations.NotNull;
+import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.util.MyExtension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
@@ -22,13 +23,11 @@ public class DebuggingIT {
     @RegisterExtension
     public final @NotNull HiveMQTestContainerExtension extension =
             new HiveMQTestContainerExtension()
-                    .withExtension(
-                        "extension-1",
-                        "my-extension",
-                        "1.0",
-                        100,
-                        1000,
-                        MyExtension.class)
+                    .withExtension(HiveMQExtension.builder()
+                            .id("extension-1")
+                            .name("my-extension")
+                            .version("1.0")
+                            .mainClass(MyExtension.class).build())
                     .withDebugging(DEBUGGING_PORT_HOST);
 
     @Test()

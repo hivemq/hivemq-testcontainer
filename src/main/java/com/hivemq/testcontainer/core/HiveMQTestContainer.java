@@ -1,6 +1,5 @@
 package com.hivemq.testcontainer.core;
 
-import com.hivemq.extension.sdk.api.ExtensionMain;
 import com.hivemq.extension.sdk.api.annotations.NotNull;
 import org.slf4j.event.Level;
 
@@ -43,24 +42,14 @@ public interface HiveMQTestContainer {
 
     /**
      * Wraps the given class and all its subclasses into an extension
-     * and puts it into '/opt/hivemq/extensions/{@param id}' inside the container.
+     * and puts it into '/opt/hivemq/extensions/{extension-id}' inside the container.
      *
      * Must be called before the container is started.
      *
-     * @param id        the extension id
-     * @param name      the extension name
-     * @param version   the extension version
-     * @param priority  the extension priority
-     * @param mainClazz the {@link ExtensionMain} of the extension
+     * @param hiveMQExtension the {@link HiveMQExtension} of the extension
      * @return self
      */
-    @NotNull HiveMQTestContainer withExtension(
-            final @NotNull String id,
-            final @NotNull String name,
-            final @NotNull String version,
-            final int priority,
-            final int startPriority,
-            final @NotNull Class<? extends ExtensionMain> mainClazz);
+    @NotNull HiveMQTestContainer withExtension(final @NotNull HiveMQExtension hiveMQExtension);
 
     /**
      * Puts the given extension folder into '/opt/hivemq/extensions/{extension-id}' inside the container.

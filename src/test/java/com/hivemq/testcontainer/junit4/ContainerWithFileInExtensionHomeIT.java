@@ -9,6 +9,8 @@ import com.hivemq.extension.sdk.api.parameter.ExtensionStopInput;
 import com.hivemq.extension.sdk.api.parameter.ExtensionStopOutput;
 import com.hivemq.extension.sdk.api.services.Services;
 import com.hivemq.extension.sdk.api.services.intializer.ClientInitializer;
+import com.hivemq.testcontainer.core.HiveMQExtension;
+import com.hivemq.testcontainer.util.MyExtension;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,13 +28,11 @@ public class ContainerWithFileInExtensionHomeIT {
     @Rule
     public final @NotNull HiveMQTestContainerRule extension =
             new HiveMQTestContainerRule()
-                    .withExtension(
-                            "extension-1",
-                            "my-extension",
-                            "1.0",
-                            100,
-                            1000,
-                            FileCheckerExtension.class)
+                    .withExtension(HiveMQExtension.builder()
+                            .id("extension-1")
+                            .name("my-extension")
+                            .version("1.0")
+                            .mainClass(FileCheckerExtension.class).build())
                     .withFileInExtensionHomeFolder(
                             new File("src/test/resources/additionalFile.txt"),
                             "extension-1",

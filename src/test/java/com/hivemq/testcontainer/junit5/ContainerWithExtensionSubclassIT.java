@@ -4,6 +4,7 @@ import com.hivemq.client.mqtt.MqttGlobalPublishFilter;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5BlockingClient;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5Client;
 import com.hivemq.extension.sdk.api.annotations.NotNull;
+import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.util.MyExtension;
 import com.hivemq.testcontainer.util.MyExtensionWithSubclasses;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
@@ -26,13 +27,11 @@ public class ContainerWithExtensionSubclassIT {
     @RegisterExtension
     public final @NotNull HiveMQTestContainerExtension extension =
             new HiveMQTestContainerExtension()
-                    .withExtension(
-                    "extension-1",
-                    "my-extension",
-                    "1.0",
-                    100,
-                    1000,
-                    MyExtensionWithSubclasses.class)
+                    .withExtension(HiveMQExtension.builder()
+                            .id("extension-1")
+                            .name("my-extension")
+                            .version("1.0")
+                            .mainClass(MyExtensionWithSubclasses.class).build())
                     .withLogLevel(Level.DEBUG);
 
     @Test()

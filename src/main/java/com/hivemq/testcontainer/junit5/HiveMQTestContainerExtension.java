@@ -2,6 +2,8 @@ package com.hivemq.testcontainer.junit5;
 
 import com.hivemq.extension.sdk.api.ExtensionMain;
 import com.hivemq.extension.sdk.api.annotations.NotNull;
+import com.hivemq.extension.sdk.api.annotations.Nullable;
+import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.core.HiveMQTestContainer;
 import com.hivemq.testcontainer.core.HiveMQTestContainerCore;
 import org.junit.jupiter.api.extension.AfterEachCallback;
@@ -44,15 +46,8 @@ public class HiveMQTestContainerExtension implements HiveMQTestContainer, Before
      * {@inheritDoc}
      */
     @Override
-    public @NotNull HiveMQTestContainerExtension withExtension(
-            final @NotNull String id,
-            final @NotNull String name,
-            final @NotNull String version,
-            final int priority,
-            final int startPriority,
-            final @NotNull Class<? extends ExtensionMain> mainClazz) {
-
-        core.withExtension(id, name, version, priority, startPriority, mainClazz);
+    public @NotNull HiveMQTestContainerExtension withExtension(final @NotNull HiveMQExtension hiveMQExtension) {
+        core.withExtension(hiveMQExtension);
         return this;
     }
 
