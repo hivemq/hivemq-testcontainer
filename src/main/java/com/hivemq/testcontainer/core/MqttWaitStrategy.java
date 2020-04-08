@@ -8,7 +8,7 @@ import org.testcontainers.containers.wait.strategy.AbstractWaitStrategy;
 import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
-import static com.hivemq.testcontainer.core.HiveMQTestContainerImpl.MQTT_PORT;
+import static com.hivemq.testcontainer.core.HiveMQTestContainerCore.MQTT_PORT;
 
 public class MqttWaitStrategy extends AbstractWaitStrategy {
 
