@@ -46,6 +46,7 @@ public class HiveMQTestContainerCore extends FixedHostPortGenericContainer<HiveM
     private static final @NotNull String DEFAULT_HIVEMQ_TAG = "latest";
     public static final int DEBUGGING_PORT = 9000;
     public static final int MQTT_PORT = 1883;
+    public static final int CONTROL_CENTER_PORT = 8080;
 
     private final @NotNull ConcurrentHashMap<String, CountDownLatch> containerOutputLatches = new ConcurrentHashMap<>();
 
@@ -333,6 +334,24 @@ public class HiveMQTestContainerCore extends FixedHostPortGenericContainer<HiveM
     @Override
     public @NotNull HiveMQTestContainer disableExtension(final @NotNull String id, final @NotNull String name) {
         return disableExtension(id, name, Duration.ofSeconds(60));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull HiveMQTestContainer withControlCenter() {
+        return withControlCenter(CONTROL_CENTER_PORT);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull HiveMQTestContainer withControlCenter(final int controlCenterPort) {
+        withExposedPorts(CONTROL_CENTER_PORT);
+        withFixedExposedPort(controlCenterPort, CONTROL_CENTER_PORT);
+        return this;
     }
 
     /**

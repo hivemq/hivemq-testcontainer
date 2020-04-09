@@ -66,6 +66,7 @@ dependencies {
     testImplementation group: 'junit', name: 'junit', version: junit4Version
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junit5Version
     testImplementation group: 'ch.qos.logback', name: 'logback-classic', version: logbackVersion
+    testImplementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.12'
     testImplementation group: 'com.google.dagger', name: 'dagger', version: '2.27'
     testAnnotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: '2.27'
 
