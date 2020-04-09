@@ -164,12 +164,18 @@ public class HiveMQTestContainerExtension implements HiveMQTestContainer, Before
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public @NotNull HiveMQTestContainerExtension withControlCenter(final int controlCenterPort) {
         core.withControlCenter(controlCenterPort);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public @NotNull HiveMQTestContainerExtension withControlCenter() {
         core.withControlCenter();
