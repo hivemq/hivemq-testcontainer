@@ -172,12 +172,18 @@ public class HiveMQTestContainerRule extends FailureDetectingExternalResource im
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public @NotNull HiveMQTestContainerRule withControlCenter(final int controlCenterPort) {
         core.withControlCenter(controlCenterPort);
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public @NotNull HiveMQTestContainerRule withControlCenter() {
         core.withControlCenter();
