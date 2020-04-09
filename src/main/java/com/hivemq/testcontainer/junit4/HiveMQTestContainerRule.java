@@ -1,8 +1,6 @@
 package com.hivemq.testcontainer.junit4;
 
-import com.hivemq.extension.sdk.api.ExtensionMain;
 import com.hivemq.extension.sdk.api.annotations.NotNull;
-import com.hivemq.extension.sdk.api.annotations.Nullable;
 import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.core.HiveMQTestContainer;
 import com.hivemq.testcontainer.core.HiveMQTestContainerCore;
@@ -156,7 +154,7 @@ public class HiveMQTestContainerRule extends FailureDetectingExternalResource im
      * {@inheritDoc}
      */
     @Override
-    public @NotNull HiveMQTestContainer disableExtension(final @NotNull String id, final @NotNull String name) {
+    public @NotNull HiveMQTestContainerRule disableExtension(final @NotNull String id, final @NotNull String name) {
         core.disableExtension(id, name);
         return this;
     }
@@ -165,12 +163,24 @@ public class HiveMQTestContainerRule extends FailureDetectingExternalResource im
      * {@inheritDoc}
      */
     @Override
-    public @NotNull HiveMQTestContainer disableExtension(
+    public @NotNull HiveMQTestContainerRule disableExtension(
             final @NotNull String id,
             final @NotNull String name,
             final @NotNull Duration timeOut) {
 
         core.disableExtension(id, name, timeOut);
+        return this;
+    }
+
+    @Override
+    public @NotNull HiveMQTestContainerRule withControlCenter(final int controlCenterPort) {
+        core.withControlCenter(controlCenterPort);
+        return this;
+    }
+
+    @Override
+    public @NotNull HiveMQTestContainerRule withControlCenter() {
+        core.withControlCenter();
         return this;
     }
 
