@@ -6,7 +6,7 @@ import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
 import com.hivemq.testcontainer.util.dagger.MyExtensionWithDagger;
 import com.hivemq.testcontainer.util.dagger.MyModule;
 import org.junit.Rule;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.junit.jupiter.api.Timeout;
 
 import java.util.concurrent.ExecutionException;
@@ -32,9 +32,8 @@ public class ContainerWithDaggerExtensionIT {
     public ContainerWithDaggerExtensionIT() throws ClassNotFoundException {
     }
 
-    @Test()
-    @Timeout(value = 5, unit = TimeUnit.MINUTES)
-    void test_single_class_extension() throws ExecutionException, InterruptedException {
+    @Test(timeout = 500_000)
+    public void test_single_class_extension() throws ExecutionException, InterruptedException {
         TestPublishModifiedUtil.testPublishModified(rule.getMqttPort());
     }
 }
