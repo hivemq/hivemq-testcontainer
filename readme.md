@@ -21,6 +21,7 @@ This enables testing MQTT client applications and integration testing of custom 
 - [load an extension directly from your code](#load-an-extension-directly-from-code)
 - [disable an extension](#disable-an-extension)
 - [set logging level](#set-logging-level)
+- [set control center port](#set-control-center-port)
 - [debug a directly loaded extension that is running inside the container](#debug-directly-loaded-extensions)
 - [put files into the container](#put-files-into-the-container)
     - [put files into hivemq home](#put-a-file-into-hivemq-home)
@@ -269,6 +270,25 @@ You can set the logging level of the HiveMQ instance running inside the containe
     public final @NotNull HiveMQTestContainerExtension extension =
         new HiveMQTestContainerExtension()
             .withLogLevel(Level.DEBUG);
+
+## Set Control Center Port
+
+You can set the HiveMQ Control Center port on the host machine that is mapped to the control center port inside the container.
+Note that the HiveMQ Control Center is feature of the HiveMQ Enterprise Edition.
+
+### JUnit 4
+
+    @Rule
+    public @NotNull HiveMQTestContainerRule rule = 
+        new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
+        .withControlCenter(CONTROL_CENTER_PORT);
+        
+### JUnit 5
+
+    @RegisterExtension
+    public @NotNull HiveMQTestContainerExtension extension = 
+        new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
+        .withControlCenter(CONTROL_CENTER_PORT);
 
 ## Debug directly loaded extensions
 

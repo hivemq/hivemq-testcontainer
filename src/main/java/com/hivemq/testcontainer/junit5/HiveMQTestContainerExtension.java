@@ -1,8 +1,6 @@
 package com.hivemq.testcontainer.junit5;
 
-import com.hivemq.extension.sdk.api.ExtensionMain;
 import com.hivemq.extension.sdk.api.annotations.NotNull;
-import com.hivemq.extension.sdk.api.annotations.Nullable;
 import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.core.HiveMQTestContainer;
 import com.hivemq.testcontainer.core.HiveMQTestContainerCore;
@@ -157,7 +155,7 @@ public class HiveMQTestContainerExtension implements HiveMQTestContainer, Before
      * {@inheritDoc}
      */
     @Override
-    public @NotNull HiveMQTestContainer disableExtension(
+    public @NotNull HiveMQTestContainerExtension disableExtension(
             final @NotNull String id,
             final @NotNull String name,
             final @NotNull Duration timeOut) {
@@ -166,11 +164,23 @@ public class HiveMQTestContainerExtension implements HiveMQTestContainer, Before
         return this;
     }
 
+    @Override
+    public @NotNull HiveMQTestContainerExtension withControlCenter(final int controlCenterPort) {
+        core.withControlCenter(controlCenterPort);
+        return this;
+    }
+
+    @Override
+    public @NotNull HiveMQTestContainerExtension withControlCenter() {
+        core.withControlCenter();
+        return this;
+    }
+
     /**
      * {@inheritDoc}
      */
     @Override
-    public @NotNull HiveMQTestContainer disableExtension(final @NotNull String id, final @NotNull String name) {
+    public @NotNull HiveMQTestContainerExtension disableExtension(final @NotNull String id, final @NotNull String name) {
         core.disableExtension(id, name);
         return this;
     }
