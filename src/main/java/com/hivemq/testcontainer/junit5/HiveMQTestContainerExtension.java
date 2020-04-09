@@ -157,11 +157,19 @@ public class HiveMQTestContainerExtension implements HiveMQTestContainer, Before
      */
     @Override
     public @NotNull HiveMQTestContainerExtension disableExtension(
-            final @NotNull String id,
-            final @NotNull String name,
+            final @NotNull HiveMQExtension hiveMQExtension,
             final @NotNull Duration timeOut) {
 
-        core.disableExtension(id, name, timeOut);
+        core.disableExtension(hiveMQExtension, timeOut);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull HiveMQTestContainerExtension disableExtension(final @NotNull HiveMQExtension hiveMQExtension) {
+        core.disableExtension(hiveMQExtension);
         return this;
     }
 
@@ -187,8 +195,8 @@ public class HiveMQTestContainerExtension implements HiveMQTestContainer, Before
      * {@inheritDoc}
      */
     @Override
-    public @NotNull HiveMQTestContainerExtension disableExtension(final @NotNull String id, final @NotNull String name) {
-        core.disableExtension(id, name);
+    public @NotNull HiveMQTestContainerExtension disableExtension(final @NotNull HiveMQExtension hiveMQExtension) {
+        core.disableExtension(hiveMQExtension);
         return this;
     }
 

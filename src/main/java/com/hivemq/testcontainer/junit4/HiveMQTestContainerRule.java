@@ -154,8 +154,8 @@ public class HiveMQTestContainerRule extends FailureDetectingExternalResource im
      * {@inheritDoc}
      */
     @Override
-    public @NotNull HiveMQTestContainerRule disableExtension(final @NotNull String id, final @NotNull String name) {
-        core.disableExtension(id, name);
+    public @NotNull HiveMQTestContainerRule disableExtension(final @NotNull HiveMQExtension hiveMQExtension) {
+        core.disableExtension(hiveMQExtension);
         return this;
     }
 
@@ -164,11 +164,31 @@ public class HiveMQTestContainerRule extends FailureDetectingExternalResource im
      */
     @Override
     public @NotNull HiveMQTestContainerRule disableExtension(
-            final @NotNull String id,
-            final @NotNull String name,
+            final @NotNull HiveMQExtension hiveMQExtension,
             final @NotNull Duration timeOut) {
 
-        core.disableExtension(id, name, timeOut);
+        core.disableExtension(hiveMQExtension, timeOut);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull HiveMQTestContainerRule enableExtension(final @NotNull HiveMQExtension hiveMQExtension) {
+        core.enableExtension(hiveMQExtension);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull HiveMQTestContainerRule enableExtension(
+            final @NotNull HiveMQExtension hiveMQExtension,
+            final @NotNull Duration timeOut) {
+
+        core.enableExtension(hiveMQExtension, timeOut);
         return this;
     }
 

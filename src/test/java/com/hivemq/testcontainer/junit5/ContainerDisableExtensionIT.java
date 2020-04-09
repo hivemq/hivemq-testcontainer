@@ -16,22 +16,29 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class ContainerDisableExtensionIT {
 
+    private final @NotNull HiveMQExtension hiveMQExtension = HiveMQExtension.builder()
+            .id("extension-1")
+            .name("my-extension")
+            .version("1.0")
+            .disabledOnStartup(true)
+            .mainClass(MyExtension.class).build();
+
     @RegisterExtension
     public final @NotNull HiveMQTestContainerExtension extension =
             new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
-                    .withExtension(HiveMQExtension.builder()
-                            .id("extension-1")
-                            .name("my-extension")
-                            .version("1.0")
-                            .mainClass(MyExtension.class).build())
+                    .withExtension(hiveMQExtension)
                     .withLogLevel(Level.DEBUG);
 
     @Test()
     @Timeout(value = 5, unit = TimeUnit.MINUTES)
-    void test_disable_enterprise_extension() throws ExecutionException, InterruptedException {
-        TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
-        extension.disableExtension("extension-1", "my-extension");
+    void test_disable_enable_extension() throws ExecutionException, InterruptedException {
         assertThrows(ExecutionException.class, () -> TestPublishModifiedUtil.testPublishModified(extension.getMqttPort()));
+        extension.enableExtension(hiveMQExtension);
+        TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
+        extension.disableExtension(hiveMQExtension);
+        assertThrows(ExecutionException.class, () -> TestPublishModifiedUtil.testPublishModified(extension.getMqttPort()));
+        extension.enableExtension(hiveMQExtension);
+        TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
     }
 
 }

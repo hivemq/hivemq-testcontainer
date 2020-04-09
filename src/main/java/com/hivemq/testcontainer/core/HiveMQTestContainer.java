@@ -144,13 +144,10 @@ public interface HiveMQTestContainer {
      * <p>
      * This can only be called once the container is started.
      *
-     * @param id   the extension id
-     * @param name the name of the extension
+     * @param hiveMQExtension the extension
      * @return self
      */
-    @NotNull HiveMQTestContainer disableExtension(
-            final @NotNull String id,
-            final @NotNull String name);
+    @NotNull HiveMQTestContainer disableExtension(final @NotNull HiveMQExtension hiveMQExtension);
 
     /**
      * Disables the extension with the corresponding {@param id}.
@@ -159,13 +156,37 @@ public interface HiveMQTestContainer {
      * <p>
      * This can only be called once the container is started.
      *
-     * @param id   the extension id
-     * @param name the name of the extension
+     * @param hiveMQExtension the extension
      * @return self
      */
     @NotNull HiveMQTestContainer disableExtension(
-            final @NotNull String id,
-            final @NotNull String name,
+            final @NotNull HiveMQExtension hiveMQExtension,
+            final @NotNull Duration timeOut);
+
+    /**
+     * Enables the extension with the corresponding {@param id}.
+     * This method blocks until the HiveMQ log for successful disabling is consumed or it times out after 60 seconds.
+     * Note: Enabling Extensions is a HiveMQ Enterprise feature, it will not work when using HiveMQ Community Edition.
+     *
+     * This can only be called once the container is started.
+     *
+     * @param hiveMQExtension the extension
+     * @return self
+     */
+    @NotNull HiveMQTestContainer enableExtension(final @NotNull HiveMQExtension hiveMQExtension);
+
+    /**
+     * Disables the extension with the corresponding {@param id}.
+     * This method blocks until the HiveMQ log for successful disabling is consumed or it times out after {@param timeOut}.
+     * Note: Enabling Extensions is a HiveMQ Enterprise feature, it will not work when using HiveMQ Community Edition.
+     *
+     * This can only be called once the container is started.
+     *
+     * @param hiveMQExtension the extension
+     * @return self
+     */
+    @NotNull HiveMQTestContainer enableExtension(
+            final @NotNull HiveMQExtension hiveMQExtension,
             final @NotNull Duration timeOut);
 
     /**

@@ -19,7 +19,7 @@ This enables testing MQTT client applications and integration testing of custom 
 - [add a custom hivemq config](#add-a-custom-hivemq-configuration)
 - [load an extension from a folder](#load-an-extension-from-a-folder)
 - [load an extension directly from your code](#load-an-extension-directly-from-code)
-- [disable an extension](#disable-an-extension)
+- [enable or disable an extension](#enabledisable-an-extension)
 - [set logging level](#set-logging-level)
 - [set control center port](#set-control-center-port)
 - [debug a directly loaded extension that is running inside the container](#debug-directly-loaded-extensions)
@@ -215,42 +215,49 @@ The extension will be packaged properly und put into the container before startu
                 .version("1.0")
                 .mainClass(MyExtension.class).build())
                     
-## Disable an extension
+## Enable/Disable an extension
 
-This disables an extension by placing an empty DISABLED filed into its extension home folder.
-Note that disabling of extension is only supported in HiveMQ 4 Enterprise Edition Containers.
+It is possible to enable and disable HiveMQ during runtime. Extensions can also be disabled on startup.
+Note that disabling of extension during runtime is only supported in HiveMQ 4 Enterprise Edition Containers.
 
 ### JUnit 4
 
+    private final @NotNull HiveMQExtension hiveMQExtension = HiveMQExtension.builder()
+        .id("extension-1")
+        .name("my-extension")
+        .version("1.0")
+        .disabledOnStartup(true)
+        .mainClass(MyExtension.class).build();
+    
     @Rule
     public final @NotNull HiveMQTestContainerRule rule =
-        new HiveMQTestContainerRule()
-            .withExtension(
-            .withExtension(HiveMQExtension.builder()
-                .id("extension-1")
-                .name("my-extension")
-                .version("1.0")
-                .mainClass(MyExtension.class).build())
-
+        new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
+        .withExtension(hiveMQExtension);
+    
     @Test()
-    void test_disable_extension() {
-        rule.disableExtension("extension-1", "my-extension");
+    public void test_disable_enable_extension() throws ExecutionException, InterruptedException {
+        rule.enableExtension(hiveMQExtension);
+        rule.disableExtension(hiveMQExtension);
     }
 
 ### JUnit 5
 
+    private final @NotNull HiveMQExtension hiveMQExtension = HiveMQExtension.builder()
+        .id("extension-1")
+        .name("my-extension")
+        .version("1.0")
+        .disabledOnStartup(true)
+        .mainClass(MyExtension.class).build();
+    
     @RegisterExtension
     public final @NotNull HiveMQTestContainerExtension extension =
-        new HiveMQTestContainerExtension()
-        .withExtension(HiveMQExtension.builder()
-            .id("extension-1")
-            .name("my-extension")
-            .version("1.0")
-            .mainClass(MyExtension.class).build())
-
+        new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
+        .withExtension(hiveMQExtension);
+    
     @Test()
-    void test_disable_extension() {
-        extension.disableExtension("extension-1", "my-extension");
+    void test_disable_enable_extension() throws ExecutionException, InterruptedException {
+        extension.enableExtension(hiveMQExtension);
+        extension.disableExtension(hiveMQExtension);
     }
                     
 ## Set logging level
