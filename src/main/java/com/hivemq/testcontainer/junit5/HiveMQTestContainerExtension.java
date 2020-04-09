@@ -4,7 +4,6 @@ import com.hivemq.extension.sdk.api.annotations.NotNull;
 import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.core.HiveMQTestContainer;
 import com.hivemq.testcontainer.core.HiveMQTestContainerCore;
-import com.hivemq.testcontainer.junit4.HiveMQTestContainerRule;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -173,6 +172,28 @@ public class HiveMQTestContainerExtension implements HiveMQTestContainer, Before
         return this;
     }
 
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull HiveMQTestContainerExtension enableExtension(
+            final @NotNull HiveMQExtension hiveMQExtension,
+            final @NotNull Duration timeOut) {
+
+        core.enableExtension(hiveMQExtension, timeOut);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull HiveMQTestContainerExtension enableExtension(final @NotNull HiveMQExtension hiveMQExtension) {
+        core.enableExtension(hiveMQExtension);
+        return this;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -188,15 +209,6 @@ public class HiveMQTestContainerExtension implements HiveMQTestContainer, Before
     @Override
     public @NotNull HiveMQTestContainerExtension withControlCenter() {
         core.withControlCenter();
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public @NotNull HiveMQTestContainerExtension disableExtension(final @NotNull HiveMQExtension hiveMQExtension) {
-        core.disableExtension(hiveMQExtension);
         return this;
     }
 
