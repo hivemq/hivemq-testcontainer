@@ -257,6 +257,8 @@ Note that disabling of extension is only supported in HiveMQ 4 Enterprise Editio
 
 You can set the logging level of the HiveMQ instance running inside the container.
 
+Note: you can silence the container at any time using the `.silent(true)` method.
+
 ### JUnit 4
 
     @Rule
@@ -270,6 +272,7 @@ You can set the logging level of the HiveMQ instance running inside the containe
     public final @NotNull HiveMQTestContainerExtension extension =
         new HiveMQTestContainerExtension()
             .withLogLevel(Level.DEBUG);
+            
 
 ## Set Control Center Port
 
