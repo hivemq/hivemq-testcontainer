@@ -194,6 +194,15 @@ public class HiveMQTestContainerRule extends FailureDetectingExternalResource im
      * {@inheritDoc}
      */
     @Override
+    public @NotNull HiveMQTestContainerRule silent(final boolean silent) {
+        core.silent(silent);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public int getMqttPort() {
         return core.getMqttPort();
     }
