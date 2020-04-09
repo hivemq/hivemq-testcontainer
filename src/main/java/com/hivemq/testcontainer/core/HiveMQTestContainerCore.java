@@ -165,6 +165,14 @@ public class HiveMQTestContainerCore extends FixedHostPortGenericContainer<HiveM
                         hiveMQExtension.getStartPriority()),
                 Charset.defaultCharset());
 
+        if (hiveMQExtension.isDisabledOnStartup()) {
+            final File disabled = new File(extensionDir, "DISABLED");
+            final boolean newFile = disabled.createNewFile();
+            if (!newFile) {
+                logger.warn("Could not create DISABLED file {} on host machine", disabled.getAbsolutePath());
+            }
+        }
+
         final JavaArchive javaArchive =
                 ShrinkWrap.create(JavaArchive.class)
                         .addAsServiceProviderAndClasses(ExtensionMain.class, hiveMQExtension.getMainClass());
@@ -297,29 +305,18 @@ public class HiveMQTestContainerCore extends FixedHostPortGenericContainer<HiveM
      */
     @Override
     public @NotNull HiveMQTestContainer disableExtension(
-            final @NotNull String id,
-            final @NotNull String name,
+            final @NotNull HiveMQExtension hiveMQExtension,
             final @NotNull Duration timeout) {
 
-        final File tempDir = Files.createTempDir();
-        final File disabled = new File(tempDir, "DISABLED");
+        final String regEX = "(.*)Extension \"" + hiveMQExtension.getName() + "\" version (.*) stopped successfully(.*)";
         try {
-            //noinspection ResultOfMethodCallIgnored
-            disabled.createNewFile();
-        } catch (final IOException e) {
-            logger.warn("Unable to create DISABLED file on host machine.", e);
-            return this;
-        }
-        final String regEX = "(.*)Extension \"" + name + "\" version (.*) stopped successfully(.*)";
-        try {
-            final MountableFile mountableFile = MountableFile.forHostPath(disabled.getAbsolutePath());
-            final String containerPath = "/opt/hivemq/extensions" + PathUtil.preparePath(id) + disabled.getName();
+            final String containerPath = "/opt/hivemq/extensions" + PathUtil.preparePath(hiveMQExtension.getId()) + "DISABLED";
 
             final CountDownLatch latch = new CountDownLatch(1);
             containerOutputLatches.put(regEX, latch);
 
-            this.copyFileToContainer(mountableFile, containerPath);
-            logger.info("Putting file {} into container path {}", disabled.getAbsolutePath(), containerPath);
+            execInContainer("touch", containerPath);
+            logger.info("Putting DISABLED file into container path {}", containerPath);
 
             final boolean await = latch.await(timeout.getSeconds(), TimeUnit.SECONDS);
             if (!await) {
@@ -327,8 +324,7 @@ public class HiveMQTestContainerCore extends FixedHostPortGenericContainer<HiveM
                         "Maybe you are using a HiveMQ Community Edition image, " +
                         "which does not support disabling of extensions", timeout.getSeconds());
             }
-
-        } catch (final InterruptedException e) {
+        } catch (final InterruptedException | IOException e) {
             e.printStackTrace();
         } finally {
             containerOutputLatches.remove(regEX);
@@ -337,9 +333,47 @@ public class HiveMQTestContainerCore extends FixedHostPortGenericContainer<HiveM
     }
 
     @Override
-    public @NotNull HiveMQTestContainer disableExtension(final @NotNull String id, final @NotNull String name) {
-        return disableExtension(id, name, Duration.ofSeconds(60));
+    public @NotNull HiveMQTestContainer disableExtension(final @NotNull HiveMQExtension hiveMQExtension) {
+        return disableExtension(hiveMQExtension, Duration.ofSeconds(60));
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull HiveMQTestContainer enableExtension(
+            final @NotNull HiveMQExtension hiveMQExtension,
+            final @NotNull Duration timeout) {
+
+        final String regEX = "(.*)Extension \"" + hiveMQExtension.getName() + "\" version (.*) started successfully(.*)";
+        try {
+            final String containerPath = "/opt/hivemq/extensions" + PathUtil.preparePath(hiveMQExtension.getId()) + "DISABLED";
+
+            final CountDownLatch latch = new CountDownLatch(1);
+            containerOutputLatches.put(regEX, latch);
+
+            execInContainer("rm", "-rf", containerPath);
+            logger.info("Removing DISABLED file in container path {}", containerPath);
+
+            final boolean await = latch.await(timeout.getSeconds(), TimeUnit.SECONDS);
+            if (!await) {
+                logger.warn("Extension enabling timed out after {} seconds. " +
+                        "Maybe you are using a HiveMQ Community Edition image, " +
+                        "which does not support disabling of extensions", timeout.getSeconds());
+            }
+        } catch (final InterruptedException | IOException e) {
+            e.printStackTrace();
+        } finally {
+            containerOutputLatches.remove(regEX);
+        }
+        return this;
+    }
+
+    @Override
+    public @NotNull HiveMQTestContainer enableExtension(final @NotNull HiveMQExtension hiveMQExtension) {
+        return enableExtension(hiveMQExtension, Duration.ofSeconds(60));
+    }
+
 
     @Override
     public @NotNull HiveMQTestContainer silent(final boolean silent) {
