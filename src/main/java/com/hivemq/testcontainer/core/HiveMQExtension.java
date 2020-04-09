@@ -13,6 +13,7 @@ public class HiveMQExtension {
     private final int priority;
     private final int startPriority;
     private final boolean sign;
+    private boolean disabledOnStartup;
     private final @NotNull Class<? extends ExtensionMain> mainClass;
     private final @NotNull ImmutableList<Class<?>> additionalClasses;
 
@@ -23,6 +24,7 @@ public class HiveMQExtension {
             final int priority,
             final int startPriority,
             final boolean sign,
+            final boolean disabledOnStartup,
             final @NotNull Class<? extends ExtensionMain> mainClass,
             final @NotNull ImmutableList<Class<?>> additionalClasses) {
 
@@ -32,6 +34,7 @@ public class HiveMQExtension {
         this.priority = priority;
         this.startPriority = startPriority;
         this.sign = sign;
+        this.disabledOnStartup = disabledOnStartup;
         this.mainClass = mainClass;
         this.additionalClasses = additionalClasses;
     }
@@ -65,6 +68,10 @@ public class HiveMQExtension {
         return sign;
     }
 
+    public boolean isDisabledOnStartup() {
+        return disabledOnStartup;
+    }
+
     public @NotNull Class<? extends ExtensionMain> getMainClass() {
         return mainClass;
     }
@@ -84,6 +91,7 @@ public class HiveMQExtension {
         private int priority = 0;
         private int startPriority = 0;
         private boolean sign = false;
+        private boolean disabledOnStartup = false;
         private @Nullable Class<? extends ExtensionMain> mainClass;
         private @NotNull ImmutableList.Builder<Class<?>> additionalClassesBuilder = ImmutableList.builder();
 
@@ -107,6 +115,7 @@ public class HiveMQExtension {
                     priority,
                     startPriority,
                     sign,
+                    disabledOnStartup,
                     mainClass,
                     additionalClassesBuilder.build()
             );
@@ -134,6 +143,11 @@ public class HiveMQExtension {
 
         public @NotNull Builder startPriority(final int startPriority) {
             this.startPriority = startPriority;
+            return this;
+        }
+
+        public @NotNull Builder disabledOnStartup(final boolean disabledOnStartup) {
+            this.disabledOnStartup = disabledOnStartup;
             return this;
         }
 
