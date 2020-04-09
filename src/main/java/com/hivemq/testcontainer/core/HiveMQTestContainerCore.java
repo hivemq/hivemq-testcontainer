@@ -49,6 +49,7 @@ public class HiveMQTestContainerCore extends FixedHostPortGenericContainer<HiveM
     public static final int CONTROL_CENTER_PORT = 8080;
 
     private final @NotNull ConcurrentHashMap<String, CountDownLatch> containerOutputLatches = new ConcurrentHashMap<>();
+    private volatile boolean silent = false;
 
     public HiveMQTestContainerCore() {
         this(DEFAULT_HIVEMQ_IMAGE, DEFAULT_HIVEMQ_TAG);
@@ -61,7 +62,11 @@ public class HiveMQTestContainerCore extends FixedHostPortGenericContainer<HiveM
         final MqttWaitStrategy mqttWaitStrategy = new MqttWaitStrategy();
         waitingFor(mqttWaitStrategy);
 
-        withLogConsumer(outputFrame -> System.out.print(outputFrame.getUtf8String()));
+        withLogConsumer(outputFrame -> {
+            if (!silent) {
+                System.out.print(outputFrame.getUtf8String());
+            }
+        });
         withLogConsumer((outputFrame) -> {
             if (!containerOutputLatches.isEmpty()) {
                 containerOutputLatches.forEach((regEx, latch) -> {
@@ -334,6 +339,12 @@ public class HiveMQTestContainerCore extends FixedHostPortGenericContainer<HiveM
     @Override
     public @NotNull HiveMQTestContainer disableExtension(final @NotNull String id, final @NotNull String name) {
         return disableExtension(id, name, Duration.ofSeconds(60));
+    }
+
+    @Override
+    public @NotNull HiveMQTestContainer silent(final boolean silent) {
+        this.silent = silent;
+        return this;
     }
 
     /**

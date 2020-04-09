@@ -190,6 +190,13 @@ public interface HiveMQTestContainer {
     @NotNull HiveMQTestContainer withControlCenter();
 
     /**
+     * Controls whether the stdout of the container is printed to System.out.
+     *
+     * @param silent whether the container is silent.
+     */
+    @NotNull HiveMQTestContainer silent(final boolean silent);
+
+    /**
      * Get the mapped port for the MQTT port of the container.
      * <p>
      * Must be called after the container is started.

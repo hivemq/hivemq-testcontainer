@@ -4,6 +4,7 @@ import com.hivemq.extension.sdk.api.annotations.NotNull;
 import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.core.HiveMQTestContainer;
 import com.hivemq.testcontainer.core.HiveMQTestContainerCore;
+import com.hivemq.testcontainer.junit4.HiveMQTestContainerRule;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -188,6 +189,15 @@ public class HiveMQTestContainerExtension implements HiveMQTestContainer, Before
     @Override
     public @NotNull HiveMQTestContainerExtension disableExtension(final @NotNull String id, final @NotNull String name) {
         core.disableExtension(id, name);
+        return this;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public @NotNull HiveMQTestContainerExtension silent(final boolean silent) {
+        core.silent(silent);
         return this;
     }
 
