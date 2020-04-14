@@ -405,7 +405,7 @@ You can debug extensions that are directly loaded from your code.
             .withLicense(new File("src/test/resources/myLicense.lic"))
             .withLicense(new File("src/test/resources/myExtensionLicense.elic"));
 
-### configure Docker resources
+### Configure Docker resources
 
 #### JUnit 4
     
