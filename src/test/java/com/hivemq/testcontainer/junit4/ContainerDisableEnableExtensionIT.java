@@ -1,6 +1,5 @@
 package com.hivemq.testcontainer.junit4;
 
-import com.github.dockerjava.api.model.HostConfig;
 import com.hivemq.extension.sdk.api.annotations.NotNull;
 import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.util.MyExtension;
@@ -24,12 +23,7 @@ public class ContainerDisableEnableExtensionIT {
     @Rule
     public final @NotNull HiveMQTestContainerRule rule =
             new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
-                    .withExtension(hiveMQExtension)
-            .withCreateContainerCmdModifier(createContainerCmd -> {
-                final HostConfig hostConfig = HostConfig.newHostConfig();
-                hostConfig.withCpuCount(2L);
-                hostConfig.withMemory(2 * 1024 * 1024L);
-            });
+                    .withExtension(hiveMQExtension);
 
     @Test(timeout = 500_000)
     public void test_disable_enable_extension() throws ExecutionException, InterruptedException {
