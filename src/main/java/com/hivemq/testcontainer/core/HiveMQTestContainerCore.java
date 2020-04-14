@@ -29,7 +29,8 @@ import java.util.concurrent.TimeUnit;
  * @author Yannick Weber
  */
 @SuppressWarnings("UnusedReturnValue")
-public class HiveMQTestContainerCore extends FixedHostPortGenericContainer<HiveMQTestContainerCore> implements HiveMQTestContainer {
+public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
+        extends FixedHostPortGenericContainer<SELF> {
 
     private final static @NotNull Logger logger = LoggerFactory.getLogger(HiveMQTestContainerCore.class);
 
@@ -82,39 +83,54 @@ public class HiveMQTestContainerCore extends FixedHostPortGenericContainer<HiveM
     }
 
     /**
-     * {@inheritDoc}
+     * Enables the possibility for remote debugging clients to connect.
+     * <p>
+     * Must be called before the container is started.
+     *
+     * @param debuggingPortHost the host port for debugging clients to connect
+     * @return self
      */
-    @Override
-    public @NotNull HiveMQTestContainerCore withDebugging(final int debuggingPortHost) {
+    public @NotNull SELF withDebugging(final int debuggingPortHost) {
         withExposedPorts(DEBUGGING_PORT);
         withFixedExposedPort(debuggingPortHost, DEBUGGING_PORT);
         withEnv("JAVA_OPTS", "-agentlib:jdwp=transport=dt_socket,address=0.0.0.0:" + DEBUGGING_PORT + ",server=y,suspend=n");
-        return this;
+        return self();
     }
 
     /**
-     * {@inheritDoc}
+     * Enables the possibility for remote debugging clients to connect on host port 9000.
+     * <p>
+     * Must be called before the container is started.
+     *
+     * @return self
      */
-    @Override
-    public @NotNull HiveMQTestContainerCore withDebugging() {
+    public @NotNull SELF withDebugging() {
         withDebugging(DEBUGGING_PORT);
-        return this;
+        return self();
     }
 
     /**
-     * {@inheritDoc}
+     * Sets the logging {@link Level} inside the container.
+     * <p>
+     * Must be called before the container is started.
+     *
+     * @param level the {@link Level}
      */
-    @Override
-    public @NotNull HiveMQTestContainerCore withLogLevel(final @NotNull Level level) {
+    public @NotNull SELF withLogLevel(final @NotNull Level level) {
         this.withEnv("HIVEMQ_LOG_LEVEL", level.name());
-        return this;
+        return self();
     }
 
     /**
-     * {@inheritDoc}
+     * Wraps the given class and all its subclasses into an extension
+     * and puts it into '/opt/hivemq/extensions/{extension-id}' inside the container.
+     * <p>
+     * Must be called before the container is started.
+     *
+     * @param hiveMQExtension the {@link HiveMQExtension} of the extension
+     * @return self
      */
-    @Override
-    public @NotNull HiveMQTestContainerCore withExtension(final @NotNull HiveMQExtension hiveMQExtension) {
+    public @NotNull SELF withExtension(final @NotNull HiveMQExtension hiveMQExtension) {
         try {
             final File extension = createExtension(hiveMQExtension);
             final MountableFile mountableExtension = MountableFile.forHostPath(extension.getPath());
@@ -122,21 +138,26 @@ public class HiveMQTestContainerCore extends FixedHostPortGenericContainer<HiveM
         } catch (final Exception e) {
             e.printStackTrace();
         }
-        return this;
+        return self();
     }
 
     /**
-     * {@inheritDoc}
+     * Puts the given extension folder into '/opt/hivemq/extensions/{extension-id}' inside the container.
+     * It must at least contain a valid hivemq-extension.xml and a valid extension.jar in order to be executed.
+     * <p>
+     * Must be called before the container is started.
+     *
+     * @param extensionDir the extension folder on the host machine
+     * @return self
      */
-    @Override
-    public @NotNull HiveMQTestContainerCore withExtension(final @NotNull File extensionDir) {
+    public @NotNull SELF withExtension(final @NotNull File extensionDir) {
         if (!extensionDir.exists()) {
             logger.warn("Extension {} could not be mounted. It does not exist", extensionDir.getAbsolutePath());
-            return this;
+            return self();
         }
         if (!extensionDir.isDirectory()) {
             logger.warn("Extension {} could not be mounted. It is not a directory.", extensionDir.getAbsolutePath());
-            return this;
+            return self();
         }
         try {
             final MountableFile mountableExtension = MountableFile.forHostPath(extensionDir.getPath());
@@ -146,7 +167,7 @@ public class HiveMQTestContainerCore extends FixedHostPortGenericContainer<HiveM
         } catch (final Exception e) {
             e.printStackTrace();
         }
-        return this;
+        return self();
     }
 
     private @NotNull File createExtension(final @NotNull HiveMQExtension hiveMQExtension)
@@ -213,46 +234,61 @@ public class HiveMQTestContainerCore extends FixedHostPortGenericContainer<HiveM
     }
 
     /**
-     * {@inheritDoc}
+     * Puts the given license into '/opt/hivemq/license/' inside the container.
+     * It must end with '.lic' or '.elic'.
+     * <p>
+     * Must be called before the container is started.
+     *
+     * @param license the license file on the host machine
+     * @return self
      */
-    @Override
-    public @NotNull HiveMQTestContainerCore withLicense(final @NotNull File license) {
+    public @NotNull SELF withLicense(final @NotNull File license) {
         if (!license.exists()) {
             logger.warn("License file {} does not exist.", license.getAbsolutePath());
-            return this;
+            return self();
         }
         if (!license.getName().endsWith(".lic") && !license.getName().endsWith(".elic")) {
             logger.warn("License file {} does not end wit '.lic' or '.elic'", license.getAbsolutePath());
-            return this;
+            return self();
         }
         final MountableFile mountableFile = MountableFile.forHostPath(license.getAbsolutePath());
         final String containerPath = "/opt/hivemq/license/" + license.getName();
         withCopyFileToContainer(mountableFile, containerPath);
         logger.info("Putting license {} into {}", license.getAbsolutePath(), containerPath);
-        return this;
+        return self();
     }
 
     /**
-     * {@inheritDoc}
+     * Overwrites the HiveMQ configuration in '/opt/hivemq/conf/' inside the container.
+     * <p>
+     * Must be called before the container is started.
+     *
+     * @param config the config file on the host machine
+     * @return self
      */
-    @Override
-    public @NotNull HiveMQTestContainerCore withHiveMQConfig(final @NotNull File config) {
+    public @NotNull SELF withHiveMQConfig(final @NotNull File config) {
         if (!config.exists()) {
             logger.warn("HiveMQ config file {} does not exist.", config.getAbsolutePath());
-            return this;
+            return self();
         }
         final MountableFile mountableFile = MountableFile.forHostPath(config.getAbsolutePath());
         final String containerPath = "/opt/hivemq/conf/config.xml";
         withCopyFileToContainer(mountableFile, containerPath);
         logger.info("Putting {} into {}", config.getAbsolutePath(), containerPath);
-        return this;
+        return self();
     }
 
     /**
-     * {@inheritDoc}
+     * Puts the given file into the root of the extension's home '/opt/hivemq/extensions/{@param extensionId}/'.
+     * Note: the extension must be loaded before the file is put.
+     * <p>
+     * Must be called before the container is started.
+     *
+     * @param file        the file on the host machine
+     * @param extensionId the extension
+     * @return self
      */
-    @Override
-    public @NotNull HiveMQTestContainerCore withFileInExtensionHomeFolder(
+    public @NotNull SELF withFileInExtensionHomeFolder(
             final @NotNull File file,
             final @NotNull String extensionId) {
 
@@ -260,10 +296,17 @@ public class HiveMQTestContainerCore extends FixedHostPortGenericContainer<HiveM
     }
 
     /**
-     * {@inheritDoc}
+     * Puts the given file into given subdirectory of the extensions's home '/opt/hivemq/extensions/{@param id}/{@param pathInExtensionHome}/'
+     * Note: the extension must be loaded before the file is put.
+     * <p>
+     * Must be called before the container is started.
+     *
+     * @param file                the file on the host machine
+     * @param extensionId         the extension
+     * @param pathInExtensionHome the path
+     * @return self
      */
-    @Override
-    public @NotNull HiveMQTestContainerCore withFileInExtensionHomeFolder(
+    public @NotNull SELF withFileInExtensionHomeFolder(
             final @NotNull File file,
             final @NotNull String extensionId,
             final @NotNull String pathInExtensionHome) {
@@ -272,39 +315,54 @@ public class HiveMQTestContainerCore extends FixedHostPortGenericContainer<HiveM
     }
 
     /**
-     * {@inheritDoc}
+     * Puts the given file into the root of the HiveMQ home folder '/opt/hivemq/'.
+     * <p>
+     * Must be called before the container is started.
+     *
+     * @param file the file on the host machine
+     * @return self
      */
-    @Override
-    public @NotNull HiveMQTestContainerCore withFileInHomeFolder(
-            final @NotNull File file) {
-
+    public @NotNull SELF withFileInHomeFolder(final @NotNull File file) {
         return withFileInHomeFolder(file, "");
     }
 
     /**
-     * {@inheritDoc}
+     * Puts the given file into the given subdirectory of the HiveMQ home folder '/opt/hivemq/{@param pathInHomeFolder}'.
+     * <p>
+     * Must be called before the container is started.
+     *
+     * @param file             the file on the host machine
+     * @param pathInHomeFolder the path
+     * @return self
      */
-    @Override
-    public @NotNull HiveMQTestContainerCore withFileInHomeFolder(
+    public @NotNull SELF withFileInHomeFolder(
             final @NotNull File file,
             final @NotNull String pathInHomeFolder) {
 
         if (!file.exists()) {
             logger.warn("File {} does not exist.", file.getAbsolutePath());
-            return this;
+            return self();
         }
         final MountableFile mountableFile = MountableFile.forHostPath(file.getAbsolutePath());
         final String containerPath = "/opt/hivemq" + PathUtil.preparePath(pathInHomeFolder) + file.getName();
         withCopyFileToContainer(mountableFile, containerPath);
         logger.info("Putting file {} into container path {}", file.getAbsolutePath(), containerPath);
-        return this;
+        return self();
     }
 
     /**
-     * {@inheritDoc}
+     /**
+     * Disables the extension.
+     * This method blocks until the HiveMQ log for successful disabling is consumed or it times out after {@param timeOut}.
+     * Note: Disabling Extensions is a HiveMQ Enterprise feature, it will not work when using HiveMQ Community Edition.
+     * <p>
+     * This can only be called once the container is started.
+     *
+     * @param hiveMQExtension the extension
+     * @param timeout the timeout
+     * @return self
      */
-    @Override
-    public @NotNull HiveMQTestContainer disableExtension(
+    public @NotNull SELF disableExtension(
             final @NotNull HiveMQExtension hiveMQExtension,
             final @NotNull Duration timeout) {
 
@@ -329,19 +387,35 @@ public class HiveMQTestContainerCore extends FixedHostPortGenericContainer<HiveM
         } finally {
             containerOutputLatches.remove(regEX);
         }
-        return this;
+        return self();
     }
 
-    @Override
-    public @NotNull HiveMQTestContainer disableExtension(final @NotNull HiveMQExtension hiveMQExtension) {
+    /**
+     * Disables the extension with the corresponding {@param id}.
+     * This method blocks until the HiveMQ log for successful disabling is consumed or it times out after 60 seconds.
+     * Note: Disabling Extensions is a HiveMQ Enterprise feature, it will not work when using HiveMQ Community Edition.
+     * <p>
+     * This can only be called once the container is started.
+     *
+     * @param hiveMQExtension the extension
+     * @return self
+     */
+    public @NotNull SELF disableExtension(final @NotNull HiveMQExtension hiveMQExtension) {
         return disableExtension(hiveMQExtension, Duration.ofSeconds(60));
     }
 
     /**
-     * {@inheritDoc}
+     * Enables the extension.
+     * This method blocks until the HiveMQ log for successful enabling is consumed or it times out after {@param timeOut}.
+     * Note: Enabling Extensions is a HiveMQ Enterprise feature, it will not work when using HiveMQ Community Edition.
+     *
+     * This can only be called once the container is started.
+     *
+     * @param hiveMQExtension the extension
+     * @param timeout the timeout
+     * @return self
      */
-    @Override
-    public @NotNull HiveMQTestContainer enableExtension(
+    public @NotNull SELF enableExtension(
             final @NotNull HiveMQExtension hiveMQExtension,
             final @NotNull Duration timeout) {
 
@@ -366,43 +440,67 @@ public class HiveMQTestContainerCore extends FixedHostPortGenericContainer<HiveM
         } finally {
             containerOutputLatches.remove(regEX);
         }
-        return this;
-    }
-
-    @Override
-    public @NotNull HiveMQTestContainer enableExtension(final @NotNull HiveMQExtension hiveMQExtension) {
-        return enableExtension(hiveMQExtension, Duration.ofSeconds(60));
-    }
-
-
-    @Override
-    public @NotNull HiveMQTestContainer silent(final boolean silent) {
-        this.silent = silent;
-        return this;
+        return self();
     }
 
     /**
-     * {@inheritDoc}
+     * Enables the extension.
+     * This method blocks until the HiveMQ log for successful enabling is consumed or it times out after {@param timeOut}.
+     * Note: Enabling Extensions is a HiveMQ Enterprise feature, it will not work when using HiveMQ Community Edition.
+     *
+     * This can only be called once the container is started.
+     *
+     * @param hiveMQExtension the extension
+     * @return self
      */
-    @Override
-    public @NotNull HiveMQTestContainer withControlCenter() {
+    public @NotNull SELF enableExtension(final @NotNull HiveMQExtension hiveMQExtension) {
+        return enableExtension(hiveMQExtension, Duration.ofSeconds(60));
+    }
+    
+    /**
+     * Determines whether the stdout of the container is printed to System.out.
+     *
+     * @param silent whether the container is silent.
+     */
+    public @NotNull SELF silent(final boolean silent) {
+        this.silent = silent;
+        return self();
+    }
+
+    /**
+     * Enables connection to the HiveMQ Control Center on host port 8080.
+     * Note: the control center is a HiveMQ 4 Enterprise feature.
+     * <p>
+     * Must be called before the container is started.
+     *
+     * @return self
+     */
+    public @NotNull SELF withControlCenter() {
         return withControlCenter(CONTROL_CENTER_PORT);
     }
 
     /**
-     * {@inheritDoc}
+     * Enables connection to the HiveMQ Control Center on host port {@param controlCenterPort}.
+     * Note: the control center is a HiveMQ 4 Enterprise feature.
+     * <p>
+     * Must be called before the container is started.
+     *
+     * @param controlCenterPort the host post
+     * @return self
      */
-    @Override
-    public @NotNull HiveMQTestContainer withControlCenter(final int controlCenterPort) {
+    public @NotNull SELF withControlCenter(final int controlCenterPort) {
         withExposedPorts(CONTROL_CENTER_PORT);
         withFixedExposedPort(controlCenterPort, CONTROL_CENTER_PORT);
-        return this;
+        return self();
     }
 
     /**
-     * {@inheritDoc}
+     * Get the mapped port for the MQTT port of the container.
+     * <p>
+     * Must be called after the container is started.
+     *
+     * @return the port on the host machine for mqtt clients to connect
      */
-    @Override
     public int getMqttPort() {
         return this.getMappedPort(MQTT_PORT);
     }

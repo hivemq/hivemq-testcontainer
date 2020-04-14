@@ -27,6 +27,8 @@ This enables testing MQTT client applications and integration testing of custom 
     - [put files into hivemq home](#put-a-file-into-hivemq-home)
     - [put files into extension home](#put-files-into-extension-home)
     - [put license files into the license folder](#put-license-files-into-the-container)
+- [configure docker resources](#configure-docker-resources)
+- [customizing the container](#customize-the-container-further)
     
 ## Add to your project
 
@@ -402,3 +404,33 @@ You can debug extensions that are directly loaded from your code.
         new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
             .withLicense(new File("src/test/resources/myLicense.lic"))
             .withLicense(new File("src/test/resources/myExtensionLicense.elic"));
+
+### configure Docker resources
+
+#### JUnit 4
+    
+    @RegisterRule
+    public final @NotNull HiveMQTestContainerRule rule =
+        new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
+            .withCreateContainerCmdModifier(createContainerCmd -> {
+                final HostConfig hostConfig = HostConfig.newHostConfig();
+                hostConfig.withCpuCount(2L);
+                hostConfig.withMemory(2 * 1024 * 1024L);
+            });
+    
+#### JUnit 5
+
+    @RegisterExtension
+    public final @NotNull HiveMQTestContainerExtension extension =
+        new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
+            .withCreateContainerCmdModifier(createContainerCmd -> {
+                final HostConfig hostConfig = HostConfig.newHostConfig();
+                hostConfig.withCpuCount(2L);
+                hostConfig.withMemory(2 * 1024 * 1024L);
+            });
+            
+### Customize the Container further
+
+Since the JUnit 4 `HiveMQContainerRule` and the JUnit 5 `HiveMQContainerExtension` directly inherit all
+methods from the [Testcontainer's](https://github.com/testcontainers) `GenericContainer` the container
+can be customized as desired.
