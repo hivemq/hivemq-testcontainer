@@ -1,241 +1,32 @@
 package com.hivemq.testcontainer.junit5;
 
 import com.hivemq.extension.sdk.api.annotations.NotNull;
-import com.hivemq.testcontainer.core.HiveMQExtension;
-import com.hivemq.testcontainer.core.HiveMQTestContainer;
 import com.hivemq.testcontainer.core.HiveMQTestContainerCore;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
-import org.slf4j.event.Level;
-
-import java.io.File;
-import java.time.Duration;
 
 /**
  * @author Yannick Weber
  */
-public class HiveMQTestContainerExtension implements HiveMQTestContainer, BeforeEachCallback, AfterEachCallback {
-
-    private final @NotNull HiveMQTestContainerCore core;
-
-    public HiveMQTestContainerExtension(
-            final @NotNull String image,
-            final @NotNull String tag) {
-
-        core = new HiveMQTestContainerCore(image, tag);
-    }
+public class HiveMQTestContainerExtension extends HiveMQTestContainerCore<HiveMQTestContainerExtension> implements BeforeEachCallback, AfterEachCallback {
 
     public HiveMQTestContainerExtension() {
-        core = new HiveMQTestContainerCore();
+        super();
     }
 
-    @Override
-    public void afterEach(final @NotNull ExtensionContext context) {
-        core.stop();
+    public HiveMQTestContainerExtension(final @NotNull String image, final @NotNull String tag) {
+        super(image, tag);
     }
 
     @Override
     public void beforeEach(final @NotNull ExtensionContext context) {
-        core.start();
+        start();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public @NotNull HiveMQTestContainerExtension withExtension(final @NotNull HiveMQExtension hiveMQExtension) {
-        core.withExtension(hiveMQExtension);
-        return this;
+    public void afterEach(final @NotNull ExtensionContext context) {
+        stop();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public @NotNull HiveMQTestContainerExtension withExtension(final @NotNull File extensionDirectory) {
-        core.withExtension(extensionDirectory);
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public @NotNull HiveMQTestContainerExtension withLogLevel(final @NotNull Level logLevel) {
-        core.withLogLevel(logLevel);
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public @NotNull HiveMQTestContainerExtension withDebugging(final int debuggingPortHost) {
-        core.withDebugging(debuggingPortHost);
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public @NotNull HiveMQTestContainerExtension withDebugging() {
-        core.withDebugging();
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public @NotNull HiveMQTestContainerExtension withLicense(final @NotNull File licence) {
-        core.withLicense(licence);
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public @NotNull HiveMQTestContainerExtension withHiveMQConfig(final @NotNull File config) {
-        core.withHiveMQConfig(config);
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public @NotNull HiveMQTestContainerExtension withFileInExtensionHomeFolder(
-            final @NotNull File file,
-            final @NotNull String extensionId,
-            final @NotNull String pathInExtensionHome) {
-
-        core.withFileInExtensionHomeFolder(file, extensionId, pathInExtensionHome);
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public @NotNull HiveMQTestContainerExtension withFileInExtensionHomeFolder(
-            final @NotNull File file,
-            final @NotNull String extensionId) {
-
-        core.withFileInExtensionHomeFolder(file, extensionId);
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public @NotNull HiveMQTestContainerExtension withFileInHomeFolder(
-            final @NotNull File file,
-            final @NotNull String pathInExtensionHome) {
-
-        core.withFileInHomeFolder(file, pathInExtensionHome);
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public @NotNull HiveMQTestContainerExtension withFileInHomeFolder(
-            final @NotNull File file) {
-
-        core.withFileInHomeFolder(file);
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public @NotNull HiveMQTestContainerExtension disableExtension(
-            final @NotNull HiveMQExtension hiveMQExtension,
-            final @NotNull Duration timeOut) {
-
-        core.disableExtension(hiveMQExtension, timeOut);
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public @NotNull HiveMQTestContainerExtension disableExtension(final @NotNull HiveMQExtension hiveMQExtension) {
-        core.disableExtension(hiveMQExtension);
-        return this;
-    }
-
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public @NotNull HiveMQTestContainerExtension enableExtension(
-            final @NotNull HiveMQExtension hiveMQExtension,
-            final @NotNull Duration timeOut) {
-
-        core.enableExtension(hiveMQExtension, timeOut);
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public @NotNull HiveMQTestContainerExtension enableExtension(final @NotNull HiveMQExtension hiveMQExtension) {
-        core.enableExtension(hiveMQExtension);
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public @NotNull HiveMQTestContainerExtension withControlCenter(final int controlCenterPort) {
-        core.withControlCenter(controlCenterPort);
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public @NotNull HiveMQTestContainerExtension withControlCenter() {
-        core.withControlCenter();
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public @NotNull HiveMQTestContainerExtension silent(final boolean silent) {
-        core.silent(silent);
-        return this;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public int getMqttPort() {
-        return core.getMqttPort();
-    }
-
-    /**
-     * Returns the underlying {@link HiveMQTestContainerCore}.
-     * This is useful for extending the behaviour of the container.
-     *
-     * @return the HiveMQTestContainerCore
-     */
-    public @NotNull HiveMQTestContainerCore getCore() {
-        return core;
-    }
 }
