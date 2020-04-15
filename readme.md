@@ -1,6 +1,6 @@
 # HiveMQ Test Container
 
-![image](readme/logo.png)
+![image](https://www.hivemq.com/img/logo-hivemq-testcontainer.png)
 
 [![Build Status](https://travis-ci.com/hivemq/hivemq-testcontainer.svg?token=PkzYtWZuTHcNUHFtmC24&branch=master)](https://travis-ci.org/hivemq/hivemq-testcontainer)
 
@@ -34,8 +34,7 @@ This enables testing MQTT client applications and integration testing of custom 
 
 Acquire your GitHub [ACCESS_TOKEN](https://help.github.com/en/packages/publishing-and-managing-packages/about-github-packages#about-tokens) and add it to your `~/.m2/settings.xml`:
 
-    <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-    <settings>
+    <settings> 
         <servers>
             <server>
                 <id>github</id>
@@ -60,13 +59,13 @@ add these dependencies to your `pom.xml`:
 
     <dependency>
         <groupId>com.hivemq</groupId>
-        <artifactId>hivemq-hivemq-extension-sdk</artifactId>
+        <artifactId>hivemq-extension-sdk</artifactId>
         <version>4.3.0</version>
     </dependency>
     <dependency>
         <groupId>com.hivemq</groupId>
         <artifactId>hivemq-testcontainer-junit4</artifactId>
-        <version>0.2</version>
+        <version>1.0</version>
         <scope>test</scope>
     </dependency>
     <dependency>
@@ -89,7 +88,7 @@ add these dependencies to your `pom.xml`:
     <dependency>
         <groupId>com.hivemq</groupId>
         <artifactId>testcontainer-junit5</artifactId>
-        <version>0.2</version>
+        <version>1.0</version>
         <scope>test</scope>
     </dependency>
     <dependency>
@@ -327,7 +326,7 @@ You can debug extensions that are directly loaded from your code.
 
 - create a Debug Client run configuration (make sure that the port matches with the code):
 
-![image](readme/DEBUGCLIENT.png)
+![image](https://www.hivemq.com/img/DEBUGCLIENT.png)
 
 - run the JUnit test that starts your container
 
