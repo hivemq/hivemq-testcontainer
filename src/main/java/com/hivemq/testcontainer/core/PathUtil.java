@@ -2,9 +2,9 @@ package com.hivemq.testcontainer.core;
 
 import com.hivemq.extension.sdk.api.annotations.NotNull;
 
-public class PathUtil {
+class PathUtil {
 
-    public static @NotNull String preparePath(@NotNull String pathInExtensionHome) {
+    static @NotNull String preparePath(@NotNull String pathInExtensionHome) {
         if ("/".equals(pathInExtensionHome) || pathInExtensionHome.isEmpty()) {
             return "/";
         }
