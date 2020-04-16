@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" ?>
 <!--
 
     Copyright 2020 HiveMQ and the HiveMQ Community
@@ -15,20 +16,10 @@
     limitations under the License.
 
 -->
-<configuration scan="false">
-
-    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%-30(%d %level)- %msg%n%ex</pattern>
-        </encoder>
-    </appender>
-
-    <root>
-        <appender-ref ref="CONSOLE"/>
-    </root>
-
-    <root level="INFO">
-        <appender-ref ref="CONSOLE"/>
-    </root>
-
-</configuration>
+<hivemq-extension>
+    <id>modifier-extension</id>
+    <version>1.0-SNAPSHOT</version>
+    <name>Modifier Extension</name>
+    <author>dc-square GmbH</author>
+    <priority>1000</priority>
+</hivemq-extension>

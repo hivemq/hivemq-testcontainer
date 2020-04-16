@@ -294,7 +294,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     }
 
     /**
-     * Puts the given file into the root of the extension's home '/opt/hivemq/extensions/{@param extensionId}/'.
+     * Puts the given file into the root of the extension's home '/opt/hivemq/extensions/{extensionId}/'.
      * Note: the extension must be loaded before the file is put.
      * <p>
      * Must be called before the container is started.
@@ -311,7 +311,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     }
 
     /**
-     * Puts the given file into given subdirectory of the extensions's home '/opt/hivemq/extensions/{@param id}/{@param pathInExtensionHome}/'
+     * Puts the given file into given subdirectory of the extensions's home '/opt/hivemq/extensions/{id}/{pathInExtensionHome}/'
      * Note: the extension must be loaded before the file is put.
      * <p>
      * Must be called before the container is started.
@@ -342,7 +342,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     }
 
     /**
-     * Puts the given file into the given subdirectory of the HiveMQ home folder '/opt/hivemq/{@param pathInHomeFolder}'.
+     * Puts the given file into the given subdirectory of the HiveMQ home folder '/opt/hivemq/{pathInHomeFolder}'.
      * <p>
      * Must be called before the container is started.
      *
@@ -368,7 +368,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     /**
      /**
      * Disables the extension.
-     * This method blocks until the HiveMQ log for successful disabling is consumed or it times out after {@param timeOut}.
+     * This method blocks until the HiveMQ log for successful disabling is consumed or it times out after {timeOut}.
      * Note: Disabling Extensions is a HiveMQ Enterprise feature, it will not work when using HiveMQ Community Edition.
      * <p>
      * This can only be called once the container is started.
@@ -406,7 +406,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     }
 
     /**
-     * Disables the extension with the corresponding {@param id}.
+     * Disables the extension with the corresponding {id}.
      * This method blocks until the HiveMQ log for successful disabling is consumed or it times out after 60 seconds.
      * Note: Disabling Extensions is a HiveMQ Enterprise feature, it will not work when using HiveMQ Community Edition.
      * <p>
@@ -421,7 +421,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
 
     /**
      * Enables the extension.
-     * This method blocks until the HiveMQ log for successful enabling is consumed or it times out after {@param timeOut}.
+     * This method blocks until the HiveMQ log for successful enabling is consumed or it times out after {timeOut}.
      * Note: Enabling Extensions is a HiveMQ Enterprise feature, it will not work when using HiveMQ Community Edition.
      *
      * This can only be called once the container is started.
@@ -460,7 +460,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
 
     /**
      * Enables the extension.
-     * This method blocks until the HiveMQ log for successful enabling is consumed or it times out after {@param timeOut}.
+     * This method blocks until the HiveMQ log for successful enabling is consumed or it times out after {timeOut}.
      * Note: Enabling Extensions is a HiveMQ Enterprise feature, it will not work when using HiveMQ Community Edition.
      *
      * This can only be called once the container is started.
@@ -495,7 +495,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     }
 
     /**
-     * Enables connection to the HiveMQ Control Center on host port {@param controlCenterPort}.
+     * Enables connection to the HiveMQ Control Center on host port {controlCenterPort}.
      * Note: the control center is a HiveMQ 4 Enterprise feature.
      * <p>
      * Must be called before the container is started.
