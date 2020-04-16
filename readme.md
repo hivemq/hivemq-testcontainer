@@ -65,7 +65,7 @@ add these dependencies to your `pom.xml`:
     <dependency>
         <groupId>com.hivemq</groupId>
         <artifactId>hivemq-testcontainer-junit4</artifactId>
-        <version>1.0</version>
+        <version>1.0.0</version>
         <scope>test</scope>
     </dependency>
     <dependency>
@@ -88,7 +88,7 @@ add these dependencies to your `pom.xml`:
     <dependency>
         <groupId>com.hivemq</groupId>
         <artifactId>testcontainer-junit5</artifactId>
-        <version>1.0</version>
+        <version>1.0.0</version>
         <scope>test</scope>
     </dependency>
     <dependency>
