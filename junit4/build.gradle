@@ -1,0 +1,21 @@
+plugins {
+    id 'java-library'
+}
+
+description = 'JUnit 4 API for testing HiveMQ Extensions and Java MQTT Applications.'
+ext {
+    readableName = 'HiveMQ Testcontainer JUnit4'
+}
+
+dependencies {
+    api project(':hivemq-testcontainer-core')
+
+    compileOnly group: 'junit', name: 'junit', version: junit4Version
+    compileOnly group: 'com.hivemq', name: 'hivemq-extension-sdk', version: extensionSDKVersion
+
+    testImplementation project(':hivemq-testcontainer-core').sourceSets.test.output
+    testImplementation group: 'com.hivemq', name: 'hivemq-extension-sdk', version: extensionSDKVersion
+    testImplementation group: 'com.hivemq', name: 'hivemq-mqtt-client', version: hmcVersion
+    testImplementation group: 'org.apache.httpcomponents', name: 'httpclient', version: httpClientVersion
+    testImplementation group: 'ch.qos.logback', name: 'logback-classic', version: logbackVersion
+}

@@ -1,299 +1,219 @@
 plugins {
-    id 'java-library'
-    id 'maven-publish'
+    id 'com.jfrog.bintray' version '1.8.5' apply false
     id 'com.github.hierynomus.license' version '0.15.0'
-    id 'com.jfrog.bintray' version '1.8.5'
 }
 
-ext {
-    shrinkWrapVersion = '1.2.6'
-    junit5Version = '5.6.1'
-    extensionSDKVersion = '4.3.0'
-    junit4Version = '4.12'
-    logbackVersion = '1.2.3'
-    daggerVersion = '2.27'
-}
 
-ext {
-    readableName = 'HiveMQ Testcontainer'
-    githubOrg = 'hivemq'
-    githubRepo = 'hivemq-testcontainer'
-    githubUrl = 'https://github.com/' + githubOrg + '/' + githubRepo
-    scmConnection = 'scm:git:git://github.com/' + githubOrg + '/' + githubRepo + '.git'
-    scmDeveloperConnection = 'scm:git:ssh://git@github.com/' + githubOrg + '/' + githubRepo + '.git'
-    issuesUrl = githubUrl + '/issues'
-    licenseShortName = 'Apache-2.0'
-    licenseReadableName = 'The Apache License, Version 2.0'
-    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-}
+/* ******************** metadata ******************** */
 
-version '1.0.0'
-group 'com.hivemq'
-description 'Testcontainers for testing HiveMQ Extensions and Java MQTT Applications.'
+allprojects {
+    version '1.0.0'
+    group 'com.hivemq'
+    description 'Testcontainers for testing HiveMQ Extensions and Java MQTT Applications.'
 
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-    mavenLocal()
-}
-
-test {
-    useJUnitPlatform()
-    testLogging.events("failed")
-    testLogging.exceptionFormat("full")
-}
-
-/* Log stdout for failed tests */
-project.test {
-    def outputCache = new LinkedList<String>()
-
-    beforeTest { TestDescriptor td -> outputCache.clear() }    // clear everything right before the test starts
-
-    onOutput { TestDescriptor td, TestOutputEvent toe ->       // when output is coming put it in the cache
-        outputCache.add(toe.getMessage())
-        while (outputCache.size() > 1000) outputCache.remove() // if we have more than 1000 lines -> drop first
+    ext {
+        readableName = 'HiveMQ Testcontainer'
+        githubOrg = 'hivemq'
+        githubRepo = 'hivemq-testcontainer'
+        githubUrl = 'https://github.com/' + githubOrg + '/' + githubRepo
+        scmConnection = 'scm:git:git://github.com/' + githubOrg + '/' + githubRepo + '.git'
+        scmDeveloperConnection = 'scm:git:ssh://git@github.com/' + githubOrg + '/' + githubRepo + '.git'
+        issuesUrl = githubUrl + '/issues'
+        licenseShortName = 'Apache-2.0'
+        licenseReadableName = 'The Apache License, Version 2.0'
+        licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
     }
+}
 
-    /** after test -> decide what to print */
-    afterTest { TestDescriptor td, TestResult tr ->
-        if (tr.resultType == TestResult.ResultType.FAILURE && outputCache.size() > 0) {
-            println()
-            println(" Output of ${td.className}.${td.name}:")
-            outputCache.each { print(" > $it") }
+
+/* ******************** java ******************** */
+
+allprojects {
+    plugins.withType(JavaPlugin) {
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
+
+        tasks.withType(JavaCompile) {
+            options.encoding = 'UTF-8'
         }
     }
 }
+
+
+/* ******************** dependencies ******************** */
+
+allprojects {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+    }
+
+    ext {
+        testContainersVersion = '1.13.0'
+        extensionSDKVersion = '4.3.0'
+        hmcVersion = '1.1.4'
+        junit4Version = '4.12'
+        junit5Version = '5.6.1'
+        commonsIoVersion = '2.6'
+        javassistVersion = '3.27.0-GA'
+        shrinkWrapVersion = '1.2.6'
+
+        // only test
+        httpClientVersion = '4.5.12'
+        logbackVersion = '1.2.3'
+        daggerVersion = '2.27'
+    }
+}
+
+
+/* ******************** test ******************** */
+
+allprojects {
+    plugins.withType(JavaPlugin) {
+        dependencies {
+            testImplementation group: 'junit', name: 'junit', version: junit4Version
+            testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junit5Version
+
+            testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junit5Version
+            testRuntimeOnly group: 'org.junit.vintage', name: 'junit-vintage-engine', version: junit5Version
+        }
+
+        test {
+            useJUnitPlatform()
+            testLogging.events("failed")
+            testLogging.exceptionFormat("full")
+
+            /* Log stdout for failed tests */
+            def outputCache = new LinkedList<String>()
+
+            beforeTest { TestDescriptor td -> outputCache.clear() }    // clear everything right before the test starts
+
+            onOutput { TestDescriptor td, TestOutputEvent toe ->       // when output is coming put it in the cache
+                outputCache.add(toe.getMessage())
+                while (outputCache.size() > 1000) outputCache.remove() // if we have more than 1000 lines -> drop first
+            }
+
+            /** after test -> decide what to print */
+            afterTest { TestDescriptor td, TestResult tr ->
+                if (tr.resultType == TestResult.ResultType.FAILURE && outputCache.size() > 0) {
+                    println()
+                    println(" Output of ${td.className}.${td.name}:")
+                    outputCache.each { print(" > $it") }
+                }
+            }
+        }
+    }
+}
+
+
+/* ******************** jars ******************** */
+
+allprojects {
+    plugins.withType(JavaLibraryPlugin) {
+        javadoc {
+            options.encoding 'UTF-8'
+            exclude '**/internal/**'
+        }
+
+        task javadocJar(type: Jar) {
+            group 'documentation'
+            description 'Assembles a jar archive containing the javadoc.'
+
+            from tasks.javadoc
+            classifier 'javadoc'
+        }
+
+        task sourcesJar(type: Jar) {
+            group 'build'
+            description 'Assembles a jar archive containing the main sources.'
+
+            from sourceSets.main.allSource
+            classifier 'sources'
+        }
+    }
+}
+
+
+/* ******************** publishing ******************** */
+
+allprojects {
+    plugins.withType(JavaLibraryPlugin) {
+
+        project.apply plugin: 'maven-publish'
+
+        publishing {
+            publications {
+                withType(MavenPublication) {
+                    pom {
+                        name = project.readableName
+                        description = project.description
+                        url = project.githubUrl
+                        licenses {
+                            license {
+                                name = project.licenseReadableName
+                                url = project.licenseUrl
+                            }
+                        }
+                        developers {
+                            developer {
+                                id = 'YW'
+                                name = 'Yannick Weber'
+                                email = 'yannick.weber@hivemq.com'
+                                organization = 'HiveMQ GmbH'
+                                organizationUrl = 'https://www.hivemq.com'
+                            }
+                        }
+                        scm {
+                            connection = project.scmConnection
+                            developerConnection = project.scmDeveloperConnection
+                            url = project.githubUrl
+                        }
+                    }
+                }
+                maven(MavenPublication) {
+                    from components.java
+                    artifact tasks.javadocJar
+                    artifact tasks.sourcesJar
+                }
+            }
+        }
+
+        project.apply plugin: 'com.jfrog.bintray'
+
+        bintray {
+            user = project.findProperty("bintrayUser") ?: System.getenv("BINTRAY_USER")
+            key = project.findProperty("bintrayKey") ?: System.getenv("BINTRAY_KEY")
+            publish = true
+            pkg {
+                userOrg = 'hivemq'
+                repo = 'HiveMQ'
+                name = 'hivemq-testcontainer'
+                desc = project.description
+                websiteUrl = project.githubUrl
+                issueTrackerUrl = project.issuesUrl
+                vcsUrl = project.githubUrl + '.git'
+                licenses = [project.licenseShortName]
+                labels = ['hivemq', 'docker', 'mqtt', 'integration-testing', 'testcontainers', 'junit4', 'junit5']
+                version {
+                    released = new Date()
+                    gpg {
+                        sign = true
+                    }
+                }
+            }
+        }
+        afterEvaluate {
+            bintray.publications = publishing.publications.withType(MavenPublication).stream().collect { it.name }
+        }
+    }
+}
+
+
+/* ******************** checks ******************** */
 
 license {
     header file("${project.rootDir}/HEADER")
     mapping {
         java = "SLASHSTAR_STYLE"
-    }
-}
-
-dependencies {
-    // exported dependencies
-    api group: 'org.testcontainers', name: 'testcontainers', version: '1.13.0'
-    implementation group: 'commons-io', name: 'commons-io', version: '2.6'
-    implementation group: 'org.jboss.shrinkwrap', name: 'shrinkwrap-api', version: shrinkWrapVersion
-    implementation group: 'org.jboss.shrinkwrap', name: 'shrinkwrap-impl-base', version: shrinkWrapVersion
-    implementation group: 'org.javassist', name: 'javassist', version: '3.27.0-GA'
-    implementation group: 'com.hivemq', name: 'hivemq-mqtt-client', version: '1.1.4'
-
-    compileOnly group: 'com.hivemq', name: 'hivemq-extension-sdk', version: extensionSDKVersion
-    compileOnly group: 'junit', name: 'junit', version: junit4Version
-    compileOnly group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junit5Version
-    compileOnly group: 'ch.qos.logback', name: 'logback-classic', version: logbackVersion
-
-    testImplementation group: 'com.hivemq', name: 'hivemq-extension-sdk', version: extensionSDKVersion
-    testImplementation group: 'junit', name: 'junit', version: junit4Version
-    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junit5Version
-    testImplementation group: 'ch.qos.logback', name: 'logback-classic', version: logbackVersion
-    testImplementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.12'
-    testImplementation group: 'com.google.dagger', name: 'dagger', version: '2.27'
-    testAnnotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: '2.27'
-
-    testRuntime group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junit5Version
-    testRuntime group: 'org.junit.vintage', name:'junit-vintage-engine', version: junit5Version
-}
-
-task junit5Jar (type: Jar) {
-    group 'build'
-    from sourceSets.main.output
-    exclude("/com/hivemq/testcontainer/junit4")
-    archiveAppendix = "junit5"
-}
-
-task junit4Jar (type: Jar) {
-    group 'build'
-    from sourceSets.main.output
-    exclude("/com/hivemq/testcontainer/junit5")
-    archiveAppendix = "junit4"
-}
-
-task coreJar (type: Jar) {
-    group 'build'
-    from sourceSets.main.output
-    exclude("/com/hivemq/testcontainer/junit5", "/com/hivemq/testcontainer/junit4")
-    archiveAppendix = "core"
-}
-
-publishing {
-    publications {
-        core(MavenPublication) {
-            artifactId "${project.name}-core"
-            artifact coreJar
-            pom {
-                name = 'HiveMQ Testcontainer Core'
-                description = 'Core API for testing HiveMQ Extensions and Java MQTT Applications.'
-                url = project.githubUrl
-                developers {
-                    developer {
-                        id = 'YW'
-                        name = 'Yannick Weber'
-                        email = 'yannick.weber@hivemq.com'
-                        organization = 'HiveMQ GmbH'
-                        organizationUrl = 'https://www.hivemq.com'
-                    }
-                }
-                scm {
-                    connection = project.scmConnection
-                    developerConnection = project.scmDeveloperConnection
-                    url = project.githubUrl
-                }
-                licenses {
-                    license {
-                        name = project.licenseReadableName
-                        url = project.licenseUrl
-                    }
-                }
-            }
-            pom.withXml {
-                def dependenciesNode = asNode().appendNode('dependencies')
-                configurations.api.dependencies.each {
-                    def dependencyNode = dependenciesNode.appendNode('dependency')
-                    println 'exporting dependency ' + it.group + ':' + it.name + ':' + it.version + ' as compile to pom.xml'
-                    dependencyNode.appendNode('groupId', it.group)
-                    dependencyNode.appendNode('artifactId', it.name)
-                    dependencyNode.appendNode('version', it.version)
-                    dependencyNode.appendNode('scope', 'compile')
-                }
-                configurations.implementation.dependencies.each {
-                    def dependencyNode = dependenciesNode.appendNode('dependency')
-                    println 'exporting dependency ' + it.group + ':' + it.name + ':' + it.version + ' as runtime to pom.xml'
-                    dependencyNode.appendNode('groupId', it.group)
-                    dependencyNode.appendNode('artifactId', it.name)
-                    dependencyNode.appendNode('version', it.version)
-                    dependencyNode.appendNode('scope', 'runtime')
-                }
-            }
-        }
-        junit5(MavenPublication) {
-            artifactId "${project.name}-junit5"
-            artifact junit5Jar
-            pom {
-                name = 'HiveMQ Testcontainer JUnit5'
-                description = 'JUnit 5 API for testing HiveMQ Extensions and Java MQTT Applications.'
-                url = project.githubUrl
-                developers {
-                    developer {
-                        id = 'YW'
-                        name = 'Yannick Weber'
-                        email = 'yannick.weber@hivemq.com'
-                        organization = 'HiveMQ GmbH'
-                        organizationUrl = 'https://www.hivemq.com'
-                    }
-                }
-                scm {
-                    connection = project.scmConnection
-                    developerConnection = project.scmDeveloperConnection
-                    url = project.githubUrl
-                }
-                licenses {
-                    license {
-                        name = project.licenseReadableName
-                        url = project.licenseUrl
-                    }
-                }
-            }
-            pom.withXml {
-                def dependenciesNode = asNode().appendNode('dependencies')
-                configurations.api.dependencies.each {
-                    def dependencyNode = dependenciesNode.appendNode('dependency')
-                    println 'exporting dependency ' + it.group + ':' + it.name + ':' + it.version + ' as compile to pom.xml'
-                    dependencyNode.appendNode('groupId', it.group)
-                    dependencyNode.appendNode('artifactId', it.name)
-                    dependencyNode.appendNode('version', it.version)
-                    dependencyNode.appendNode('scope', 'compile')
-                }
-                configurations.implementation.dependencies.each {
-                    def dependencyNode = dependenciesNode.appendNode('dependency')
-                    println 'exporting dependency ' + it.group + ':' + it.name + ':' + it.version + ' as runtime to pom.xml'
-                    dependencyNode.appendNode('groupId', it.group)
-                    dependencyNode.appendNode('artifactId', it.name)
-                    dependencyNode.appendNode('version', it.version)
-                    dependencyNode.appendNode('scope', 'runtime')
-                }
-            }
-        }
-        junit4(MavenPublication) {
-            artifactId "${project.name}-junit4"
-            artifact junit4Jar
-            pom {
-                name = 'HiveMQ Testcontainer JUnit4'
-                description = 'JUnit 4 API for testing HiveMQ Extensions and Java MQTT Applications.'
-                url = project.githubUrl
-                developers {
-                    developer {
-                        id = 'YW'
-                        name = 'Yannick Weber'
-                        email = 'yannick.weber@hivemq.com'
-                        organization = 'HiveMQ GmbH'
-                        organizationUrl = 'https://www.hivemq.com'
-                    }
-                }
-                scm {
-                    connection = project.scmConnection
-                    developerConnection = project.scmDeveloperConnection
-                    url = project.githubUrl
-                }
-                licenses {
-                    license {
-                        name = project.licenseReadableName
-                        url = project.licenseUrl
-                    }
-                }
-            }
-            pom.withXml {
-                def dependenciesNode = asNode().appendNode('dependencies')
-                configurations.api.dependencies.each {
-                    def dependencyNode = dependenciesNode.appendNode('dependency')
-                    println 'exporting dependency ' + it.group + ':' + it.name + ':' + it.version + ' as compile to pom.xml'
-                    dependencyNode.appendNode('groupId', it.group)
-                    dependencyNode.appendNode('artifactId', it.name)
-                    dependencyNode.appendNode('version', it.version)
-                    dependencyNode.appendNode('scope', 'compile')
-                }
-                configurations.implementation.dependencies.each {
-                    def dependencyNode = dependenciesNode.appendNode('dependency')
-                    println 'exporting dependency ' + it.group + ':' + it.name + ':' + it.version + ' as runtime to pom.xml'
-                    dependencyNode.appendNode('groupId', it.group)
-                    dependencyNode.appendNode('artifactId', it.name)
-                    dependencyNode.appendNode('version', it.version)
-                    dependencyNode.appendNode('scope', 'runtime')
-                }
-            }
-        }
-    }
-}
-
-bintray {
-    publications = publishing.publications.withType(MavenPublication).stream().collect { it.name }
-    user = project.findProperty("bintray.user") ?: System.getenv("BINTRAY_USER")
-    key = project.findProperty("bintray.key") ?: System.getenv("BINTRAY_KEY")
-    publish = true
-    pkg {
-        userOrg = 'hivemq'
-        repo = 'HiveMQ'
-        name = 'hivemq-testcontainer'
-        desc = project.description
-        websiteUrl = project.githubUrl
-        issueTrackerUrl = project.issuesUrl
-        vcsUrl = project.githubUrl + '.git'
-        licenses = [project.licenseShortName]
-        labels = ['hivemq',
-                  'docker',
-                  'mqtt',
-                  'integration-testing',
-                  'testcontainers',
-                  'junit4',
-                  'junit5']
-        version {
-            released = new Date()
-            gpg {
-                sign = true
-            }
-        }
     }
 }

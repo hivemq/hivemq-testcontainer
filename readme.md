@@ -32,77 +32,59 @@ This enables testing MQTT client applications and integration testing of custom 
     
 ## Add to your project
 
-Acquire your GitHub [ACCESS_TOKEN](https://help.github.com/en/packages/publishing-and-managing-packages/about-github-packages#about-tokens) and add it to your `~/.m2/settings.xml`:
-
-    <settings> 
-        <servers>
-            <server>
-                <id>github</id>
-                <username>GITHUB_USERNAME</username>
-                <password>GITHUB_TOKEN</password>
-            </server>
-        </servers>
-    </settings>
-    
-Add this repository to your `pom.xml`:
-
-    <repositories>
-        <repository>
-            <id>github</id>
-            <url>https://maven.pkg.github.com/hivemq/hivemq-testcontainer</url>
-        </repository>
-    </repositories>
-
 ### Maven + JUnit 4
 
 add these dependencies to your `pom.xml`:
 
-    <dependency>
-        <groupId>com.hivemq</groupId>
-        <artifactId>hivemq-extension-sdk</artifactId>
-        <version>4.3.0</version>
-    </dependency>
-    <dependency>
-        <groupId>com.hivemq</groupId>
-        <artifactId>hivemq-testcontainer-junit4</artifactId>
-        <version>1.0.0</version>
-        <scope>test</scope>
-    </dependency>
-    <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>4.13</version>
-        <scope>test</scope>
-    </dependency>
-
+```xml
+<dependency>
+    <groupId>com.hivemq</groupId>
+    <artifactId>hivemq-extension-sdk</artifactId>
+    <version>4.3.0</version>
+</dependency>
+<dependency>
+    <groupId>com.hivemq</groupId>
+    <artifactId>hivemq-testcontainer-junit4</artifactId>
+    <version>1.0.0</version>
+    <scope>test</scope>
+</dependency>
+<dependency>
+    <groupId>junit</groupId>
+    <artifactId>junit</artifactId>
+    <version>4.13</version>
+    <scope>test</scope>
+</dependency>
+```
 
 ### Maven + JUnit 5
 
 add these dependencies to your `pom.xml`:
 
-    <dependency>
-        <groupId>com.hivemq</groupId>
-        <artifactId>hivemq-extension-sdk</artifactId>
-        <version>4.3.0</version>
-    </dependency>
-    <dependency>
-        <groupId>com.hivemq</groupId>
-        <artifactId>testcontainer-junit5</artifactId>
-        <version>1.0.0</version>
-        <scope>test</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-engine</artifactId>
-        <version>5.6.1</version>
-        <scope>test</scope>
-    </dependency>
-    <dependency>
-        <groupId>org.junit.jupiter</groupId>
-        <artifactId>junit-jupiter-api</artifactId>
-        <version>5.6.1</version>
-        <scope>test</scope>
-    </dependency>
+```xml
+<dependency>
+    <groupId>com.hivemq</groupId>
+    <artifactId>hivemq-extension-sdk</artifactId>
+    <version>4.3.0</version>
+</dependency>
+<dependency>
+    <groupId>com.hivemq</groupId>
+    <artifactId>testcontainer-junit5</artifactId>
+    <version>1.0.0</version>
+    <scope>test</scope>
+</dependency>
+<dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter-engine</artifactId>
+    <version>5.6.1</version>
+    <scope>test</scope>
+</dependency>
+<dependency>
+    <groupId>org.junit.jupiter</groupId>
+    <artifactId>junit-jupiter-api</artifactId>
+    <version>5.6.1</version>
+    <scope>test</scope>
+</dependency>
+```
     
 ## User defined HiveMQ image and tag
 
