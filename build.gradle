@@ -13,7 +13,7 @@ ext {
     daggerVersion = '2.27'
 }
 
-version '1.0'
+version '1.0.0'
 group 'com.hivemq'
 
 sourceCompatibility = 1.8
