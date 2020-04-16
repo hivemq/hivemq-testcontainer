@@ -80,8 +80,8 @@ allprojects {
 
         test {
             useJUnitPlatform()
-            testLogging.events("failed")
-            testLogging.exceptionFormat("full")
+            testLogging.events('failed')
+            testLogging.exceptionFormat('full')
 
             /* Log stdout for failed tests */
             def outputCache = new LinkedList<String>()
@@ -181,8 +181,8 @@ allprojects {
         project.apply plugin: 'com.jfrog.bintray'
 
         bintray {
-            user = project.findProperty("bintrayUser") ?: System.getenv("BINTRAY_USER")
-            key = project.findProperty("bintrayKey") ?: System.getenv("BINTRAY_KEY")
+            user = project.findProperty('bintrayUser') ?: System.getenv('BINTRAY_USER')
+            key = project.findProperty('bintrayKey') ?: System.getenv('BINTRAY_KEY')
             publish = true
             pkg {
                 userOrg = 'hivemq'
@@ -214,6 +214,6 @@ allprojects {
 license {
     header file("${project.rootDir}/HEADER")
     mapping {
-        java = "SLASHSTAR_STYLE"
+        java = 'SLASHSTAR_STYLE'
     }
 }
