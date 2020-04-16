@@ -20,7 +20,6 @@ import dagger.Component;
 
 import javax.inject.Singleton;
 
-@SuppressWarnings("NullableProblems")
 @Singleton
 @Component(modules = { MyModule.class })
 public interface MyComponent {

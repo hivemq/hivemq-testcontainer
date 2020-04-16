@@ -30,7 +30,7 @@ import com.hivemq.extension.sdk.api.services.intializer.ClientInitializer;
 public class MyExtensionWithSubclasses implements ExtensionMain {
 
     @Override
-    public void extensionStart(@NotNull ExtensionStartInput extensionStartInput, @NotNull ExtensionStartOutput extensionStartOutput) {
+    public void extensionStart(final @NotNull ExtensionStartInput extensionStartInput, final @NotNull ExtensionStartOutput extensionStartOutput) {
 
         final ClientInitializer clientInitializer = (initializerInput, clientContext) -> clientContext.addPublishInboundInterceptor(new PublishModifier());
 
@@ -38,7 +38,7 @@ public class MyExtensionWithSubclasses implements ExtensionMain {
     }
 
     @Override
-    public void extensionStop(@NotNull ExtensionStopInput extensionStopInput, @NotNull ExtensionStopOutput extensionStopOutput) {
+    public void extensionStop(final @NotNull ExtensionStopInput extensionStopInput, final @NotNull ExtensionStopOutput extensionStopOutput) {
 
     }
 }

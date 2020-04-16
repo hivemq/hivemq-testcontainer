@@ -130,6 +130,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * Must be called before the container is started.
      *
      * @param level the {@link Level}
+     * @return self
      */
     public @NotNull SELF withLogLevel(final @NotNull Level level) {
         this.withEnv("HIVEMQ_LOG_LEVEL", level.name());
@@ -476,6 +477,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * Determines whether the stdout of the container is printed to System.out.
      *
      * @param silent whether the container is silent.
+     * @return self
      */
     public @NotNull SELF silent(final boolean silent) {
         this.silent = silent;

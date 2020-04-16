@@ -28,7 +28,7 @@ public class HiveMQExtension {
     private final int priority;
     private final int startPriority;
     private final boolean sign;
-    private boolean disabledOnStartup;
+    private final boolean disabledOnStartup;
     private final @NotNull Class<? extends ExtensionMain> mainClass;
     private final @NotNull ImmutableList<Class<?>> additionalClasses;
 
@@ -108,7 +108,7 @@ public class HiveMQExtension {
         private boolean sign = false;
         private boolean disabledOnStartup = false;
         private @Nullable Class<? extends ExtensionMain> mainClass;
-        private @NotNull ImmutableList.Builder<Class<?>> additionalClassesBuilder = ImmutableList.builder();
+        private final @NotNull ImmutableList.Builder<Class<?>> additionalClassesBuilder = ImmutableList.builder();
 
         public HiveMQExtension build() {
             if (id == null || id.isEmpty()) {
