@@ -2,7 +2,7 @@
 
 ## Contributing to the HiveMQ Community Projects
 
-Welcome to the HiveMQ Community! Glad to see your interest in contributing to HiveMQ MQTT Client.
+Welcome to the HiveMQ Community! Glad to see your interest in contributing to the HiveMQ Testcontainer.
 Please checkout our [Contribution Guide](https://github.com/hivemq/hivemq-community/blob/master/CONTRIBUTING.adoc) to 
 make sure your contribution will be accepted by the HiveMQ team.
 
@@ -55,6 +55,5 @@ change.
 
 ### Code style guidelines
 
-- The project uses Nullability annotations to avoid NullPointerExceptions: `@NotNull`, `@Nullable`.
+The project uses Nullability annotations to avoid NullPointerExceptions: `@NotNull`, `@Nullable`.
 Every non-primitive parameter/return type/field should be annotated with one of them.
-- For IntelliJ IDEA the codeStyleConfig and the inspectionProfile are provided in the `.idea` folder.

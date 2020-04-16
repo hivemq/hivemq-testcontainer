@@ -418,8 +418,8 @@ can be customized as desired.
 
 ## Contributing
 
-If you want to contribute to HiveMQ MQTT Client, see the [contribution guidelines](CONTRIBUTING.md).
+If you want to contribute to the HiveMQ Testcontainer, see the [contribution guidelines](CONTRIBUTING.md).
 
 ## License
 
-HiveMQ MQTT Client is licensed under the `APACHE LICENSE, VERSION 2.0`. A copy of the license can be found [here](LICENSE).
+The HiveMQ Testcontainer is licensed under the `APACHE LICENSE, VERSION 2.0`. A copy of the license can be found [here](LICENSE).
