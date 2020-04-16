@@ -415,3 +415,11 @@ You can debug extensions that are directly loaded from your code.
 Since the JUnit 4 `HiveMQContainerRule` and the JUnit 5 `HiveMQContainerExtension` directly inherit all
 methods from the [Testcontainer's](https://github.com/testcontainers) `GenericContainer` the container
 can be customized as desired.
+
+## Contributing
+
+If you want to contribute to HiveMQ MQTT Client, see the [contribution guidelines](CONTRIBUTING.md).
+
+## License
+
+HiveMQ MQTT Client is licensed under the `APACHE LICENSE, VERSION 2.0`. A copy of the license can be found [here](LICENSE).
