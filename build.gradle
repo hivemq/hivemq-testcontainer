@@ -1,6 +1,6 @@
 plugins {
     id 'com.jfrog.bintray' version '1.8.5' apply false
-    id 'com.github.hierynomus.license' version '0.15.0'
+    id 'com.github.hierynomus.license' version '0.15.0' apply false
 }
 
 
@@ -142,37 +142,43 @@ allprojects {
 
         publishing {
             publications {
-                withType(MavenPublication) {
-                    pom {
-                        name = project.readableName
-                        description = project.description
-                        url = project.githubUrl
-                        licenses {
-                            license {
-                                name = project.licenseReadableName
-                                url = project.licenseUrl
-                            }
-                        }
-                        developers {
-                            developer {
-                                id = 'YW'
-                                name = 'Yannick Weber'
-                                email = 'yannick.weber@hivemq.com'
-                                organization = 'HiveMQ GmbH'
-                                organizationUrl = 'https://www.hivemq.com'
-                            }
-                        }
-                        scm {
-                            connection = project.scmConnection
-                            developerConnection = project.scmDeveloperConnection
-                            url = project.githubUrl
-                        }
-                    }
-                }
                 maven(MavenPublication) {
                     from components.java
                     artifact tasks.javadocJar
                     artifact tasks.sourcesJar
+                }
+            }
+        }
+        afterEvaluate {
+            publishing {
+                publications {
+                    withType(MavenPublication) {
+                        pom {
+                            name = project.readableName
+                            description = project.description
+                            url = project.githubUrl
+                            licenses {
+                                license {
+                                    name = project.licenseReadableName
+                                    url = project.licenseUrl
+                                }
+                            }
+                            developers {
+                                developer {
+                                    id = 'YW'
+                                    name = 'Yannick Weber'
+                                    email = 'yannick.weber@hivemq.com'
+                                    organization = 'HiveMQ GmbH'
+                                    organizationUrl = 'https://www.hivemq.com'
+                                }
+                            }
+                            scm {
+                                connection = project.scmConnection
+                                developerConnection = project.scmDeveloperConnection
+                                url = project.githubUrl
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -210,9 +216,13 @@ allprojects {
 
 /* ******************** checks ******************** */
 
-license {
-    header file("${project.rootDir}/HEADER")
-    mapping {
-        java = 'SLASHSTAR_STYLE'
+allprojects {
+    apply plugin: 'com.github.hierynomus.license'
+
+    license {
+        header file("${project.rootDir}/HEADER")
+        mapping {
+            java = 'SLASHSTAR_STYLE'
+        }
     }
 }
