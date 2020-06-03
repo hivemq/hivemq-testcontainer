@@ -35,7 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.time.Duration;
-import java.util.Set;
+import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -239,9 +239,8 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
             final @NotNull JavaArchive javaArchive) throws NotFoundException {
 
         if (clazz != null) {
-            final Set<String> subClassNames =
-                    ClassPool.getDefault().get(clazz.getName()).getClassFile().getConstPool().getClassNames();
-            for (final String subClassName : subClassNames) {
+            final Collection<String> refClasses = ClassPool.getDefault().get(clazz.getName()).getRefClasses();
+            for (final String subClassName : refClasses) {
                 final String className = subClassName.replaceAll("/", ".");
                 logger.debug("Packaging subclass {} into extension {}.", className, extensionId);
                 javaArchive.addClass(className);
