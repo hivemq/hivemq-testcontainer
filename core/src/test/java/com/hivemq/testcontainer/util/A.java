@@ -15,5 +15,8 @@
  */
 package com.hivemq.testcontainer.util;
 
+/**
+ * @author Yannick Weber
+ */
 public class A {
 }
