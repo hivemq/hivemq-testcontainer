@@ -7,7 +7,7 @@ plugins {
 /* ******************** metadata ******************** */
 
 allprojects {
-    version '1.0.0'
+    version '1.0.1'
     group 'com.hivemq'
     description 'Testcontainers for testing HiveMQ Extensions and Java MQTT Applications.'
 
