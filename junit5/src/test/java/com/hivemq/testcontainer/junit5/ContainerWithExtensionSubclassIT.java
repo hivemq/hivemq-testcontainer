@@ -40,7 +40,7 @@ public class ContainerWithExtensionSubclassIT {
                             .name("my-extension")
                             .version("1.0")
                             .mainClass(MyExtensionWithSubclasses.class).build())
-                    .withLogLevel(Level.DEBUG);
+                    .withLogLevel(Level.TRACE);
 
     @Test()
     @Timeout(value = 5, unit = TimeUnit.MINUTES)

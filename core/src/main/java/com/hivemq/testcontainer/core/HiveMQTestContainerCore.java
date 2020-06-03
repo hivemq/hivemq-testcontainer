@@ -36,7 +36,9 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.time.Duration;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -239,13 +241,43 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
             final @NotNull JavaArchive javaArchive) throws NotFoundException {
 
         if (clazz != null) {
-            final Collection<String> refClasses = ClassPool.getDefault().get(clazz.getName()).getRefClasses();
+            final Collection<String> refClasses = analyseClass(clazz.getName());
             for (final String refClass : refClasses) {
                 final String className = refClass.replaceAll("/", ".");
                 logger.debug("Packaging subclass {} into extension {}.", className, extensionId);
                 javaArchive.addClass(className);
             }
         }
+    }
+
+    private @NotNull Collection<String> analyseClass(final @NotNull String className) throws NotFoundException {
+
+        final HashSet<String> analysedClasses = new HashSet<>();
+
+        final Collection<String> refClasses = ClassPool.getDefault().get(className).getRefClasses();
+        final ConcurrentLinkedQueue<String> notAnalysedClasses = new ConcurrentLinkedQueue<>();
+
+        for (final String refClass : refClasses) {
+            if (!refClass.startsWith("java.") ) {
+                notAnalysedClasses.add(refClass);
+            }
+        }
+        analysedClasses.add(className);
+
+        while (!notAnalysedClasses.isEmpty()) {
+            final String clazz = notAnalysedClasses.poll();
+            final Collection<String> refs = ClassPool.getDefault().get(clazz).getRefClasses();
+            for (final String ref : refs) {
+                if (!ref.startsWith("java.")
+                        && !analysedClasses.contains(ref)
+                        && !notAnalysedClasses.contains(ref)) {
+                    notAnalysedClasses.add(ref);
+                }
+            }
+            notAnalysedClasses.remove(clazz);
+            analysedClasses.add(clazz);
+        }
+        return analysedClasses;
     }
 
     /**

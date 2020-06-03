@@ -30,5 +30,7 @@ public class PublishModifier implements PublishInboundInterceptor {
     @Override
     public void onInboundPublish(final @NotNull PublishInboundInput publishInboundInput, final @NotNull PublishInboundOutput publishInboundOutput) {
         publishInboundOutput.getPublishPacket().setPayload(ByteBuffer.wrap("modified".getBytes(StandardCharsets.UTF_8)));
+
+        new A();
     }
 }
