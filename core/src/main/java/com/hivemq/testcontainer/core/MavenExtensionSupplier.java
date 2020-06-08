@@ -44,7 +44,7 @@ public class MavenExtensionSupplier implements Supplier<File> {
     @Override
     public @NotNull File get() {
         final PomEquippedEmbeddedMaven embeddedMaven = EmbeddedMaven.forProject(pomFile);
-        final BuiltProject aPackage = embeddedMaven.setGoals("clean", "package").build();
+        final BuiltProject aPackage = embeddedMaven.setGoals("package").build();
         final File targetDirectory = aPackage.getTargetDirectory();
         final String version = aPackage.getModel().getVersion();
         final String artifactId = aPackage.getModel().getArtifactId();
