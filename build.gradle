@@ -56,6 +56,8 @@ allprojects {
         commonsIoVersion = '2.6'
         javassistVersion = '3.27.0-GA'
         shrinkWrapVersion = '1.2.6'
+        shrinkwrapResolverDepchainVersion = '3.1.4'
+        zip4jVersion = '2.6.1'
 
         // only test
         httpClientVersion = '4.5.12'
