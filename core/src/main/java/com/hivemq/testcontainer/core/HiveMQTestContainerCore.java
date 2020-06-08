@@ -241,7 +241,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
         if (clazz != null) {
             final Collection<String> refClasses = ClassPool.getDefault().get(clazz.getName()).getRefClasses();
             for (final String refClass : refClasses) {
-                final String className = refClass.replaceAll("/", ".");
+                final String className = subClassName.replaceAll("/", ".");
                 logger.debug("Packaging subclass {} into extension {}.", className, extensionId);
                 javaArchive.addClass(className);
             }
