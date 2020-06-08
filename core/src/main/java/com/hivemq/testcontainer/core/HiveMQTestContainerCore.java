@@ -37,8 +37,8 @@ import java.nio.charset.Charset;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -255,10 +255,10 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
         final HashSet<String> analysedClasses = new HashSet<>();
 
         final Collection<String> refClasses = ClassPool.getDefault().get(className).getRefClasses();
-        final ConcurrentLinkedQueue<String> notAnalysedClasses = new ConcurrentLinkedQueue<>();
+        final LinkedList<String> notAnalysedClasses = new LinkedList<>();
 
         for (final String refClass : refClasses) {
-            if (!refClass.startsWith("java.") ) {
+            if (!refClass.startsWith("java.")) {
                 notAnalysedClasses.add(refClass);
             }
         }
@@ -266,16 +266,20 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
 
         while (!notAnalysedClasses.isEmpty()) {
             final String clazz = notAnalysedClasses.poll();
-            final Collection<String> refs = ClassPool.getDefault().get(clazz).getRefClasses();
-            for (final String ref : refs) {
-                if (!ref.startsWith("java.")
-                        && !analysedClasses.contains(ref)
-                        && !notAnalysedClasses.contains(ref)) {
-                    notAnalysedClasses.add(ref);
+            try {
+                final Collection<String> refs = ClassPool.getDefault().get(clazz).getRefClasses();
+                for (final String ref : refs) {
+                    if (!ref.startsWith("java.")
+                            && !analysedClasses.contains(ref)
+                            && !notAnalysedClasses.contains(ref)) {
+                        notAnalysedClasses.add(ref);
+                    }
+                    analysedClasses.add(clazz);
                 }
+            } catch (final NotFoundException notFoundException) {
+                logger.warn("Referenced class {} was not found on the class path.", clazz);
             }
             notAnalysedClasses.remove(clazz);
-            analysedClasses.add(clazz);
         }
         return analysedClasses;
     }
@@ -398,7 +402,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     }
 
     /**
-     /**
+     * /**
      * Disables the extension.
      * This method blocks until the HiveMQ log for successful disabling is consumed or it times out after {timeOut}.
      * Note: Disabling Extensions is a HiveMQ Enterprise feature, it will not work when using HiveMQ Community Edition.
@@ -406,7 +410,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * This can only be called once the container is started.
      *
      * @param hiveMQExtension the extension
-     * @param timeout the timeout
+     * @param timeout         the timeout
      * @return self
      */
     public @NotNull SELF disableExtension(
@@ -455,11 +459,11 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * Enables the extension.
      * This method blocks until the HiveMQ log for successful enabling is consumed or it times out after {timeOut}.
      * Note: Enabling Extensions is a HiveMQ Enterprise feature, it will not work when using HiveMQ Community Edition.
-     *
+     * <p>
      * This can only be called once the container is started.
      *
      * @param hiveMQExtension the extension
-     * @param timeout the timeout
+     * @param timeout         the timeout
      * @return self
      */
     public @NotNull SELF enableExtension(
@@ -494,7 +498,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * Enables the extension.
      * This method blocks until the HiveMQ log for successful enabling is consumed or it times out after {timeOut}.
      * Note: Enabling Extensions is a HiveMQ Enterprise feature, it will not work when using HiveMQ Community Edition.
-     *
+     * <p>
      * This can only be called once the container is started.
      *
      * @param hiveMQExtension the extension
@@ -503,7 +507,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     public @NotNull SELF enableExtension(final @NotNull HiveMQExtension hiveMQExtension) {
         return enableExtension(hiveMQExtension, Duration.ofSeconds(60));
     }
-    
+
     /**
      * Determines whether the stdout of the container is printed to System.out.
      *
