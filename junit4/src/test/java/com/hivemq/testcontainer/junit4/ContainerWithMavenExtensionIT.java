@@ -16,7 +16,7 @@
 package com.hivemq.testcontainer.junit4;
 
 import com.hivemq.extension.sdk.api.annotations.NotNull;
-import com.hivemq.testcontainer.core.MavenExtensionSupplier;
+import com.hivemq.testcontainer.core.MavenHiveMQExtensionSupplier;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,7 +31,7 @@ public class ContainerWithMavenExtensionIT {
     @Rule
     public final @NotNull HiveMQTestContainerRule extension =
             new HiveMQTestContainerRule()
-                    .withExtensionSupplier(new MavenExtensionSupplier("src/test/resources/maven-extension/pom.xml"));
+                    .withExtension(new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml"));
 
     @Test
     public void test_single_class_extension() throws ExecutionException, InterruptedException {

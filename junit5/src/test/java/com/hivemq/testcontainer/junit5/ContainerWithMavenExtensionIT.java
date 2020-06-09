@@ -16,7 +16,7 @@
 package com.hivemq.testcontainer.junit5;
 
 import com.hivemq.extension.sdk.api.annotations.NotNull;
-import com.hivemq.testcontainer.core.MavenExtensionSupplier;
+import com.hivemq.testcontainer.core.MavenHiveMQExtensionSupplier;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
@@ -33,7 +33,7 @@ public class ContainerWithMavenExtensionIT {
     @RegisterExtension
     public final @NotNull HiveMQTestContainerExtension extension =
             new HiveMQTestContainerExtension()
-                    .withExtensionSupplier(new MavenExtensionSupplier("src/test/resources/maven-extension/pom.xml"));
+                    .withExtension(new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml"));
 
     @Test()
     @Timeout(value = 5, unit = TimeUnit.MINUTES)
