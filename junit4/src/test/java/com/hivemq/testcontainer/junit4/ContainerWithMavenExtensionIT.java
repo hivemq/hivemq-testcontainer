@@ -31,7 +31,7 @@ public class ContainerWithMavenExtensionIT {
     @Rule
     public final @NotNull HiveMQTestContainerRule extension =
             new HiveMQTestContainerRule()
-                    .withExtension(new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml"));
+                    .withExtension(new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml").get());
 
     @Test
     public void test_single_class_extension() throws ExecutionException, InterruptedException {

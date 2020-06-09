@@ -39,7 +39,6 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Supplier;
 
 /**
  * @author Yannick Weber
@@ -135,20 +134,6 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      */
     public @NotNull SELF withLogLevel(final @NotNull Level level) {
         this.withEnv("HIVEMQ_LOG_LEVEL", level.name());
-        return self();
-    }
-
-    /**
-     * Puts the supplied extension folder into '/opt/hivemq/extensions/{extension-id}' inside the container.
-     * It must at least contain a valid hivemq-extension.xml and a valid extension.jar in order to be executed.
-     * <p>
-     * Must be called before the container is started.
-     *
-     * @param extensionSupplier supplies an extension folder on the host machine
-     * @return self
-     */
-    public @NotNull SELF withExtension(final @NotNull Supplier<File> extensionSupplier) {
-        withExtension(extensionSupplier.get());
         return self();
     }
 
