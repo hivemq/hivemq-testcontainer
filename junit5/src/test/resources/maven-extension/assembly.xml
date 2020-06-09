@@ -25,10 +25,6 @@
     </formats>
     <files>
         <file>
-            <source>target/LICENSE.txt</source>
-            <outputDirectory>/${artifactId}/</outputDirectory>
-        </file>
-        <file>
             <source>target/README.html</source>
             <outputDirectory>/${artifactId}/</outputDirectory>
         </file>
