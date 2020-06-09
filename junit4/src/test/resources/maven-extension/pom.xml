@@ -29,7 +29,6 @@
     <properties>
         <extension.name>Hello World Extension</extension.name>
         <extension.author>HiveMQ GmbH</extension.author>
-        <output.dir>${basedir}</output.dir>
     </properties>
 
     <dependencies>
