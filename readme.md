@@ -195,27 +195,6 @@ The extension will be placed in the container before startup.
             new HiveMQTestContainerExtension()
                 .withExtension(new File("src/test/resources/modifier-extension"));
                 
-Alternatively you can also pass a Supplier for the file:
-
-### JUnit 4
-
-    @Rule
-    public final @NotNull HiveMQTestContainerRule rule =
-        new HiveMQTestContainerRule()
-            .withExtension(() -> {
-                return new File("src/test/resources/modifier-extension"));
-            };
-
-### JUnit 5
-
-    @RegisterExtension
-    public final @NotNull HiveMQTestContainerExtension extension =
-        new HiveMQTestContainerExtension()
-            .withExtension(() -> {
-                return new File("src/test/resources/modifier-extension"));
-            };
-                
- 
 ## Load an extension directly from code
 
 You can load an extension directly from code, by providing the extension's main class and extension information.
