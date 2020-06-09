@@ -28,10 +28,9 @@
 
     <properties>
         <extension.name>Hello World Extension</extension.name>
-        <extension.author>dc-square GmbH</extension.author>
+        <extension.author>HiveMQ GmbH</extension.author>
         <asciidoctor.version>1.5.2.1</asciidoctor.version>
         <output.dir>${basedir}</output.dir>
-        <source.document.name>README.adoc</source.document.name>
     </properties>
 
     <dependencies>
