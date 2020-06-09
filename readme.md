@@ -163,14 +163,14 @@ You can package and load an extension from a maven project.
     @Rule
     public final @NotNull HiveMQTestContainerRule extension =
         new HiveMQTestContainerRule()
-            .withExtension(new MavenHiveMQExtensionSupplier("path/to/extension/pom.xml"));
+            .withExtension(new MavenHiveMQExtensionSupplier("path/to/extension/pom.xml").get());
 
 ### JUnit 5
 
         @RegisterExtension
         public final @NotNull HiveMQTestContainerExtension extension =
             new HiveMQTestContainerExtension()
-                .withExtension(new MavenHiveMQExtensionSupplier("path/to/extension/pom.xml"));
+                .withExtension(new MavenHiveMQExtensionSupplier("path/to/extension/pom.xml").get());
                     
 If your current project is the HiveMQ Extension you want to load into the HiveMQ Testcontainer, you can simply use:
 
