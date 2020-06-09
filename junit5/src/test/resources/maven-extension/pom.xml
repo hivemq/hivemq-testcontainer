@@ -103,60 +103,7 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.asciidoctor</groupId>
-                <artifactId>asciidoctor-maven-plugin</artifactId>
-                <version>${asciidoctor.version}</version>
-                <executions>
-                    <execution>
-                        <id>output-html</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>process-asciidoc</goal>
-                        </goals>
-                        <configuration>
-                            <backend>html</backend>
-                            <doctype>xhtml</doctype>
-                            <headerFooter>true</headerFooter>
-                            <sourceDirectory>${basedir}</sourceDirectory>
-                            <outputDirectory>${output.dir}/target</outputDirectory>
-                            <sourceDocumentName>${source.document.name}</sourceDocumentName>
-                            <attributes>
-                                <icons>font</icons>
-                                <toc2/>
-                            </attributes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
-    <profiles>
-        <profile>
-            <id>RunWithHiveMQ</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>com.hivemq</groupId>
-                        <artifactId>hivemq-maven-plugin</artifactId>
-                        <version>4.0.2</version>
-                        <executions>
-                            <execution>
-                                <id>hivemq</id>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>hivemq</goal>
-                                </goals>
-                                <configuration>
-                                    <hiveMQDir>FIXME, insert your HiveMQ directory here!</hiveMQDir>
-                                    <debugMode>SERVER</debugMode>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 
 </project>

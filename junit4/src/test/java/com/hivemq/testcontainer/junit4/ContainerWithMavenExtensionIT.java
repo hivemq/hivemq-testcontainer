@@ -33,7 +33,7 @@ public class ContainerWithMavenExtensionIT {
             new HiveMQTestContainerRule()
                     .withExtension(new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml").get());
 
-    @Test
+    @Test(timeout = 500_000)
     public void test_single_class_extension() throws ExecutionException, InterruptedException {
         TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
     }
