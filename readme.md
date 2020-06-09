@@ -18,6 +18,7 @@ This enables testing MQTT client applications and integration testing of custom 
 - [load user defined HiveMQ images and tags](#add-to-your-project)
 - [test your MQTT 3 and MQTT 5 client applications](#test-your-mqtt-3-and-mqtt-5-client-application)
 - [add a custom hivemq config](#add-a-custom-hivemq-configuration)
+- [load an extension from a maven project](#load-an-extension-from-a-maven-project)
 - [load an extension from a folder](#load-an-extension-from-a-folder)
 - [load an extension directly from your code](#load-an-extension-directly-from-code)
 - [enable or disable an extension](#enabledisable-an-extension)
@@ -46,7 +47,7 @@ add these dependencies to your `pom.xml`:
 <dependency>
     <groupId>com.hivemq</groupId>
     <artifactId>hivemq-testcontainer-junit4</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <scope>test</scope>
 </dependency>
 <dependency>
@@ -70,7 +71,7 @@ add these dependencies to your `pom.xml`:
 <dependency>
     <groupId>com.hivemq</groupId>
     <artifactId>hivemq-testcontainer-junit5</artifactId>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <scope>test</scope>
 </dependency>
 <dependency>
@@ -151,6 +152,29 @@ You can define a custom image and tag in the constructor:
     final @NotNull HiveMQTestContainerExtension extension = 
         new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
             .withHiveMQConfig(new File("src/test/resources/config.xml"));
+            
+            
+## Load an extension from a maven project
+
+You can package and load an extension from a maven project. 
+
+### JUnit 4
+
+    @Rule
+    public final @NotNull HiveMQTestContainerRule extension =
+        new HiveMQTestContainerRule()
+            .withExtension(new MavenHiveMQExtensionSupplier("path/to/extension/pom.xml"));
+
+### JUnit 5
+
+        @RegisterExtension
+        public final @NotNull HiveMQTestContainerExtension extension =
+            new HiveMQTestContainerExtension()
+                .withExtension(new MavenHiveMQExtensionSupplier("path/to/extension/pom.xml"));
+                    
+If your current project is the HiveMQ Extension you want to load into the HiveMQ Testcontainer, you can simply use:
+
+    MavenHiveMQExtensionSupplier.direct()
 
 ## Load an extension from a folder
 
@@ -170,6 +194,26 @@ The extension will be placed in the container before startup.
     public final @NotNull HiveMQTestContainerExtension extension =
             new HiveMQTestContainerExtension()
                 .withExtension(new File("src/test/resources/modifier-extension"));
+                
+Alternatively you can also pass a Supplier for the file:
+
+### JUnit 4
+
+    @Rule
+    public final @NotNull HiveMQTestContainerRule rule =
+        new HiveMQTestContainerRule()
+            .withExtension(() -> {
+                return new File("src/test/resources/modifier-extension"));
+            };
+
+### JUnit 5
+
+    @RegisterExtension
+    public final @NotNull HiveMQTestContainerExtension extension =
+        new HiveMQTestContainerExtension()
+            .withExtension(() -> {
+                return new File("src/test/resources/modifier-extension"));
+            };
                 
  
 ## Load an extension directly from code

@@ -147,7 +147,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * @param extensionSupplier supplies an extension folder on the host machine
      * @return self
      */
-    public @NotNull SELF withExtensionSupplier(final @NotNull Supplier<File> extensionSupplier) {
+    public @NotNull SELF withExtension(final @NotNull Supplier<File> extensionSupplier) {
         withExtension(extensionSupplier.get());
         return self();
     }

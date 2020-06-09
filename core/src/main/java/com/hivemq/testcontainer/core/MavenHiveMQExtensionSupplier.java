@@ -27,20 +27,38 @@ import java.io.File;
 import java.util.function.Supplier;
 
 /**
+ * This class automates the process of packaging a HiveMQ extension from a maven project.
+ *
  * @author Yannick Weber
  */
-public class MavenExtensionSupplier implements Supplier<File> {
+public class MavenHiveMQExtensionSupplier implements Supplier<File> {
 
     private final @NotNull String pomFile;
 
-    public static @NotNull MavenExtensionSupplier direct() {
-        return new MavenExtensionSupplier("pom.xml");
+    /**
+     * This {@link Supplier} can be used if the current maven project is the HiveMQ Extension to supply.
+     * It uses the pom.xml file of the current maven project.
+     *
+     * @return a {@link MavenHiveMQExtensionSupplier} for the current maven project
+     */
+    public static @NotNull MavenHiveMQExtensionSupplier direct() {
+        return new MavenHiveMQExtensionSupplier("pom.xml");
     }
 
-    public MavenExtensionSupplier(final @NotNull String pomFile) {
+    /**
+     * Creates a Maven HiveMQ extension {@link Supplier}.
+     *
+     * @param pomFile the path of the pom.xml of the HiveMQ extension to supply.
+     */
+    public MavenHiveMQExtensionSupplier(final @NotNull String pomFile) {
         this.pomFile = pomFile;
     }
 
+    /**
+     * Packages the HiveMQ extension, copies it to a temporary directory and returns the directory as a {@link File}.
+     *
+     * @return the {@link File} of the packaged HiveMQ extension
+     */
     @Override
     public @NotNull File get() {
         final PomEquippedEmbeddedMaven embeddedMaven = EmbeddedMaven.forProject(pomFile);
