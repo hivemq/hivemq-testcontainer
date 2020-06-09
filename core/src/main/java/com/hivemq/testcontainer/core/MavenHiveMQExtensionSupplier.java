@@ -73,7 +73,7 @@ public class MavenHiveMQExtensionSupplier implements Supplier<File> {
         try {
             zipFile.extractAll(tempDir.getAbsolutePath());
         } catch (final ZipException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return new File(tempDir, artifactId);
     }
