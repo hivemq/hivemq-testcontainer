@@ -14,11 +14,17 @@ dependencies {
     implementation group: 'org.javassist', name: 'javassist', version: javassistVersion
     implementation group: 'org.jboss.shrinkwrap', name: 'shrinkwrap-api', version: shrinkWrapVersion
     implementation group: 'org.jboss.shrinkwrap', name: 'shrinkwrap-impl-base', version: shrinkWrapVersion
-    implementation group: 'org.jboss.shrinkwrap.resolver', name: 'shrinkwrap-resolver-api-maven-embedded', version: shrinkwrapResolverDepchainVersion
     implementation group: 'net.lingala.zip4j', name: 'zip4j', version: zip4jVersion
 
+    implementation group: 'org.codehaus.plexus', name: 'plexus-utils', version: '3.2.1'
+    implementation (group: 'org.jboss.shrinkwrap.resolver', name: 'shrinkwrap-resolver-api-maven-embedded', version: shrinkwrapResolverDepchainVersion) {
+        exclude group: 'org.codehouse.plexus', module: 'plexus-utils'
+    }
+    implementation (group: 'org.jboss.shrinkwrap.resolver', name: 'shrinkwrap-resolver-impl-maven-embedded', version: shrinkwrapResolverDepchainVersion) {
+        exclude group: 'org.codehouse.plexus', module: 'plexus-utils'
+    }
+
     compileOnly group: 'com.hivemq', name: 'hivemq-extension-sdk', version: extensionSDKVersion
-    runtimeOnly group: 'org.jboss.shrinkwrap.resolver', name: 'shrinkwrap-resolver-impl-maven-embedded', version: shrinkwrapResolverDepchainVersion
 
     testImplementation group: 'com.hivemq', name: 'hivemq-extension-sdk', version: extensionSDKVersion
     testImplementation group: 'com.google.dagger', name: 'dagger', version: daggerVersion
