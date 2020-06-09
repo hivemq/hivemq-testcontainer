@@ -7,3 +7,5 @@ build/
 
 .DS_Store
 .java-version
+/junit4/src/test/resources/maven-extension/target/
+/junit5/src/test/resources/maven-extension/target/
