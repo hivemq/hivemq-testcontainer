@@ -168,10 +168,10 @@ You can package and load an extension from a maven project.
 
 ### JUnit 5
 
-        @RegisterExtension
-        public final @NotNull HiveMQTestContainerExtension extension =
-            new HiveMQTestContainerExtension()
-                .withExtension(new MavenHiveMQExtensionSupplier("path/to/extension/pom.xml").get());
+    @RegisterExtension
+    public final @NotNull HiveMQTestContainerExtension extension =
+        new HiveMQTestContainerExtension()
+            .withExtension(new MavenHiveMQExtensionSupplier("path/to/extension/pom.xml").get());
                     
 If your current project is the HiveMQ Extension you want to load into the HiveMQ Testcontainer, you can simply use:
 
@@ -379,12 +379,12 @@ You can debug extensions that are directly loaded from your code.
 
 #### JUnit 4
 
-        @Rule
-        public final @NotNull HiveMQTestContainerRule rule =
-            new HiveMQTestContainerRule()
-            .withFileInHomeFolder(
-                new File("src/test/resources/additionalFile.txt"),
-                "/path/in/home/folder");
+    @Rule
+    public final @NotNull HiveMQTestContainerRule rule =
+        new HiveMQTestContainerRule()
+        .withFileInHomeFolder(
+            new File("src/test/resources/additionalFile.txt"),
+            "/path/in/home/folder");
 
 #### JUnit 5
 
