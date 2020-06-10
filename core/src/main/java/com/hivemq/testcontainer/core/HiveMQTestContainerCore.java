@@ -442,7 +442,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     }
 
     /**
-     * Disables the extension with the corresponding {id}.
+     * Disables the extension.
      * This method blocks until the HiveMQ log for successful disabling is consumed or it times out after 60 seconds.
      * Note: Disabling Extensions is a HiveMQ Enterprise feature, it will not work when using the HiveMQ Community Edition.
      * <p>

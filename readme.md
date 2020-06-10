@@ -22,6 +22,7 @@ This enables testing MQTT client applications and integration testing of custom 
 - [load an extension from a folder](#load-an-extension-from-a-folder)
 - [load an extension directly from your code](#load-an-extension-directly-from-code)
 - [enable or disable an extension](#enabledisable-an-extension)
+- [enable or disable an extension loaded from a folder](#enabledisable-an-extension-loaded-from-a-folder)
 - [set logging level](#set-logging-level)
 - [set control center port](#set-control-center-port)
 - [debug a directly loaded extension that is running inside the container](#debug-directly-loaded-extensions)
@@ -224,8 +225,8 @@ The extension will be packaged properly und put into the container before startu
                     
 ## Enable/Disable an extension
 
-It is possible to enable and disable HiveMQ during runtime. Extensions can also be disabled on startup.
-Note that disabling of extension during runtime is only supported in HiveMQ 4 Enterprise Edition Containers.
+It is possible to enable and disable HiveMQ extensions during runtime. Extensions can also be disabled on startup.
+Note that disabling or enabling of extension during runtime is only supported in HiveMQ 4 Enterprise Edition Containers.
 
 ### JUnit 4
 
@@ -269,10 +270,11 @@ Note that disabling of extension during runtime is only supported in HiveMQ 4 En
     
 It is possible to enable and disable extensions that are loaded from a file by providing their directory name and extension name:
 
-## Load an extension from a folder
+## Enable/Disable an extension loaded from a folder
 
-You can load an extension from an extension directory into the container.
-The extension will be placed in the container before startup. 
+You can enable or disable extensions loaded from an extension folder during runtime.
+If the extension folder contains a DISABLED file, the extension will be disabled during startup.
+Note that disabling or enabling of extension during runtime is only supported in HiveMQ 4 Enterprise Edition Containers.
 
 ### JUnit 4
 
