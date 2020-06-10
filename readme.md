@@ -278,26 +278,26 @@ The extension will be placed in the container before startup.
 
     @Rule
     public final @NotNull HiveMQTestContainerRule rule =
-            new HiveMQTestContainerRule()
+            new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
                 .withExtension(new File("src/test/resources/modifier-extension"));
                 
     @Test
     void test_disable_enable_extension() throws ExecutionException, InterruptedException {
-        extension.enableExtension("Modifier Extension", "modifier-extension");
         extension.disableExtension("Modifier Extension", "modifier-extension");
+        extension.enableExtension("Modifier Extension", "modifier-extension");
     }
 
 ### JUnit 5
 
     @RegisterExtension
     public final @NotNull HiveMQTestContainerExtension extension =
-            new HiveMQTestContainerExtension()
+            new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
                 .withExtension(new File("src/test/resources/modifier-extension"));
                 
     @Test
     void test_disable_enable_extension() throws ExecutionException, InterruptedException {
-        extension.enableExtension("Modifier Extension", "modifier-extension");
         extension.disableExtension("Modifier Extension", "modifier-extension");
+        extension.enableExtension("Modifier Extension", "modifier-extension");
     }
                     
 ## Set logging level
