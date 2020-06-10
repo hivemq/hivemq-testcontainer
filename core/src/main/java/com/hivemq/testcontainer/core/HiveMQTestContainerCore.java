@@ -377,6 +377,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * @param extensionDirectory the name of the extension's directory
      * @param timeout the timeout
      * @return self
+     * @since 1.1.0
      */
     public @NotNull SELF disableExtension(
             final @NotNull String extensionName,
@@ -417,6 +418,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * @param extensionName the name of the extension to disable
      * @param extensionDirectory the name of the extension's directory
      * @return self
+     * @since 1.1.0
      */
     public @NotNull SELF disableExtension(
             final @NotNull String extensionName,
@@ -466,6 +468,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * @param extensionDirectory the name of the extension's directory
      * @param timeout the timeout
      * @return self
+     * @since 1.1.0
      */
     public @NotNull SELF enableExtension(
             final @NotNull String extensionName,
@@ -506,6 +509,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * @param extensionName the name of the extension to disable
      * @param extensionDirectory the name of the extension's directory
      * @return self
+     * @since 1.1.0
      */
     public @NotNull SELF enableExtension(
             final @NotNull String extensionName,

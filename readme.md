@@ -150,7 +150,7 @@ You can define a custom image and tag in the constructor:
 ### JUnit 5
 
     @RegisterExtension
-    final @NotNull HiveMQTestContainerExtension rule = 
+    final @NotNull HiveMQTestContainerExtension extension = 
         new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
             .withHiveMQConfig(new File("src/test/resources/config.xml"));
             
@@ -268,8 +268,6 @@ Note that disabling or enabling of extension during runtime is only supported in
         extension.disableExtension(hiveMQExtension);
     }
     
-It is possible to enable and disable extensions that are loaded from a file by providing their directory name and extension name:
-
 ## Enable/Disable an extension loaded from a folder
 
 You can enable or disable extensions loaded from an extension folder during runtime.

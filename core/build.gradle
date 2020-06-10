@@ -16,11 +16,14 @@ dependencies {
     implementation group: 'org.jboss.shrinkwrap', name: 'shrinkwrap-impl-base', version: shrinkWrapVersion
     implementation group: 'net.lingala.zip4j', name: 'zip4j', version: zip4jVersion
 
+    /*  This dependency needs to be explicitly added, because shrinkwrap-resolver-api-maven-embedded
+        and shrinkwrap-resolver-impl-maven-embedded depend on different versions of it.
+        This would lead to issues when the HiveMQ Testcontainer is included in maven projects. */
     implementation group: 'org.codehaus.plexus', name: 'plexus-utils', version: '3.2.1'
-    implementation (group: 'org.jboss.shrinkwrap.resolver', name: 'shrinkwrap-resolver-api-maven-embedded', version: shrinkwrapResolverDepchainVersion) {
+    implementation(group: 'org.jboss.shrinkwrap.resolver', name: 'shrinkwrap-resolver-api-maven-embedded', version: shrinkwrapResolverDepchainVersion) {
         exclude group: 'org.codehouse.plexus', module: 'plexus-utils'
     }
-    runtimeOnly (group: 'org.jboss.shrinkwrap.resolver', name: 'shrinkwrap-resolver-impl-maven-embedded', version: shrinkwrapResolverDepchainVersion) {
+    runtimeOnly(group: 'org.jboss.shrinkwrap.resolver', name: 'shrinkwrap-resolver-impl-maven-embedded', version: shrinkwrapResolverDepchainVersion) {
         exclude group: 'org.codehouse.plexus', module: 'plexus-utils'
     }
 
