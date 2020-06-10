@@ -20,7 +20,7 @@ dependencies {
     implementation (group: 'org.jboss.shrinkwrap.resolver', name: 'shrinkwrap-resolver-api-maven-embedded', version: shrinkwrapResolverDepchainVersion) {
         exclude group: 'org.codehouse.plexus', module: 'plexus-utils'
     }
-    implementation (group: 'org.jboss.shrinkwrap.resolver', name: 'shrinkwrap-resolver-impl-maven-embedded', version: shrinkwrapResolverDepchainVersion) {
+    runtimeOnly (group: 'org.jboss.shrinkwrap.resolver', name: 'shrinkwrap-resolver-impl-maven-embedded', version: shrinkwrapResolverDepchainVersion) {
         exclude group: 'org.codehouse.plexus', module: 'plexus-utils'
     }
 
