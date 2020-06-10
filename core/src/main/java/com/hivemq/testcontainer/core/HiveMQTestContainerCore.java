@@ -158,7 +158,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     }
 
     /**
-     * Puts the given extension folder into '/opt/hivemq/extensions/{extension-id}' inside the container.
+     * Puts the given extension folder into '/opt/hivemq/extensions/{directory-name}' inside the container.
      * It must at least contain a valid hivemq-extension.xml and a valid extension.jar in order to be executed.
      * <p>
      * Must be called before the container is started.
@@ -367,7 +367,6 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     }
 
     /**
-     /**
      * Disables the extension.
      * This method blocks until the HiveMQ log for successful disabling is consumed or it times out after {timeOut}.
      * Note: Disabling Extensions is a HiveMQ Enterprise feature, it will not work when using HiveMQ Community Edition.
