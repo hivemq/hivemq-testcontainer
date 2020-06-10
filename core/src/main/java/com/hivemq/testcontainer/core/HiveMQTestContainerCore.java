@@ -367,23 +367,25 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     }
 
     /**
-     * Disables the extension.
+     * Disables the extension with the given name and extension directory name.
      * This method blocks until the HiveMQ log for successful disabling is consumed or it times out after {timeOut}.
-     * Note: Disabling Extensions is a HiveMQ Enterprise feature, it will not work when using HiveMQ Community Edition.
+     * Note: Disabling Extensions is a HiveMQ Enterprise feature, it will not work when using the HiveMQ Community Edition.
      * <p>
      * This can only be called once the container is started.
      *
-     * @param hiveMQExtension the extension
+     * @param extensionName the name of the extension to disable
+     * @param extensionDirectory the name of the extension's directory
      * @param timeout the timeout
      * @return self
      */
     public @NotNull SELF disableExtension(
-            final @NotNull HiveMQExtension hiveMQExtension,
+            final @NotNull String extensionName,
+            final @NotNull String extensionDirectory,
             final @NotNull Duration timeout) {
 
-        final String regEX = "(.*)Extension \"" + hiveMQExtension.getName() + "\" version (.*) stopped successfully(.*)";
+        final String regEX = "(.*)Extension \"" + extensionName + "\" version (.*) stopped successfully(.*)";
         try {
-            final String containerPath = "/opt/hivemq/extensions" + PathUtil.preparePath(hiveMQExtension.getId()) + "DISABLED";
+            final String containerPath = "/opt/hivemq/extensions" + PathUtil.preparePath(extensionDirectory) + "DISABLED";
 
             final CountDownLatch latch = new CountDownLatch(1);
             containerOutputLatches.put(regEX, latch);
@@ -406,9 +408,43 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     }
 
     /**
+     * Disables the extension with the given name and extension directory name.
+     * This method blocks until the HiveMQ log for successful disabling is consumed or it times out after 60 seconds.
+     * Note: Disabling Extensions is a HiveMQ Enterprise feature, it will not work when using the HiveMQ Community Edition.
+     * <p>
+     * This can only be called once the container is started.
+     *
+     * @param extensionName the name of the extension to disable
+     * @param extensionDirectory the name of the extension's directory
+     * @return self
+     */
+    public @NotNull SELF disableExtension(
+            final @NotNull String extensionName,
+            final @NotNull String extensionDirectory) {
+        return disableExtension(extensionName, extensionDirectory, Duration.ofSeconds(60));
+    }
+
+    /**
+     * Disables the extension.
+     * This method blocks until the HiveMQ log for successful disabling is consumed or it times out after {timeOut}.
+     * Note: Disabling Extensions is a HiveMQ Enterprise feature, it will not work when using the HiveMQ Community Edition.
+     * <p>
+     * This can only be called once the container is started.
+     *
+     * @param hiveMQExtension the extension
+     * @param timeout the timeout
+     * @return self
+     */
+    public @NotNull SELF disableExtension(
+            final @NotNull HiveMQExtension hiveMQExtension,
+            final @NotNull Duration timeout) {
+        return disableExtension(hiveMQExtension.getName(), hiveMQExtension.getId(), timeout);
+    }
+
+    /**
      * Disables the extension with the corresponding {id}.
      * This method blocks until the HiveMQ log for successful disabling is consumed or it times out after 60 seconds.
-     * Note: Disabling Extensions is a HiveMQ Enterprise feature, it will not work when using HiveMQ Community Edition.
+     * Note: Disabling Extensions is a HiveMQ Enterprise feature, it will not work when using the HiveMQ Community Edition.
      * <p>
      * This can only be called once the container is started.
      *
@@ -420,23 +456,25 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     }
 
     /**
-     * Enables the extension.
+     * Enables the extension with the given name and extension directory name.
      * This method blocks until the HiveMQ log for successful enabling is consumed or it times out after {timeOut}.
-     * Note: Enabling Extensions is a HiveMQ Enterprise feature, it will not work when using HiveMQ Community Edition.
+     * Note: Enabling Extensions is a HiveMQ Enterprise feature, it will not work when using the HiveMQ Community Edition.
      *
      * This can only be called once the container is started.
      *
-     * @param hiveMQExtension the extension
+     * @param extensionName the name of the extension to disable
+     * @param extensionDirectory the name of the extension's directory
      * @param timeout the timeout
      * @return self
      */
     public @NotNull SELF enableExtension(
-            final @NotNull HiveMQExtension hiveMQExtension,
+            final @NotNull String extensionName,
+            final @NotNull String extensionDirectory,
             final @NotNull Duration timeout) {
 
-        final String regEX = "(.*)Extension \"" + hiveMQExtension.getName() + "\" version (.*) started successfully(.*)";
+        final String regEX = "(.*)Extension \"" + extensionName + "\" version (.*) started successfully(.*)";
         try {
-            final String containerPath = "/opt/hivemq/extensions" + PathUtil.preparePath(hiveMQExtension.getId()) + "DISABLED";
+            final String containerPath = "/opt/hivemq/extensions" + PathUtil.preparePath(extensionDirectory) + "DISABLED";
 
             final CountDownLatch latch = new CountDownLatch(1);
             containerOutputLatches.put(regEX, latch);
@@ -459,9 +497,43 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     }
 
     /**
+     * Enables the extension with the given name and extension directory name.
+     * This method blocks until the HiveMQ log for successful enabling is consumed or it times out after 60 seconds.
+     * Note: Enabling Extensions is a HiveMQ Enterprise feature, it will not work when using the HiveMQ Community Edition.
+     *
+     * This can only be called once the container is started.
+     *
+     * @param extensionName the name of the extension to disable
+     * @param extensionDirectory the name of the extension's directory
+     * @return self
+     */
+    public @NotNull SELF enableExtension(
+            final @NotNull String extensionName,
+            final @NotNull String extensionDirectory) {
+        return enableExtension(extensionName, extensionDirectory, Duration.ofSeconds(60));
+    }
+
+    /**
      * Enables the extension.
      * This method blocks until the HiveMQ log for successful enabling is consumed or it times out after {timeOut}.
-     * Note: Enabling Extensions is a HiveMQ Enterprise feature, it will not work when using HiveMQ Community Edition.
+     * Note: Enabling Extensions is a HiveMQ Enterprise feature, it will not work when using the HiveMQ Community Edition.
+     *
+     * This can only be called once the container is started.
+     *
+     * @param hiveMQExtension the extension
+     * @param timeout the timeout
+     * @return self
+     */
+    public @NotNull SELF enableExtension(
+            final @NotNull HiveMQExtension hiveMQExtension,
+            final @NotNull Duration timeout) {
+        return enableExtension(hiveMQExtension.getName(), hiveMQExtension.getId(), timeout);
+    }
+
+    /**
+     * Enables the extension.
+     * This method blocks until the HiveMQ log for successful enabling is consumed or it times out after {timeOut}.
+     * Note: Enabling Extensions is a HiveMQ Enterprise feature, it will not work when using the HiveMQ Community Edition.
      *
      * This can only be called once the container is started.
      *

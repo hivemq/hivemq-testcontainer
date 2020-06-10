@@ -241,7 +241,7 @@ Note that disabling of extension during runtime is only supported in HiveMQ 4 En
         new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
         .withExtension(hiveMQExtension);
     
-    @Test()
+    @Test
     public void test_disable_enable_extension() throws ExecutionException, InterruptedException {
         rule.enableExtension(hiveMQExtension);
         rule.disableExtension(hiveMQExtension);
@@ -261,10 +261,43 @@ Note that disabling of extension during runtime is only supported in HiveMQ 4 En
         new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
         .withExtension(hiveMQExtension);
     
-    @Test()
+    @Test
     void test_disable_enable_extension() throws ExecutionException, InterruptedException {
         extension.enableExtension(hiveMQExtension);
         extension.disableExtension(hiveMQExtension);
+    }
+    
+It is possible to enable and disable extensions that are loaded from a file by providing their directory name and extension name:
+
+## Load an extension from a folder
+
+You can load an extension from an extension directory into the container.
+The extension will be placed in the container before startup. 
+
+### JUnit 4
+
+    @Rule
+    public final @NotNull HiveMQTestContainerRule rule =
+            new HiveMQTestContainerRule()
+                .withExtension(new File("src/test/resources/modifier-extension"));
+                
+    @Test
+    void test_disable_enable_extension() throws ExecutionException, InterruptedException {
+        extension.enableExtension("Modifier Extension", "modifier-extension");
+        extension.disableExtension("Modifier Extension", "modifier-extension");
+    }
+
+### JUnit 5
+
+    @RegisterExtension
+    public final @NotNull HiveMQTestContainerExtension extension =
+            new HiveMQTestContainerExtension()
+                .withExtension(new File("src/test/resources/modifier-extension"));
+                
+    @Test
+    void test_disable_enable_extension() throws ExecutionException, InterruptedException {
+        extension.enableExtension("Modifier Extension", "modifier-extension");
+        extension.disableExtension("Modifier Extension", "modifier-extension");
     }
                     
 ## Set logging level
