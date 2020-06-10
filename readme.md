@@ -150,7 +150,7 @@ You can define a custom image and tag in the constructor:
 ### JUnit 5
 
     @RegisterExtension
-    final @NotNull HiveMQTestContainerExtension extension = 
+    final @NotNull HiveMQTestContainerExtension rule = 
         new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
             .withHiveMQConfig(new File("src/test/resources/config.xml"));
             
@@ -162,7 +162,7 @@ You can package and load an extension from a maven project.
 ### JUnit 4
 
     @Rule
-    public final @NotNull HiveMQTestContainerRule extension =
+    public final @NotNull HiveMQTestContainerRule rule =
         new HiveMQTestContainerRule()
             .withExtension(new MavenHiveMQExtensionSupplier("path/to/extension/pom.xml").get());
 
