@@ -20,6 +20,9 @@ import com.hivemq.extension.sdk.api.annotations.NotNull;
 import com.hivemq.extension.sdk.api.annotations.Nullable;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
 
+/**
+ * @author Yannick Weber
+ */
 public class HiveMQExtension {
 
     private final @NotNull String id;

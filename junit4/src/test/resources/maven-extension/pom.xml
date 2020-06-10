@@ -24,10 +24,8 @@
     <artifactId>maven-extension</artifactId>
     <version>1.0.0</version>
 
-    <description>HiveMQ 4 Hello World Extension - a simple reference for all extension developers</description>
-
     <properties>
-        <extension.name>Hello World Extension</extension.name>
+        <extension.name>Maven Extension</extension.name>
         <extension.author>HiveMQ GmbH</extension.author>
     </properties>
 

@@ -16,40 +16,37 @@
 package com.hivemq.testcontainer.junit5;
 
 import com.hivemq.extension.sdk.api.annotations.NotNull;
-import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
-import com.hivemq.testcontainer.util.dagger.MyExtensionWithDagger;
-import com.hivemq.testcontainer.util.dagger.MyModule;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.RegisterExtension;
+import org.slf4j.event.Level;
 
+import java.io.File;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author Yannick Weber
  */
-public class ContainerWithDaggerExtensionIT {
+public class DisableEnableExtensionFromDirectoryIT {
 
     @RegisterExtension
     public final @NotNull HiveMQTestContainerExtension extension =
-            new HiveMQTestContainerExtension()
-                    .withExtension(HiveMQExtension.builder()
-                            .id("extension-1")
-                            .name("my-extension")
-                            .version("1.0")
-                            .mainClass(MyExtensionWithDagger.class)
-                            .addAdditionalClass(MyModule.class)
-                            .addAdditionalClass(Class.forName("com.hivemq.testcontainer.util.dagger.MyModule_ProvidePublishModifierFactory"))
-                            .build());
-
-    public ContainerWithDaggerExtensionIT() throws ClassNotFoundException {
-    }
+            new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
+                    .withExtension(new File("src/test/resources/modifier-extension"))
+                    .withLogLevel(Level.DEBUG);
 
     @Test
     @Timeout(value = 5, unit = TimeUnit.MINUTES)
-    void test_single_class_extension() throws ExecutionException, InterruptedException {
+    void test_disable_enable_extension() throws ExecutionException, InterruptedException {
+        TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
+        extension.disableExtension("Modifier Extension", "modifier-extension");
+        assertThrows(ExecutionException.class, () -> TestPublishModifiedUtil.testPublishModified(extension.getMqttPort()));
+        extension.enableExtension("Modifier Extension", "modifier-extension");
         TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
     }
+
 }

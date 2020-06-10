@@ -42,7 +42,7 @@ public class ContainerWithExtensionSubclassIT {
                             .mainClass(MyExtensionWithSubclasses.class).build())
                     .withLogLevel(Level.DEBUG);
 
-    @Test()
+    @Test
     @Timeout(value = 5, unit = TimeUnit.MINUTES)
     void test_extension_with_subclass() throws ExecutionException, InterruptedException {
         TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
