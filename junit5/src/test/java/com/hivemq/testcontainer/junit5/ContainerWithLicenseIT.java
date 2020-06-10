@@ -53,7 +53,7 @@ public class ContainerWithLicenseIT {
             .withLicense(new File("src/test/resources/myExtensionLicense.elic"))
             .withDebugging();
 
-    @Test()
+    @Test
     @Timeout(value = 5, unit = TimeUnit.MINUTES)
     void test_single_class_extension() throws ExecutionException, InterruptedException {
         TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());

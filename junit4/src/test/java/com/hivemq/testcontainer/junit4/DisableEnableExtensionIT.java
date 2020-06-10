@@ -26,7 +26,10 @@ import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class ContainerDisableEnableExtensionIT {
+/**
+ * @author Yannick Weber
+ */
+public class DisableEnableExtensionIT {
 
     private final @NotNull HiveMQExtension hiveMQExtension = HiveMQExtension.builder()
             .id("extension-1")

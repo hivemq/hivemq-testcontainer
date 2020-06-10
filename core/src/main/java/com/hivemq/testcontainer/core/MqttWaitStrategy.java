@@ -25,6 +25,9 @@ import java.util.concurrent.TimeUnit;
 
 import static com.hivemq.testcontainer.core.HiveMQTestContainerCore.MQTT_PORT;
 
+/**
+ * @author Yannick Weber
+ */
 public class MqttWaitStrategy extends AbstractWaitStrategy {
 
     private @NotNull Duration retryInterval = Duration.ofMillis(500);

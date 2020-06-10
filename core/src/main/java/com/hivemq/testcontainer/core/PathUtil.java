@@ -17,6 +17,9 @@ package com.hivemq.testcontainer.core;
 
 import com.hivemq.extension.sdk.api.annotations.NotNull;
 
+/**
+ * @author Yannick Weber
+ */
 class PathUtil {
 
     static @NotNull String preparePath(@NotNull String pathInExtensionHome) {
