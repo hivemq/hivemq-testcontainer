@@ -33,7 +33,10 @@ public class ContainerWithMavenExtensionIT {
     @RegisterExtension
     public final @NotNull HiveMQTestContainerExtension extension =
             new HiveMQTestContainerExtension()
-                    .withExtension(new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml").get());
+                    .withExtension(new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml")
+                            .cleanBefore()
+                            .cleanAfter()
+                            .get());
 
     @Test
     @Timeout(value = 5, unit = TimeUnit.MINUTES)
