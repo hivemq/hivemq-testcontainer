@@ -43,7 +43,7 @@ public class ContainerWithLicenseIT {
 
     @RegisterExtension
     public final @NotNull HiveMQTestContainerExtension extension =
-            new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
+            new HiveMQTestContainerExtension()
                     .withExtension(HiveMQExtension.builder()
                             .id("extension-1")
                             .name("my-extension")
