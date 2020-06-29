@@ -35,6 +35,8 @@ import java.util.function.Supplier;
 public class MavenHiveMQExtensionSupplier implements Supplier<File> {
 
     private final @NotNull String pomFile;
+    private boolean cleanBefore = false;
+    private boolean cleanAfter = false;
 
     /**
      * This {@link Supplier} can be used if the current maven project is the HiveMQ Extension to supply.
@@ -66,7 +68,12 @@ public class MavenHiveMQExtensionSupplier implements Supplier<File> {
     @Override
     public @NotNull File get() {
         final PomEquippedEmbeddedMaven embeddedMaven = EmbeddedMaven.forProject(pomFile);
-        final BuiltProject aPackage = embeddedMaven.setGoals("package").build();
+        BuiltProject aPackage;
+        if (cleanBefore) {
+            aPackage = embeddedMaven.setGoals("clean package").build();
+        } else {
+            aPackage = embeddedMaven.setGoals("package").build();
+        }
         final File targetDirectory = aPackage.getTargetDirectory();
         final String version = aPackage.getModel().getVersion();
         final String artifactId = aPackage.getModel().getArtifactId();
@@ -79,6 +86,20 @@ public class MavenHiveMQExtensionSupplier implements Supplier<File> {
         } catch (final ZipException e) {
             throw new RuntimeException(e);
         }
+        if (cleanAfter) {
+            final PomEquippedEmbeddedMaven cleaner = EmbeddedMaven.forProject(pomFile);
+            cleaner.setGoals("clean").build();
+        }
         return new File(tempDir, artifactId);
+    }
+
+    public @NotNull MavenHiveMQExtensionSupplier cleanBefore() {
+        this.cleanBefore = true;
+        return this;
+    }
+
+    public @NotNull MavenHiveMQExtensionSupplier cleanAfter() {
+        this.cleanAfter = true;
+        return this;
     }
 }
