@@ -94,7 +94,7 @@ public class MavenHiveMQExtensionSupplier implements Supplier<File> {
     }
 
     /**
-     * Sets a Flag to execute a mvn clean command before execution.
+     * Execute mvn clean before packaging.
      *
      * @return self
      */
@@ -105,7 +105,7 @@ public class MavenHiveMQExtensionSupplier implements Supplier<File> {
 
 
     /**
-     * Sets a Flag to execute a mvn clean command after execution.
+     * Execute mvn clean after packaging.
      *
      * @return self
      */
