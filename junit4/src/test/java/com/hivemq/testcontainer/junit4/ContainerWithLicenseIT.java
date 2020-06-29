@@ -41,7 +41,7 @@ public class ContainerWithLicenseIT {
 
     @Rule
     public final @NotNull HiveMQTestContainerRule extension =
-            new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
+            new HiveMQTestContainerRule()
                     .withExtension(HiveMQExtension.builder()
                             .id("extension-1")
                             .name("my-extension")
