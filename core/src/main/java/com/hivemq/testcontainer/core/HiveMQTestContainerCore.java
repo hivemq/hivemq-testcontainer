@@ -87,10 +87,10 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
             if (!containerOutputLatches.isEmpty()) {
                 containerOutputLatches.forEach((regEx, latch) -> {
                     if (outputFrame.getUtf8String().matches("(?s)" + regEx)) {
-                        logger.debug("Contanier Output '{}' matched RegEx '{}'", outputFrame.getUtf8String(), regEx);
+                        logger.debug("Container Output '{}' matched RegEx '{}'", outputFrame.getUtf8String(), regEx);
                         latch.countDown();
                     } else {
-                        logger.debug("Contanier Output '{}' did not match RegEx '{}'", outputFrame.getUtf8String(), regEx);
+                        logger.debug("Container Output '{}' did not match RegEx '{}'", outputFrame.getUtf8String(), regEx);
                     }
                 });
             }
