@@ -70,10 +70,11 @@ public class MavenHiveMQExtensionSupplier implements Supplier<File> {
         final PomEquippedEmbeddedMaven embeddedMaven = EmbeddedMaven.forProject(pomFile);
         BuiltProject aPackage;
         if (cleanBefore) {
-            aPackage = embeddedMaven.setGoals("clean package").build();
+            embeddedMaven.setGoals("clean package");
         } else {
-            aPackage = embeddedMaven.setGoals("package").build();
+            embeddedMaven.setGoals("package");
         }
+        aPackage = embeddedMaven.build();
         final File targetDirectory = aPackage.getTargetDirectory();
         final String version = aPackage.getModel().getVersion();
         final String artifactId = aPackage.getModel().getArtifactId();
@@ -87,8 +88,7 @@ public class MavenHiveMQExtensionSupplier implements Supplier<File> {
             throw new RuntimeException(e);
         }
         if (cleanAfter) {
-            final PomEquippedEmbeddedMaven cleaner = EmbeddedMaven.forProject(pomFile);
-            cleaner.setGoals("clean").build();
+            EmbeddedMaven.forProject(pomFile).setGoals("clean").build();
         }
         return new File(tempDir, artifactId);
     }
