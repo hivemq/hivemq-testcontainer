@@ -93,11 +93,22 @@ public class MavenHiveMQExtensionSupplier implements Supplier<File> {
         return new File(tempDir, artifactId);
     }
 
+    /**
+     * Sets a Flag to execute a mvn clean command before execution.
+     *
+     * @return self
+     */
     public @NotNull MavenHiveMQExtensionSupplier cleanBefore() {
         this.cleanBefore = true;
         return this;
     }
 
+
+    /**
+     * Sets a Flag to execute a mvn clean command after execution.
+     *
+     * @return self
+     */
     public @NotNull MavenHiveMQExtensionSupplier cleanAfter() {
         this.cleanAfter = true;
         return this;
