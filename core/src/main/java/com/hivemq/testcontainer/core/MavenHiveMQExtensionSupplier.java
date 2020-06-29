@@ -68,13 +68,12 @@ public class MavenHiveMQExtensionSupplier implements Supplier<File> {
     @Override
     public @NotNull File get() {
         final PomEquippedEmbeddedMaven embeddedMaven = EmbeddedMaven.forProject(pomFile);
-        BuiltProject aPackage;
         if (cleanBefore) {
             embeddedMaven.setGoals("clean package");
         } else {
             embeddedMaven.setGoals("package");
         }
-        aPackage = embeddedMaven.build();
+        final BuiltProject aPackage = embeddedMaven.build();
         final File targetDirectory = aPackage.getTargetDirectory();
         final String version = aPackage.getModel().getVersion();
         final String artifactId = aPackage.getModel().getArtifactId();
