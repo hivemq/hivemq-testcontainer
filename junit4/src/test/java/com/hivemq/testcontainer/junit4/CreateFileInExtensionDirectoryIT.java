@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hivemq.testcontainer.junit5;
+package com.hivemq.testcontainer.junit4;
 
 import com.hivemq.extension.sdk.api.ExtensionMain;
 import com.hivemq.extension.sdk.api.annotations.NotNull;
@@ -26,59 +26,54 @@ import com.hivemq.extension.sdk.api.services.Services;
 import com.hivemq.extension.sdk.api.services.intializer.ClientInitializer;
 import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
-import org.junit.jupiter.api.extension.RegisterExtension;
+import org.junit.Rule;
+import org.junit.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author Yannick Weber
  */
-public class ContainerWithLicenseIT {
+public class CreateFileInExtensionDirectoryIT {
 
-    @RegisterExtension
-    public final @NotNull HiveMQTestContainerExtension extension =
-            new HiveMQTestContainerExtension()
+    @Rule
+    public final @NotNull HiveMQTestContainerRule rule =
+            new HiveMQTestContainerRule()
                     .withExtension(HiveMQExtension.builder()
                             .id("extension-1")
                             .name("my-extension")
                             .version("1.0")
-                            .mainClass(LicenceCheckerExtension.class).build())
-            .withLicense(new File("src/test/resources/myLicense.lic"))
-            .withLicense(new File("src/test/resources/myExtensionLicense.elic"))
-            .withDebugging();
+                            .mainClass(FileCreatorExtension.class).build());
 
-    @Test
-    @Timeout(value = 5, unit = TimeUnit.MINUTES)
-    void test_single_class_extension() throws ExecutionException, InterruptedException {
-        TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
+    @Test(timeout = 500_000)
+    public void test_single_class_extension() throws ExecutionException, InterruptedException {
+        TestPublishModifiedUtil.testPublishModified(rule.getMqttPort());
     }
 
-    @SuppressWarnings("CodeBlock2Expr")
-    public static class LicenceCheckerExtension implements ExtensionMain {
+    public static class FileCreatorExtension implements ExtensionMain {
 
         @Override
         public void extensionStart(@NotNull ExtensionStartInput extensionStartInput, @NotNull ExtensionStartOutput extensionStartOutput) {
 
             final PublishInboundInterceptor publishInboundInterceptor = (publishInboundInput, publishInboundOutput) -> {
 
-                final File homeFolder = extensionStartInput.getServerInformation().getHomeFolder();
-                final File myLicence = new File(homeFolder, "license/myLicense.lic");
-                final File myExtensionLicence = new File(homeFolder, "license/myExtensionLicense.elic");
+                final File extensionHomeFolder = extensionStartInput.getExtensionInformation().getExtensionHomeFolder();
 
-                if (myLicence.exists() && myExtensionLicence.exists()) {
-                    publishInboundOutput.getPublishPacket().setPayload(ByteBuffer.wrap("modified".getBytes(StandardCharsets.UTF_8)));
+                final File file = new File(extensionHomeFolder, "myfile.txt");
+                try {
+                    if (file.createNewFile()) {
+                        publishInboundOutput.getPublishPacket().setPayload(ByteBuffer.wrap("modified".getBytes(StandardCharsets.UTF_8)));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             };
 
-            final ClientInitializer clientInitializer = (initializerInput, clientContext) -> {
-                clientContext.addPublishInboundInterceptor(publishInboundInterceptor);
-            };
+            final ClientInitializer clientInitializer = (initializerInput, clientContext) -> clientContext.addPublishInboundInterceptor(publishInboundInterceptor);
 
             Services.initializerRegistry().setClientInitializer(clientInitializer);
         }

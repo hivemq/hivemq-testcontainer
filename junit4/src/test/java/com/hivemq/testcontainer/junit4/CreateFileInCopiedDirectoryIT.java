@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hivemq.testcontainer.junit5;
+package com.hivemq.testcontainer.junit4;
 
 import com.hivemq.extension.sdk.api.ExtensionMain;
 import com.hivemq.extension.sdk.api.annotations.NotNull;
@@ -26,41 +26,50 @@ import com.hivemq.extension.sdk.api.services.Services;
 import com.hivemq.extension.sdk.api.services.intializer.ClientInitializer;
 import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
-import org.junit.jupiter.api.extension.RegisterExtension;
+import org.jetbrains.annotations.Nullable;
+import org.junit.Rule;
+import org.junit.Test;
+import org.testcontainers.shaded.com.google.common.io.Files;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author Yannick Weber
  */
-public class ContainerWithLicenseIT {
+public class CreateFileInCopiedDirectoryIT {
 
-    @RegisterExtension
-    public final @NotNull HiveMQTestContainerExtension extension =
-            new HiveMQTestContainerExtension()
+    public @Nullable File tempDir = Files.createTempDir();
+
+    private @NotNull File createDirectory() {
+        final File directory = new File(tempDir, "directory");
+        assertTrue(directory.mkdir());
+        final File subdirectory = new File(directory, "sub-directory");
+        assertTrue(subdirectory.mkdir());
+        return directory;
+    }
+
+    @Rule
+    public final @NotNull HiveMQTestContainerRule rule =
+            new HiveMQTestContainerRule()
                     .withExtension(HiveMQExtension.builder()
                             .id("extension-1")
                             .name("my-extension")
                             .version("1.0")
-                            .mainClass(LicenceCheckerExtension.class).build())
-            .withLicense(new File("src/test/resources/myLicense.lic"))
-            .withLicense(new File("src/test/resources/myExtensionLicense.elic"))
-            .withDebugging();
+                            .mainClass(FileCreatorExtension.class).build())
+                    .withFileInHomeFolder(createDirectory());
 
     @Test
-    @Timeout(value = 5, unit = TimeUnit.MINUTES)
-    void test_single_class_extension() throws ExecutionException, InterruptedException {
-        TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
+    public void test_createFileInCopiedDirectory() throws ExecutionException, InterruptedException {
+        TestPublishModifiedUtil.testPublishModified(rule.getMqttPort());
     }
 
-    @SuppressWarnings("CodeBlock2Expr")
-    public static class LicenceCheckerExtension implements ExtensionMain {
+    public static class FileCreatorExtension implements ExtensionMain {
 
         @Override
         public void extensionStart(@NotNull ExtensionStartInput extensionStartInput, @NotNull ExtensionStartOutput extensionStartOutput) {
@@ -68,17 +77,22 @@ public class ContainerWithLicenseIT {
             final PublishInboundInterceptor publishInboundInterceptor = (publishInboundInput, publishInboundOutput) -> {
 
                 final File homeFolder = extensionStartInput.getServerInformation().getHomeFolder();
-                final File myLicence = new File(homeFolder, "license/myLicense.lic");
-                final File myExtensionLicence = new File(homeFolder, "license/myExtensionLicense.elic");
 
-                if (myLicence.exists() && myExtensionLicence.exists()) {
-                    publishInboundOutput.getPublishPacket().setPayload(ByteBuffer.wrap("modified".getBytes(StandardCharsets.UTF_8)));
+                final File dir = new File(homeFolder, "directory");
+                final File dirFile = new File(dir, "file.txt");
+                final File subDir = new File(dir, "sub-directory");
+                final File subDirFile = new File(subDir, "file.txt");
+
+                try {
+                    if (dirFile.createNewFile() && subDirFile.createNewFile()) {
+                        publishInboundOutput.getPublishPacket().setPayload(ByteBuffer.wrap("modified".getBytes(StandardCharsets.UTF_8)));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             };
 
-            final ClientInitializer clientInitializer = (initializerInput, clientContext) -> {
-                clientContext.addPublishInboundInterceptor(publishInboundInterceptor);
-            };
+            final ClientInitializer clientInitializer = (initializerInput, clientContext) -> clientContext.addPublishInboundInterceptor(publishInboundInterceptor);
 
             Services.initializerRegistry().setClientInitializer(clientInitializer);
         }

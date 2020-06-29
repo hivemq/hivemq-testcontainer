@@ -149,7 +149,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     public @NotNull SELF withExtension(final @NotNull HiveMQExtension hiveMQExtension) {
         try {
             final File extension = createExtension(hiveMQExtension);
-            final MountableFile mountableExtension = MountableFile.forHostPath(extension.getPath());
+            final MountableFile mountableExtension = MountableFile.forHostPath(extension.getPath(), 32767);
             withCopyFileToContainer(mountableExtension, "/opt/hivemq/extensions/" + hiveMQExtension.getId());
         } catch (final Exception e) {
             e.printStackTrace();
@@ -176,7 +176,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
             return self();
         }
         try {
-            final MountableFile mountableExtension = MountableFile.forHostPath(extensionDir.getPath());
+            final MountableFile mountableExtension = MountableFile.forHostPath(extensionDir.getPath(), 32767);
             final String containerPath = "/opt/hivemq/extensions/" + extensionDir.getName();
             withCopyFileToContainer(mountableExtension, containerPath);
             logger.info("Putting extension {} into {}", extensionDir.getName(), containerPath);
@@ -267,7 +267,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
             logger.warn("License file {} does not end wit '.lic' or '.elic'", license.getAbsolutePath());
             return self();
         }
-        final MountableFile mountableFile = MountableFile.forHostPath(license.getAbsolutePath());
+        final MountableFile mountableFile = MountableFile.forHostPath(license.getAbsolutePath(), 32767);
         final String containerPath = "/opt/hivemq/license/" + license.getName();
         withCopyFileToContainer(mountableFile, containerPath);
         logger.info("Putting license {} into {}", license.getAbsolutePath(), containerPath);
@@ -287,7 +287,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
             logger.warn("HiveMQ config file {} does not exist.", config.getAbsolutePath());
             return self();
         }
-        final MountableFile mountableFile = MountableFile.forHostPath(config.getAbsolutePath());
+        final MountableFile mountableFile = MountableFile.forHostPath(config.getAbsolutePath(), 32767);
         final String containerPath = "/opt/hivemq/conf/config.xml";
         withCopyFileToContainer(mountableFile, containerPath);
         logger.info("Putting {} into {}", config.getAbsolutePath(), containerPath);
@@ -359,7 +359,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
             logger.warn("File {} does not exist.", file.getAbsolutePath());
             return self();
         }
-        final MountableFile mountableFile = MountableFile.forHostPath(file.getAbsolutePath());
+        final MountableFile mountableFile = MountableFile.forHostPath(file.getAbsolutePath(), 32767);
         final String containerPath = "/opt/hivemq" + PathUtil.preparePath(pathInHomeFolder) + file.getName();
         withCopyFileToContainer(mountableFile, containerPath);
         logger.info("Putting file {} into container path {}", file.getAbsolutePath(), containerPath);
