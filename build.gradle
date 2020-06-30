@@ -96,7 +96,7 @@ allprojects {
 
             /** after test -> decide what to print */
             afterTest { TestDescriptor td, TestResult tr ->
-                if (tr.resultType == TestResult.ResultType.FAILURE && outputCache.size() > 0) {
+                if (outputCache.size() > 0) {
                     println()
                     println(" Output of ${td.className}.${td.name}:")
                     outputCache.each { print(" > $it") }
