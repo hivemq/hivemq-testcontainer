@@ -81,7 +81,7 @@ allprojects {
 
         test {
             useJUnitPlatform()
-            testLogging.events('failed')
+            testLogging.events('failed', 'passed')
             testLogging.exceptionFormat('full')
 
             /* Log stdout for failed tests */
