@@ -37,6 +37,7 @@ public class MavenHiveMQExtensionSupplier implements Supplier<File> {
     private final @NotNull String pomFile;
     private boolean cleanBefore = false;
     private boolean cleanAfter = false;
+    private boolean quiet = false;
 
     /**
      * This {@link Supplier} can be used if the current maven project is the HiveMQ Extension to supply.
@@ -73,6 +74,7 @@ public class MavenHiveMQExtensionSupplier implements Supplier<File> {
         } else {
             embeddedMaven.setGoals("package");
         }
+        embeddedMaven.setQuiet(quiet).setBatchMode(true);
         final BuiltProject aPackage = embeddedMaven.build();
         final File targetDirectory = aPackage.getTargetDirectory();
         final String version = aPackage.getModel().getVersion();
@@ -87,7 +89,7 @@ public class MavenHiveMQExtensionSupplier implements Supplier<File> {
             throw new RuntimeException(e);
         }
         if (cleanAfter) {
-            EmbeddedMaven.forProject(pomFile).setGoals("clean").build();
+            EmbeddedMaven.forProject(pomFile).setBatchMode(true).setQuiet(quiet).setGoals("clean").build();
         }
         return new File(tempDir, artifactId);
     }
@@ -102,7 +104,6 @@ public class MavenHiveMQExtensionSupplier implements Supplier<File> {
         return this;
     }
 
-
     /**
      * Execute mvn clean after packaging.
      *
@@ -110,6 +111,16 @@ public class MavenHiveMQExtensionSupplier implements Supplier<File> {
      */
     public @NotNull MavenHiveMQExtensionSupplier cleanAfter() {
         this.cleanAfter = true;
+        return this;
+    }
+
+    /**
+     * Suppress stdout of the maven build.
+     *
+     * @return self
+     */
+    public @NotNull MavenHiveMQExtensionSupplier quiet() {
+        this.quiet = true;
         return this;
     }
 }
