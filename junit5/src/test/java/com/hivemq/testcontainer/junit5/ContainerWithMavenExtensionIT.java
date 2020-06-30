@@ -36,7 +36,8 @@ public class ContainerWithMavenExtensionIT {
                         .withExtension(new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml")
                                 .cleanBefore()
                                 .cleanAfter()
-                                .get());
+                                .quiet()
+                            .get());
 
         extension.beforeEach(null);
         TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());

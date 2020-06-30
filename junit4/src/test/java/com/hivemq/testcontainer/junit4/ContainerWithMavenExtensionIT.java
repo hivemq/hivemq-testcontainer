@@ -27,11 +27,12 @@ public class ContainerWithMavenExtensionIT {
     @Test(timeout = 500_000)
     public void test() throws Exception {
         final HiveMQTestContainerRule rule =
-                new HiveMQTestContainerRule()
-                        .withExtension(
-                                new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml")
-                                        .cleanAfter()
-                                        .cleanBefore().get());
+            new HiveMQTestContainerRule()
+                    .withExtension(
+                            new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml")
+                                    .cleanAfter()
+                                    .cleanBefore()
+                                    .quiet().get());
         rule.start();
         TestPublishModifiedUtil.testPublishModified(rule.getMqttPort());
         rule.stop();
