@@ -28,13 +28,11 @@ import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -42,19 +40,19 @@ import java.util.concurrent.TimeUnit;
  */
 public class CreateFileInExtensionDirectoryIT {
 
-    @RegisterExtension
-    public final @NotNull HiveMQTestContainerExtension extension =
-            new HiveMQTestContainerExtension()
-                    .withExtension(HiveMQExtension.builder()
-                            .id("extension-1")
-                            .name("my-extension")
-                            .version("1.0")
-                            .mainClass(FileCreatorExtension.class).build());
-
     @Test
     @Timeout(value = 5, unit = TimeUnit.MINUTES)
-    void test_createFileInExtensionDirectory() throws ExecutionException, InterruptedException {
+    void test() throws Exception {
+        final HiveMQTestContainerExtension extension =
+                new HiveMQTestContainerExtension()
+                        .withExtension(HiveMQExtension.builder()
+                                .id("extension-1")
+                                .name("my-extension")
+                                .version("1.0")
+                                .mainClass(FileCreatorExtension.class).build());
+        extension.start();
         TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
+        extension.stop();
     }
 
     public static class FileCreatorExtension implements ExtensionMain {

@@ -15,33 +15,32 @@
  */
 package com.hivemq.testcontainer.junit5;
 
-import com.hivemq.extension.sdk.api.annotations.NotNull;
 import com.hivemq.testcontainer.core.MavenHiveMQExtensionSupplier;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.junit.jupiter.api.extension.RegisterExtension;
 
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 /**
  * @author Yannick Weber
  */
+@SuppressWarnings("ConstantConditions")
 public class ContainerWithMavenExtensionIT {
-
-    @RegisterExtension
-    public final @NotNull HiveMQTestContainerExtension extension =
-            new HiveMQTestContainerExtension()
-                    .withExtension(new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml")
-                            .cleanBefore()
-                            .cleanAfter()
-                            .get());
 
     @Test
     @Timeout(value = 5, unit = TimeUnit.MINUTES)
-    void test_single_class_extension() throws ExecutionException, InterruptedException {
+    void test() throws Exception {
+        final HiveMQTestContainerExtension extension =
+                new HiveMQTestContainerExtension()
+                        .withExtension(new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml")
+                                .cleanBefore()
+                                .cleanAfter()
+                                .get());
+
+        extension.beforeEach(null);
         TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
+        extension.afterEach(null);
     }
 
 }

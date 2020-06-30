@@ -26,8 +26,6 @@ import com.hivemq.extension.sdk.api.services.Services;
 import com.hivemq.extension.sdk.api.services.intializer.ClientInitializer;
 import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
-import org.jetbrains.annotations.Nullable;
-import org.junit.Rule;
 import org.junit.Test;
 import org.testcontainers.shaded.com.google.common.io.Files;
 
@@ -35,7 +33,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -44,29 +41,28 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class CreateFileInCopiedDirectoryIT {
 
-    public @Nullable File tempDir = Files.createTempDir();
-
     private @NotNull File createDirectory() {
-        final File directory = new File(tempDir, "directory");
+        final File directory = new File(Files.createTempDir(), "directory");
         assertTrue(directory.mkdir());
         final File subdirectory = new File(directory, "sub-directory");
         assertTrue(subdirectory.mkdir());
         return directory;
     }
 
-    @Rule
-    public final @NotNull HiveMQTestContainerRule rule =
-            new HiveMQTestContainerRule()
-                    .withExtension(HiveMQExtension.builder()
-                            .id("extension-1")
-                            .name("my-extension")
-                            .version("1.0")
-                            .mainClass(FileCreatorExtension.class).build())
-                    .withFileInHomeFolder(createDirectory());
-
     @Test(timeout = 500_000)
-    public void test_createFileInCopiedDirectory() throws ExecutionException, InterruptedException {
+    public void test() throws Exception {
+        final @NotNull HiveMQTestContainerRule rule =
+                new HiveMQTestContainerRule()
+                        .withExtension(HiveMQExtension.builder()
+                                .id("extension-1")
+                                .name("my-extension")
+                                .version("1.0")
+                                .mainClass(FileCreatorExtension.class).build())
+                        .withFileInHomeFolder(createDirectory());
+
+        rule.start();
         TestPublishModifiedUtil.testPublishModified(rule.getMqttPort());
+        rule.stop();
     }
 
     public static class FileCreatorExtension implements ExtensionMain {

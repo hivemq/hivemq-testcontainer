@@ -15,30 +15,26 @@
  */
 package com.hivemq.testcontainer.junit4;
 
-import com.hivemq.extension.sdk.api.annotations.NotNull;
 import com.hivemq.testcontainer.core.MavenHiveMQExtensionSupplier;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
-import org.junit.Rule;
 import org.junit.Test;
-
-import java.util.concurrent.ExecutionException;
 
 /**
  * @author Yannick Weber
  */
 public class ContainerWithMavenExtensionIT {
 
-    @Rule
-    public final @NotNull HiveMQTestContainerRule extension =
-            new HiveMQTestContainerRule()
-                    .withExtension(
-                            new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml")
-                            .cleanAfter()
-                            .cleanBefore().get());
-
     @Test(timeout = 500_000)
-    public void test_single_class_extension() throws ExecutionException, InterruptedException {
-        TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
+    public void test() throws Exception {
+        final HiveMQTestContainerRule rule =
+                new HiveMQTestContainerRule()
+                        .withExtension(
+                                new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml")
+                                        .cleanAfter()
+                                        .cleanBefore().get());
+        rule.start();
+        TestPublishModifiedUtil.testPublishModified(rule.getMqttPort());
+        rule.stop();
     }
 
 }

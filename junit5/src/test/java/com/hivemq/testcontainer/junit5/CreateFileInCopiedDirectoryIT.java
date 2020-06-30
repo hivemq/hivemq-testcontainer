@@ -26,17 +26,14 @@ import com.hivemq.extension.sdk.api.services.Services;
 import com.hivemq.extension.sdk.api.services.intializer.ClientInitializer;
 import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
-import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.testcontainers.shaded.com.google.common.io.Files;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -44,32 +41,32 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * @author Yannick Weber
  */
+@SuppressWarnings("ConstantConditions")
 public class CreateFileInCopiedDirectoryIT {
 
-    public @Nullable File tempDir = Files.createTempDir();
-
     private @NotNull File createDirectory() {
-        final File directory = new File(tempDir, "directory");
+        final File directory = new File(Files.createTempDir(), "directory");
         assertTrue(directory.mkdir());
         final File subdirectory = new File(directory, "sub-directory");
         assertTrue(subdirectory.mkdir());
         return directory;
     }
 
-    @RegisterExtension
-    public final @NotNull HiveMQTestContainerExtension extension =
-            new HiveMQTestContainerExtension()
-                    .withExtension(HiveMQExtension.builder()
-                            .id("extension-1")
-                            .name("my-extension")
-                            .version("1.0")
-                            .mainClass(FileCreatorExtension.class).build())
-                    .withFileInHomeFolder(createDirectory());
-
     @Test
     @Timeout(value = 5, unit = TimeUnit.MINUTES)
-    void test_createFileInCopiedDirectory() throws ExecutionException, InterruptedException {
+    void test() throws Exception {
+        final HiveMQTestContainerExtension extension =
+                new HiveMQTestContainerExtension()
+                        .withExtension(HiveMQExtension.builder()
+                                .id("extension-1")
+                                .name("my-extension")
+                                .version("1.0")
+                                .mainClass(FileCreatorExtension.class).build())
+                        .withFileInHomeFolder(createDirectory());
+
+        extension.beforeEach(null);
         TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
+        extension.afterEach(null);
     }
 
     public static class FileCreatorExtension implements ExtensionMain {

@@ -28,36 +28,36 @@ import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 /**
  * @author Yannick Weber
  */
+@SuppressWarnings("ConstantConditions")
 public class ContainerWithFileInHomeIT {
-
-    @RegisterExtension
-    public final @NotNull HiveMQTestContainerExtension extension =
-            new HiveMQTestContainerExtension()
-                    .withExtension(HiveMQExtension.builder()
-                            .id("extension-1")
-                            .name("my-extension")
-                            .version("1.0")
-                            .mainClass(FileCheckerExtension.class).build())
-                    .withFileInHomeFolder(
-                            new File("src/test/resources/additionalFile.txt"),
-                            "/additionalFiles/")
-                    .withDebugging();
 
     @Test
     @Timeout(value = 5, unit = TimeUnit.MINUTES)
-    void test_single_class_extension() throws ExecutionException, InterruptedException {
+    void test() throws Exception {
+        final HiveMQTestContainerExtension extension =
+                new HiveMQTestContainerExtension()
+                        .withExtension(HiveMQExtension.builder()
+                                .id("extension-1")
+                                .name("my-extension")
+                                .version("1.0")
+                                .mainClass(FileCheckerExtension.class).build())
+                        .withFileInHomeFolder(
+                                new File("src/test/resources/additionalFile.txt"),
+                                "/additionalFiles/")
+                        .withDebugging();
+
+        extension.beforeEach(null);
         TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
+        extension.afterEach(null);
     }
 
     public static class FileCheckerExtension implements ExtensionMain {

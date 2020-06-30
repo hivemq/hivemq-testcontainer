@@ -15,36 +15,35 @@
  */
 package com.hivemq.testcontainer.junit5;
 
-import com.hivemq.extension.sdk.api.annotations.NotNull;
 import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.util.MyExtensionWithSubclasses;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.junit.jupiter.api.extension.RegisterExtension;
 import org.slf4j.event.Level;
 
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 /**
  * @author Yannick Weber
  */
+@SuppressWarnings("ConstantConditions")
 public class ContainerWithExtensionSubclassIT {
-
-    @RegisterExtension
-    public final @NotNull HiveMQTestContainerExtension extension =
-            new HiveMQTestContainerExtension()
-                    .withExtension(HiveMQExtension.builder()
-                            .id("extension-1")
-                            .name("my-extension")
-                            .version("1.0")
-                            .mainClass(MyExtensionWithSubclasses.class).build())
-                    .withLogLevel(Level.DEBUG);
 
     @Test
     @Timeout(value = 5, unit = TimeUnit.MINUTES)
-    void test_extension_with_subclass() throws ExecutionException, InterruptedException {
+    void test() throws Exception {
+        final HiveMQTestContainerExtension extension =
+                new HiveMQTestContainerExtension()
+                        .withExtension(HiveMQExtension.builder()
+                                .id("extension-1")
+                                .name("my-extension")
+                                .version("1.0")
+                                .mainClass(MyExtensionWithSubclasses.class).build())
+                        .withLogLevel(Level.DEBUG);
+
+        extension.beforeEach(null);
         TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
+        extension.afterEach(null);
     }
 }
