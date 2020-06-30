@@ -15,9 +15,7 @@
  */
 package com.hivemq.testcontainer.junit4;
 
-import com.hivemq.extension.sdk.api.annotations.NotNull;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
-import org.junit.Rule;
 import org.junit.Test;
 import org.slf4j.event.Level;
 
@@ -31,19 +29,22 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 public class DisableEnableExtensionFromDirectoryIT {
 
-    @Rule
-    public final @NotNull HiveMQTestContainerRule rule =
-            new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
-                    .withExtension(new File("src/test/resources/modifier-extension"))
-                    .withLogLevel(Level.DEBUG);
-
     @Test(timeout = 500_000)
-    public void test_disable_enable_extension() throws ExecutionException, InterruptedException {
+    public void test() throws Exception {
+        final HiveMQTestContainerRule rule =
+                new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
+                        .withExtension(new File("src/test/resources/modifier-extension"))
+                        .withLogLevel(Level.DEBUG);
+
+        rule.start();
+
         TestPublishModifiedUtil.testPublishModified(rule.getMqttPort());
         rule.disableExtension("Modifier Extension", "modifier-extension");
         assertThrows(ExecutionException.class, () -> TestPublishModifiedUtil.testPublishModified(rule.getMqttPort()));
         rule.enableExtension("Modifier Extension", "modifier-extension");
         TestPublishModifiedUtil.testPublishModified(rule.getMqttPort());
+
+        rule.stop();
     }
 
 }

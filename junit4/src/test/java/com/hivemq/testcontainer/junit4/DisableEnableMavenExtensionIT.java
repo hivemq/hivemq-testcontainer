@@ -15,10 +15,8 @@
  */
 package com.hivemq.testcontainer.junit4;
 
-import com.hivemq.extension.sdk.api.annotations.NotNull;
 import com.hivemq.testcontainer.core.MavenHiveMQExtensionSupplier;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
-import org.junit.Rule;
 import org.junit.Test;
 
 import java.util.concurrent.ExecutionException;
@@ -30,18 +28,19 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 public class DisableEnableMavenExtensionIT {
 
-    @Rule
-    public final @NotNull HiveMQTestContainerRule rule =
-            new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
-                    .withExtension(new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml").get());
-
     @Test(timeout = 500_000)
-    public void test_disable_enable_extension() throws ExecutionException, InterruptedException {
+    public void test() throws Exception {
+        final HiveMQTestContainerRule rule =
+                new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
+                        .withExtension(new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml").get());
+
+        rule.start();
         TestPublishModifiedUtil.testPublishModified(rule.getMqttPort());
         rule.disableExtension("Maven Extension", "maven-extension");
         assertThrows(ExecutionException.class, () -> TestPublishModifiedUtil.testPublishModified(rule.getMqttPort()));
         rule.enableExtension("Maven Extension", "maven-extension");
         TestPublishModifiedUtil.testPublishModified(rule.getMqttPort());
+        rule.stop();
     }
 
 }

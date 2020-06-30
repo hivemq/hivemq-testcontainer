@@ -15,12 +15,10 @@
  */
 package com.hivemq.testcontainer.junit5;
 
-import com.hivemq.extension.sdk.api.annotations.NotNull;
 import com.hivemq.testcontainer.core.MavenHiveMQExtensionSupplier;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
-import org.junit.jupiter.api.extension.RegisterExtension;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -32,19 +30,20 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  */
 public class DisableEnableMavenExtensionIT {
 
-    @RegisterExtension
-    public final @NotNull HiveMQTestContainerExtension extension =
-            new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
-                    .withExtension(new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml").get());
-
     @Test
     @Timeout(value = 5, unit = TimeUnit.MINUTES)
-    void test_disable_enable_extension() throws ExecutionException, InterruptedException {
+    void test() throws Exception {
+        final HiveMQTestContainerExtension extension =
+                new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
+                        .withExtension(new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml").get());
+
+        extension.start();
         TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
         extension.disableExtension("Maven Extension", "maven-extension");
         assertThrows(ExecutionException.class, () -> TestPublishModifiedUtil.testPublishModified(extension.getMqttPort()));
         extension.enableExtension("Maven Extension", "maven-extension");
         TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
+        extension.stop();
     }
 
 }

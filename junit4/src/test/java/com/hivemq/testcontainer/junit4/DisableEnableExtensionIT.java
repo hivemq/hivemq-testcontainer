@@ -19,7 +19,6 @@ import com.hivemq.extension.sdk.api.annotations.NotNull;
 import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.util.MyExtension;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
-import org.junit.Rule;
 import org.junit.Test;
 
 import java.util.concurrent.ExecutionException;
@@ -38,13 +37,15 @@ public class DisableEnableExtensionIT {
             .disabledOnStartup(true)
             .mainClass(MyExtension.class).build();
 
-    @Rule
-    public final @NotNull HiveMQTestContainerRule rule =
-            new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
-                    .withExtension(hiveMQExtension);
-
     @Test(timeout = 500_000)
-    public void test_disable_enable_extension() throws ExecutionException, InterruptedException {
+    public void test() throws Exception {
+
+        final @NotNull HiveMQTestContainerRule rule =
+                new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
+                        .withExtension(hiveMQExtension);
+
+        rule.start();
+
         assertThrows(ExecutionException.class, () -> TestPublishModifiedUtil.testPublishModified(rule.getMqttPort()));
         rule.enableExtension(hiveMQExtension);
         TestPublishModifiedUtil.testPublishModified(rule.getMqttPort());
@@ -52,6 +53,8 @@ public class DisableEnableExtensionIT {
         assertThrows(ExecutionException.class, () -> TestPublishModifiedUtil.testPublishModified(rule.getMqttPort()));
         rule.enableExtension(hiveMQExtension);
         TestPublishModifiedUtil.testPublishModified(rule.getMqttPort());
+
+        rule.stop();
     }
 
 }
