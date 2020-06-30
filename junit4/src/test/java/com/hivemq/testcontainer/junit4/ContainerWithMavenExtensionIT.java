@@ -30,7 +30,6 @@ public class ContainerWithMavenExtensionIT {
             new HiveMQTestContainerRule()
                     .withExtension(
                             new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml")
-                                    .cleanAfter()
                                     .cleanBefore()
                                     .quiet().get());
         rule.start();
