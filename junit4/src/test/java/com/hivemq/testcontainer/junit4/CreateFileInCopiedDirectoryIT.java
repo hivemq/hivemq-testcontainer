@@ -64,7 +64,7 @@ public class CreateFileInCopiedDirectoryIT {
                             .mainClass(FileCreatorExtension.class).build())
                     .withFileInHomeFolder(createDirectory());
 
-    @Test
+    @Test(timeout = 500_000)
     public void test_createFileInCopiedDirectory() throws ExecutionException, InterruptedException {
         TestPublishModifiedUtil.testPublishModified(rule.getMqttPort());
     }
