@@ -37,7 +37,6 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Yannick Weber
  */
-@SuppressWarnings("ConstantConditions")
 public class ContainerWithFileInExtensionHomeIT {
 
 

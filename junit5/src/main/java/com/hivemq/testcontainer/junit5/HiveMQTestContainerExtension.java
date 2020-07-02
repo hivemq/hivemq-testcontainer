@@ -17,6 +17,7 @@ package com.hivemq.testcontainer.junit5;
 
 import com.hivemq.extension.sdk.api.annotations.NotNull;
 import com.hivemq.testcontainer.core.HiveMQTestContainerCore;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
@@ -35,12 +36,12 @@ public class HiveMQTestContainerExtension extends HiveMQTestContainerCore<HiveMQ
     }
 
     @Override
-    public void beforeEach(final @NotNull ExtensionContext context) {
+    public void beforeEach(final @Nullable ExtensionContext context) {
         start();
     }
 
     @Override
-    public void afterEach(final @NotNull ExtensionContext context) {
+    public void afterEach(final @Nullable ExtensionContext context) {
         stop();
     }
 

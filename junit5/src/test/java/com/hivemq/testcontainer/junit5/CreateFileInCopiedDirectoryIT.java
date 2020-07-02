@@ -41,7 +41,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * @author Yannick Weber
  */
-@SuppressWarnings("ConstantConditions")
 public class CreateFileInCopiedDirectoryIT {
 
     private @NotNull File createDirectory() {

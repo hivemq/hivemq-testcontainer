@@ -39,13 +39,13 @@ public class DisableEnableExtensionFromDirectoryIT {
                         .withExtension(new File("src/test/resources/modifier-extension"))
                         .withLogLevel(Level.DEBUG);
 
-        extension.start();
+        extension.beforeEach(null);
         TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
         extension.disableExtension("Modifier Extension", "modifier-extension");
         assertThrows(ExecutionException.class, () -> TestPublishModifiedUtil.testPublishModified(extension.getMqttPort()));
         extension.enableExtension("Modifier Extension", "modifier-extension");
         TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
-        extension.stop();
+        extension.afterEach(null);
     }
 
 }

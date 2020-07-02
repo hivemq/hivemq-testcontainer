@@ -30,7 +30,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * @author Yannick Weber
  */
-@SuppressWarnings("ConstantConditions")
 public class ContainerWithCustomConfigIT {
 
     @Test

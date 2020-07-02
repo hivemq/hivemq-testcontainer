@@ -46,10 +46,10 @@ public class DebuggingIT {
                                 .mainClass(MyExtension.class).build())
                         .withDebugging(DEBUGGING_PORT_HOST);
 
-        extension.start();
+        extension.beforeEach(null);
         final Socket localhost = new Socket("localhost", 9000);
         localhost.close();
-        extension.stop();
+        extension.afterEach(null);
     }
 
 }
