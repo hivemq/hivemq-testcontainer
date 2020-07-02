@@ -37,7 +37,7 @@ public class DisableEnableExtensionIT {
             .disabledOnStartup(true)
             .mainClass(MyExtension.class).build();
 
-    @Test(timeout = 500_000)
+    @Test(timeout = 200_000)
     public void test() throws Exception {
 
         final @NotNull HiveMQTestContainerRule rule =

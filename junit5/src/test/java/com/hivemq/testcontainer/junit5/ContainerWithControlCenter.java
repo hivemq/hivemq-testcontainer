@@ -29,7 +29,7 @@ public class ContainerWithControlCenter {
     public static final int CONTROL_CENTER_PORT = 8080;
 
     @Test
-    @Timeout(value = 5, unit = TimeUnit.MINUTES)
+    @Timeout(value = 3, unit = TimeUnit.MINUTES)
     public void test() throws Exception {
 
         final HiveMQTestContainerExtension extension =

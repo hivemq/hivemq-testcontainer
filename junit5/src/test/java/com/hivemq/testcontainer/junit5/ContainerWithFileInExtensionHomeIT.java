@@ -41,7 +41,7 @@ public class ContainerWithFileInExtensionHomeIT {
 
 
     @Test
-    @Timeout(value = 5, unit = TimeUnit.MINUTES)
+    @Timeout(value = 3, unit = TimeUnit.MINUTES)
     void test() throws Exception {
         final HiveMQTestContainerExtension extension =
                 new HiveMQTestContainerExtension()

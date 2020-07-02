@@ -33,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class ContainerWithCustomConfigIT {
 
     @Test
-    @Timeout(value = 5, unit = TimeUnit.MINUTES)
+    @Timeout(value = 3, unit = TimeUnit.MINUTES)
     void test() {
         final HiveMQTestContainerExtension extension = new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
                 .withHiveMQConfig(new File("src/test/resources/config.xml"));
