@@ -20,24 +20,24 @@ import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 /**
  * @author Yannick Weber
  */
-@SuppressWarnings("ConstantConditions")
 public class ContainerWithMavenExtensionIT {
 
     @Test
     @Timeout(value = 5, unit = TimeUnit.MINUTES)
     void test() throws Exception {
-        final HiveMQTestContainerExtension extension =
-                new HiveMQTestContainerExtension()
-                        .withExtension(new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml")
-                                .cleanBefore()
-                                .cleanAfter()
-                                .quiet()
-                            .get());
+        final File mavenExtension = new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml")
+                .cleanBefore()
+                .cleanAfter()
+                .quiet()
+                .get();
+        final HiveMQTestContainerExtension extension = new HiveMQTestContainerExtension()
+                .withExtension(mavenExtension);
 
         extension.beforeEach(null);
         TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());

@@ -37,13 +37,13 @@ public class DisableEnableMavenExtensionIT {
                 new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
                         .withExtension(new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml").get());
 
-        extension.start();
+        extension.beforeEach(null);
         TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
         extension.disableExtension("Maven Extension", "maven-extension");
         assertThrows(ExecutionException.class, () -> TestPublishModifiedUtil.testPublishModified(extension.getMqttPort()));
         extension.enableExtension("Maven Extension", "maven-extension");
         TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
-        extension.stop();
+        extension.afterEach(null);
     }
 
 }

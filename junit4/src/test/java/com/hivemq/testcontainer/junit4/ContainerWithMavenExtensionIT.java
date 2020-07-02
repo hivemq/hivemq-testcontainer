@@ -19,6 +19,8 @@ import com.hivemq.testcontainer.core.MavenHiveMQExtensionSupplier;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
 import org.junit.Test;
 
+import java.io.File;
+
 /**
  * @author Yannick Weber
  */
@@ -26,13 +28,13 @@ public class ContainerWithMavenExtensionIT {
 
     @Test(timeout = 500_000)
     public void test() throws Exception {
+        final File mavenExtension = new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml")
+                .cleanBefore()
+                .cleanAfter()
+                .quiet().get();
         final HiveMQTestContainerRule rule =
-            new HiveMQTestContainerRule()
-                    .withExtension(
-                            new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml")
-                                    .cleanBefore()
-                                    .cleanAfter()
-                                    .quiet().get());
+                new HiveMQTestContainerRule().withExtension(mavenExtension);
+
         rule.start();
         TestPublishModifiedUtil.testPublishModified(rule.getMqttPort());
         rule.stop();

@@ -48,7 +48,7 @@ public class DisableEnableExtensionIT {
                         .withExtension(hiveMQExtension)
                         .withLogLevel(Level.DEBUG);
 
-        extension.start();
+        extension.beforeEach(null);
         assertThrows(ExecutionException.class, () -> TestPublishModifiedUtil.testPublishModified(extension.getMqttPort()));
         extension.enableExtension(hiveMQExtension);
         TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
@@ -56,7 +56,7 @@ public class DisableEnableExtensionIT {
         assertThrows(ExecutionException.class, () -> TestPublishModifiedUtil.testPublishModified(extension.getMqttPort()));
         extension.enableExtension(hiveMQExtension);
         TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
-        extension.stop();
+        extension.afterEach(null);
     }
 
 }

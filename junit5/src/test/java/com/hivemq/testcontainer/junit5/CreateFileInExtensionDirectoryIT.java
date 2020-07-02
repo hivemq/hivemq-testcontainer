@@ -50,9 +50,9 @@ public class CreateFileInExtensionDirectoryIT {
                                 .name("my-extension")
                                 .version("1.0")
                                 .mainClass(FileCreatorExtension.class).build());
-        extension.start();
+        extension.beforeEach(null);
         TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
-        extension.stop();
+        extension.afterEach(null);
     }
 
     public static class FileCreatorExtension implements ExtensionMain {

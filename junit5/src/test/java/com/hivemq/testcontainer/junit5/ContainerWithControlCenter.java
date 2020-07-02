@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Timeout;
 
 import java.util.concurrent.TimeUnit;
 
-@SuppressWarnings("ConstantConditions")
 public class ContainerWithControlCenter {
 
     public static final int CONTROL_CENTER_PORT = 8080;
