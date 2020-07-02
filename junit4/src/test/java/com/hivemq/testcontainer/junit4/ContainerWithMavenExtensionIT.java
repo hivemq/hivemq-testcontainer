@@ -26,7 +26,7 @@ import java.io.File;
  */
 public class ContainerWithMavenExtensionIT {
 
-    @Test(timeout = 500_000)
+    @Test(timeout = 200_000)
     public void test() throws Exception {
         final File mavenExtension = new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml")
                 .cleanBefore()

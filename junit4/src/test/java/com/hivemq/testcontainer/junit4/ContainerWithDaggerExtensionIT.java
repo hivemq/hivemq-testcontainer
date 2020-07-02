@@ -26,7 +26,7 @@ import org.junit.Test;
  */
 public class ContainerWithDaggerExtensionIT {
 
-    @Test(timeout = 500_000)
+    @Test(timeout = 200_000)
     public void test() throws Exception {
         final HiveMQTestContainerRule rule =
                 new HiveMQTestContainerRule()

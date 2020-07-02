@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 public class ContainerWithMavenExtensionIT {
 
     @Test
-    @Timeout(value = 5, unit = TimeUnit.MINUTES)
+    @Timeout(value = 3, unit = TimeUnit.MINUTES)
     void test() throws Exception {
         final File mavenExtension = new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml")
                 .cleanBefore()

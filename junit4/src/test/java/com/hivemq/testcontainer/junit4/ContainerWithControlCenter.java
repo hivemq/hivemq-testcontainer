@@ -25,7 +25,7 @@ public class ContainerWithControlCenter {
 
     public static final int CONTROL_CENTER_PORT = 8080;
 
-    @Test(timeout = 500_000)
+    @Test(timeout = 200_000)
     public void test() throws Exception {
         final HiveMQTestContainerRule rule =
                 new HiveMQTestContainerRule("hivemq/hivemq4", "latest")

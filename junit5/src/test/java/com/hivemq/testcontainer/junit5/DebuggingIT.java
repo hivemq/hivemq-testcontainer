@@ -34,7 +34,7 @@ public class DebuggingIT {
     public static final int DEBUGGING_PORT_HOST = 9000;
 
     @Test()
-    @Timeout(value = 5, unit = TimeUnit.MINUTES)
+    @Timeout(value = 3, unit = TimeUnit.MINUTES)
     void test() throws IOException {
 
         HiveMQTestContainerExtension extension =
