@@ -35,8 +35,6 @@ import java.util.function.Supplier;
 public class MavenHiveMQExtensionSupplier implements Supplier<File> {
 
     private final @NotNull String pomFile;
-    private boolean cleanBefore = false;
-    private boolean cleanAfter = false;
     private boolean quiet = false;
 
     /**
@@ -69,12 +67,10 @@ public class MavenHiveMQExtensionSupplier implements Supplier<File> {
     @Override
     public @NotNull File get() {
         final PomEquippedEmbeddedMaven embeddedMaven = EmbeddedMaven.forProject(pomFile);
-        if (cleanBefore) {
-            embeddedMaven.setGoals("clean package");
-        } else {
-            embeddedMaven.setGoals("package");
-        }
-        embeddedMaven.setQuiet(quiet).setBatchMode(true);
+        embeddedMaven
+                .setGoals("package")
+                .setQuiet(quiet)
+                .setBatchMode(true);
         final BuiltProject aPackage = embeddedMaven.build();
         final File targetDirectory = aPackage.getTargetDirectory();
         final String version = aPackage.getModel().getVersion();
@@ -88,30 +84,7 @@ public class MavenHiveMQExtensionSupplier implements Supplier<File> {
         } catch (final ZipException e) {
             throw new RuntimeException(e);
         }
-        if (cleanAfter) {
-            EmbeddedMaven.forProject(pomFile).setBatchMode(true).setQuiet(quiet).setGoals("clean").build();
-        }
         return new File(tempDir, artifactId);
-    }
-
-    /**
-     * Execute mvn clean before packaging.
-     *
-     * @return self
-     */
-    public @NotNull MavenHiveMQExtensionSupplier cleanBefore() {
-        this.cleanBefore = true;
-        return this;
-    }
-
-    /**
-     * Execute mvn clean after packaging.
-     *
-     * @return self
-     */
-    public @NotNull MavenHiveMQExtensionSupplier cleanAfter() {
-        this.cleanAfter = true;
-        return this;
     }
 
     /**

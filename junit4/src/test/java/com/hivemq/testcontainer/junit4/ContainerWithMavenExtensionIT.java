@@ -29,8 +29,6 @@ public class ContainerWithMavenExtensionIT {
     @Test(timeout = 200_000)
     public void test() throws Exception {
         final File mavenExtension = new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml")
-                .cleanBefore()
-                .cleanAfter()
                 .quiet().get();
         final HiveMQTestContainerRule rule =
                 new HiveMQTestContainerRule().withExtension(mavenExtension);
