@@ -31,9 +31,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.hivemq</groupId>
-            <artifactId>hivemq-extension-sdk</artifactId>
-            <version>4.3.0</version>
+            <groupId>${HIVEMQ_GROUP_ID}</groupId>
+            <artifactId>${HIVEMQ_EXTENSION_SDK}</artifactId>
+            <version>${HIVEMQ_EXTENSION_SDK_VERSION}</version>
         </dependency>
     </dependencies>
 
