@@ -19,6 +19,7 @@ import com.hivemq.testcontainer.core.MavenHiveMQExtensionSupplier;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -30,9 +31,16 @@ public class DisableEnableMavenExtensionIT {
 
     @Test(timeout = 200_000)
     public void test() throws Exception {
+        final File extensionDir = new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml")
+                .addProperty("HIVEMQ_GROUP_ID", "com.hivemq")
+                .addProperty("HIVEMQ_EXTENSION_SDK", "hivemq-extension-sdk")
+                .addProperty("HIVEMQ_EXTENSION_SDK_VERSION", "4.3.0")
+                .quiet()
+                .get();
+
         final HiveMQTestContainerRule rule =
                 new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
-                        .withExtension(new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml").get());
+                        .withExtension(extensionDir);
 
         rule.start();
         TestPublishModifiedUtil.testPublishModified(rule.getMqttPort());

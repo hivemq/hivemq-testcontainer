@@ -24,6 +24,7 @@ import org.jboss.shrinkwrap.resolver.api.maven.embedded.pom.equipped.PomEquipped
 import org.testcontainers.shaded.com.google.common.io.Files;
 
 import java.io.File;
+import java.util.Properties;
 import java.util.function.Supplier;
 
 /**
@@ -36,6 +37,7 @@ public class MavenHiveMQExtensionSupplier implements Supplier<File> {
 
     private final @NotNull String pomFile;
     private boolean quiet = false;
+    private final @NotNull Properties properties = new Properties();
 
     /**
      * This {@link Supplier} can be used if the current maven project is the HiveMQ Extension to supply.
@@ -71,6 +73,7 @@ public class MavenHiveMQExtensionSupplier implements Supplier<File> {
                 .setGoals("package")
                 .setQuiet(quiet)
                 .setBatchMode(true);
+        embeddedMaven.setProperties(properties);
         final BuiltProject aPackage = embeddedMaven.build();
         final File targetDirectory = aPackage.getTargetDirectory();
         final String version = aPackage.getModel().getVersion();
@@ -94,6 +97,11 @@ public class MavenHiveMQExtensionSupplier implements Supplier<File> {
      */
     public @NotNull MavenHiveMQExtensionSupplier quiet() {
         this.quiet = true;
+        return this;
+    }
+
+    public @NotNull MavenHiveMQExtensionSupplier addProperty(final @NotNull String key, final @NotNull String value) {
+        properties.put(key, value);
         return this;
     }
 }

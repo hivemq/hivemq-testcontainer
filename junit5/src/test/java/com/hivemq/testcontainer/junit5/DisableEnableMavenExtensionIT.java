@@ -20,6 +20,7 @@ import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
+import java.io.File;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -33,9 +34,16 @@ public class DisableEnableMavenExtensionIT {
     @Test
     @Timeout(value = 3, unit = TimeUnit.MINUTES)
     void test() throws Exception {
+        final File extensionDir = new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml")
+                .addProperty("HIVEMQ_GROUP_ID", "com.hivemq")
+                .addProperty("HIVEMQ_EXTENSION_SDK", "hivemq-extension-sdk")
+                .addProperty("HIVEMQ_EXTENSION_SDK_VERSION", "4.3.0")
+                .quiet()
+                .get();
+
         final HiveMQTestContainerExtension extension =
                 new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
-                        .withExtension(new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml").get());
+                        .withExtension(extensionDir);
 
         extension.beforeEach(null);
         TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
