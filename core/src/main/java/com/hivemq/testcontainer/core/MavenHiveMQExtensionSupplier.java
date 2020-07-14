@@ -100,6 +100,12 @@ public class MavenHiveMQExtensionSupplier implements Supplier<File> {
         return this;
     }
 
+    /**
+     * Add a custom property for the maven packaging.
+     * @param key the name of the property
+     * @param value the value of the property
+     * @return self
+     */
     public @NotNull MavenHiveMQExtensionSupplier addProperty(final @NotNull String key, final @NotNull String value) {
         properties.put(key, value);
         return this;
