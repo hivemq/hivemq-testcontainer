@@ -15,6 +15,8 @@
  */
 package com.hivemq.testcontainer.junit4;
 
+import com.hivemq.client.mqtt.mqtt3.Mqtt3BlockingClient;
+import com.hivemq.client.mqtt.mqtt3.Mqtt3Client;
 import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.util.MyExtension;
 import org.junit.Test;
@@ -46,6 +48,10 @@ public class DebuggingIT {
         rule.start();
         final Socket localhost = new Socket("localhost", 9000);
         localhost.close();
+
+        final Mqtt3BlockingClient client = Mqtt3Client.builder().serverPort(rule.getMqttPort()).buildBlocking();
+        client.connect();
+        client.disconnect();
         rule.stop();
     }
 
