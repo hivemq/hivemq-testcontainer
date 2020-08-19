@@ -76,7 +76,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
 
     public HiveMQTestContainerCore(final @NotNull String image, final @NotNull String tag) {
         super(image + ":" + tag);
-        withExposedPorts(MQTT_PORT);
+        addExposedPort(MQTT_PORT);
 
         waitStrategy.withRegEx("(.*)Started HiveMQ in(.*)");
         waitingFor(waitStrategy);
@@ -135,8 +135,8 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * @return self
      */
     public @NotNull SELF withDebugging(final int debuggingPortHost) {
-        withExposedPorts(DEBUGGING_PORT);
-        withFixedExposedPort(debuggingPortHost, DEBUGGING_PORT);
+        addExposedPorts(DEBUGGING_PORT);
+        addFixedExposedPort(debuggingPortHost, DEBUGGING_PORT);
         withEnv("JAVA_OPTS", "-agentlib:jdwp=transport=dt_socket,address=0.0.0.0:" + DEBUGGING_PORT + ",server=y,suspend=n");
         return self();
     }
@@ -610,8 +610,8 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * @return self
      */
     public @NotNull SELF withControlCenter(final int controlCenterPort) {
-        withExposedPorts(CONTROL_CENTER_PORT);
-        withFixedExposedPort(controlCenterPort, CONTROL_CENTER_PORT);
+        addExposedPorts(CONTROL_CENTER_PORT);
+        addFixedExposedPort(controlCenterPort, CONTROL_CENTER_PORT);
         return self();
     }
 
