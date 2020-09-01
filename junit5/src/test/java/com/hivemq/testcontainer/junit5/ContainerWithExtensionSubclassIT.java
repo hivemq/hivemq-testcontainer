@@ -32,13 +32,15 @@ public class ContainerWithExtensionSubclassIT {
     @Test
     @Timeout(value = 3, unit = TimeUnit.MINUTES)
     void test() throws Exception {
+        final HiveMQExtension hiveMQExtension = HiveMQExtension.builder()
+                .id("extension-1")
+                .name("my-extension")
+                .version("1.0")
+                .mainClass(MyExtensionWithSubclasses.class).build();
         final HiveMQTestContainerExtension extension =
                 new HiveMQTestContainerExtension()
-                        .withExtension(HiveMQExtension.builder()
-                                .id("extension-1")
-                                .name("my-extension")
-                                .version("1.0")
-                                .mainClass(MyExtensionWithSubclasses.class).build())
+                        .waitForExtension(hiveMQExtension)
+                        .withExtension(hiveMQExtension)
                         .withLogLevel(Level.DEBUG);
 
         extension.beforeEach(null);

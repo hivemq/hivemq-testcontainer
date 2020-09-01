@@ -28,16 +28,19 @@ public class ContainerWithDaggerExtensionIT {
 
     @Test(timeout = 200_000)
     public void test() throws Exception {
+        final HiveMQExtension hiveMQExtension = HiveMQExtension.builder()
+                .id("extension-1")
+                .name("my-extension")
+                .version("1.0")
+                .mainClass(MyExtensionWithDagger.class)
+                .addAdditionalClass(MyModule.class)
+                .addAdditionalClass(Class.forName("com.hivemq.testcontainer.util.dagger.MyModule_ProvidePublishModifierFactory"))
+                .build();
+
         final HiveMQTestContainerRule rule =
                 new HiveMQTestContainerRule()
-                        .withExtension(HiveMQExtension.builder()
-                                .id("extension-1")
-                                .name("my-extension")
-                                .version("1.0")
-                                .mainClass(MyExtensionWithDagger.class)
-                                .addAdditionalClass(MyModule.class)
-                                .addAdditionalClass(Class.forName("com.hivemq.testcontainer.util.dagger.MyModule_ProvidePublishModifierFactory"))
-                                .build());
+                        .waitForExtension(hiveMQExtension)
+                        .withExtension(hiveMQExtension);
 
         rule.start();
 

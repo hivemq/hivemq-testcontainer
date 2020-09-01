@@ -15,6 +15,8 @@
  */
 package com.hivemq.testcontainer.junit5;
 
+import com.hivemq.client.mqtt.mqtt3.Mqtt3BlockingClient;
+import com.hivemq.client.mqtt.mqtt3.Mqtt3Client;
 import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.util.MyExtension;
 import org.junit.jupiter.api.Test;
@@ -31,7 +33,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class DebuggingIT {
 
-    public static final int DEBUGGING_PORT_HOST = 9000;
+    public static final int DEBUGGING_PORT_HOST = 5005;
 
     @Test()
     @Timeout(value = 3, unit = TimeUnit.MINUTES)
@@ -47,8 +49,14 @@ public class DebuggingIT {
                         .withDebugging(DEBUGGING_PORT_HOST);
 
         extension.beforeEach(null);
-        final Socket localhost = new Socket("localhost", 9000);
+
+        final Socket localhost = new Socket("localhost", DEBUGGING_PORT_HOST);
         localhost.close();
+
+        final Mqtt3BlockingClient client = Mqtt3Client.builder().serverPort(extension.getMqttPort()).buildBlocking();
+        client.connect();
+        client.disconnect();
+
         extension.afterEach(null);
     }
 

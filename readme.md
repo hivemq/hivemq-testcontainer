@@ -16,6 +16,7 @@ This enables testing MQTT client applications and integration testing of custom 
 
 ## Features
 - [load user defined HiveMQ images and tags](#add-to-your-project)
+- [wait strategy](#wait-strategy)
 - [test your MQTT 3 and MQTT 5 client applications](#test-your-mqtt-3-and-mqtt-5-client-application)
 - [add a custom hivemq config](#add-a-custom-hivemq-configuration)
 - [load an extension from a maven project](#load-an-extension-from-a-maven-project)
@@ -48,7 +49,7 @@ add these dependencies to your `pom.xml`:
 <dependency>
     <groupId>com.hivemq</groupId>
     <artifactId>hivemq-testcontainer-junit4</artifactId>
-    <version>1.1.1</version>
+    <version>1.2.0</version>
     <scope>test</scope>
 </dependency>
 <dependency>
@@ -72,7 +73,7 @@ add these dependencies to your `pom.xml`:
 <dependency>
     <groupId>com.hivemq</groupId>
     <artifactId>hivemq-testcontainer-junit5</artifactId>
-    <version>1.1.1</version>
+    <version>1.2.0</version>
     <scope>test</scope>
 </dependency>
 <dependency>
@@ -97,14 +98,63 @@ You can define a custom image and tag in the constructor:
 ### JUnit 4
 
     @Rule
-    final public @NotNull HiveMQEnterpriseTestContainerRule rule 
-        = new HiveMQEnterpriseTestContainerRule("hivemq/hivemq-ce", "2020.2");
+    final public @NotNull HiveMQTestContainerRule rule 
+        = new HiveMQTestContainerRule("hivemq/hivemq-ce", "2020.2");
 
 ### JUnit 5
 
     @RegisterExtension
-    final public @NotNull HiveMQEnterpriseTestContainerExtension extension 
-        = new HiveMQEnterpriseTestContainerExtension("hivemq/hivemq-ce", "2020.2");
+    final public @NotNull HiveMQTestContainerExtension extension 
+        = new HiveMQTestContainerExtension("hivemq/hivemq-ce", "2020.2");
+        
+## Wait Strategy
+
+Per default the HiveMQ Testcontainer waits for the HiveMQ startup log message, but you can define additional
+wait conditions for your HiveMQ Extensions:
+
+### JUnit 4
+
+    @Rule
+    public final @NotNull HiveMQTestContainerRule rule =
+            new HiveMQTestContainerRule()
+                .withExtension(new File("src/test/resources/modifier-extension"))
+                .waitForExtension("My Extension Name");
+
+### JUnit 5
+
+    @RegisterExtension
+    public final @NotNull HiveMQTestContainerExtension extension =
+            new HiveMQTestContainerExtension()
+                .withExtension(new File("src/test/resources/modifier-extension"))
+                .waitForExtension("My Extension Name");
+                
+### JUnit 4
+
+    private final @NotNull HiveMQExtension hiveMQExtension = HiveMQExtension.builder()
+        .id("extension-1")
+        .name("my-extension")
+        .version("1.0")
+        .mainClass(MyExtension.class).build();
+    
+    @Rule
+    public final @NotNull HiveMQTestContainerRule rule =
+        new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
+        .withExtension(hiveMQExtension)
+        .waitForExtension(hiveMQExtension);
+
+### JUnit 5
+
+    private final @NotNull HiveMQExtension hiveMQExtension = HiveMQExtension.builder()
+        .id("extension-1")
+        .name("my-extension")
+        .version("1.0")
+        .mainClass(MyExtension.class).build();
+    
+    @RegisterExtension
+    public final @NotNull HiveMQTestContainerExtension extension =
+        new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
+        .withExtension(hiveMQExtension)
+        .waitForExtension(hiveMQExtension);
 
 ## Test your MQTT 3 and MQTT 5 client application
 

@@ -34,8 +34,10 @@ public class ContainerWithMavenExtensionIT {
                 .addProperty("HIVEMQ_EXTENSION_SDK_VERSION", "4.3.0")
                 .quiet()
                 .get();
-        final HiveMQTestContainerRule rule =
-                new HiveMQTestContainerRule().withExtension(mavenExtension);
+
+        final HiveMQTestContainerRule rule = new HiveMQTestContainerRule()
+                .waitForExtension("Maven Extension")
+                .withExtension(mavenExtension);
 
         rule.start();
         TestPublishModifiedUtil.testPublishModified(rule.getMqttPort());

@@ -15,6 +15,8 @@
  */
 package com.hivemq.testcontainer.junit4;
 
+import com.hivemq.client.mqtt.mqtt3.Mqtt3BlockingClient;
+import com.hivemq.client.mqtt.mqtt3.Mqtt3Client;
 import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.util.MyExtension;
 import org.junit.Test;
@@ -33,17 +35,23 @@ public class DebuggingIT {
 
     @Test(timeout = 200_000)
     public void test() throws IOException {
+        final HiveMQExtension hiveMQExtension = HiveMQExtension.builder()
+                .id("extension-1")
+                .name("my-extension")
+                .version("1.0")
+                .mainClass(MyExtension.class).build();
+
         final HiveMQTestContainerRule rule =
                 new HiveMQTestContainerRule()
-                        .withExtension(HiveMQExtension.builder()
-                                .id("extension-1")
-                                .name("my-extension")
-                                .version("1.0")
-                                .mainClass(MyExtension.class).build())
+                        .withExtension(hiveMQExtension)
                         .withDebugging(DEBUGGING_PORT_HOST);
         rule.start();
         final Socket localhost = new Socket("localhost", 9000);
         localhost.close();
+
+        final Mqtt3BlockingClient client = Mqtt3Client.builder().serverPort(rule.getMqttPort()).buildBlocking();
+        client.connect();
+        client.disconnect();
         rule.stop();
     }
 

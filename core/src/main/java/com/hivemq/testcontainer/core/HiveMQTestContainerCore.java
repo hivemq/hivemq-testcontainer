@@ -68,16 +68,18 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     private final @NotNull ConcurrentHashMap<String, CountDownLatch> containerOutputLatches = new ConcurrentHashMap<>();
     private volatile boolean silent = false;
 
+    private final @NotNull MultiLogMessageWaitStrategy waitStrategy = new MultiLogMessageWaitStrategy();
+
     public HiveMQTestContainerCore() {
         this(DEFAULT_HIVEMQ_IMAGE, DEFAULT_HIVEMQ_TAG);
     }
 
     public HiveMQTestContainerCore(final @NotNull String image, final @NotNull String tag) {
         super(image + ":" + tag);
-        withExposedPorts(MQTT_PORT);
+        addExposedPort(MQTT_PORT);
 
-        final MqttWaitStrategy mqttWaitStrategy = new MqttWaitStrategy();
-        waitingFor(mqttWaitStrategy);
+        waitStrategy.withRegEx("(.*)Started HiveMQ in(.*)");
+        waitingFor(waitStrategy);
 
         withLogConsumer(outputFrame -> {
             if (!silent) {
@@ -99,6 +101,32 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     }
 
     /**
+     * Adds a wait condition for the extension with this name.
+     * <p>
+     * Must be called before the container is started.
+     *
+     * @param extensionName the extension to wait for
+     * @return self
+     */
+    public @NotNull SELF waitForExtension(final @NotNull String extensionName) {
+        final String regEX = "(.*)Extension \"" + extensionName + "\" version (.*) started successfully(.*)";
+        waitStrategy.withRegEx(regEX);
+        return self();
+    }
+
+    /**
+     * Adds a wait condition for this {@link HiveMQExtension}
+     * <p>
+     * Must be called before the container is started.
+     *
+     * @param extension the extension to wait for
+     * @return self
+     */
+    public @NotNull SELF waitForExtension(final @NotNull HiveMQExtension extension) {
+        return this.waitForExtension(extension.getName());
+    }
+
+    /**
      * Enables the possibility for remote debugging clients to connect.
      * <p>
      * Must be called before the container is started.
@@ -107,8 +135,8 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * @return self
      */
     public @NotNull SELF withDebugging(final int debuggingPortHost) {
-        withExposedPorts(DEBUGGING_PORT);
-        withFixedExposedPort(debuggingPortHost, DEBUGGING_PORT);
+        addExposedPorts(DEBUGGING_PORT);
+        addFixedExposedPort(debuggingPortHost, DEBUGGING_PORT);
         withEnv("JAVA_OPTS", "-agentlib:jdwp=transport=dt_socket,address=0.0.0.0:" + DEBUGGING_PORT + ",server=y,suspend=n");
         return self();
     }
@@ -582,8 +610,8 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * @return self
      */
     public @NotNull SELF withControlCenter(final int controlCenterPort) {
-        withExposedPorts(CONTROL_CENTER_PORT);
-        withFixedExposedPort(controlCenterPort, CONTROL_CENTER_PORT);
+        addExposedPorts(CONTROL_CENTER_PORT);
+        addFixedExposedPort(controlCenterPort, CONTROL_CENTER_PORT);
         return self();
     }
 

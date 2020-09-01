@@ -35,6 +35,7 @@ public class ContainerWithExtensionFromDirectoryIT {
         final HiveMQTestContainerExtension extension =
                 new HiveMQTestContainerExtension()
                         .withExtension(new File("src/test/resources/modifier-extension"))
+                        .waitForExtension("Modifier Extension")
                         .withLogLevel(Level.DEBUG);
 
         extension.beforeEach(null);
