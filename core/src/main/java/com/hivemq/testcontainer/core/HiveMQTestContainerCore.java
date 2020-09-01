@@ -100,12 +100,28 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
         });
     }
 
+    /**
+     * Adds a wait condition for the extension with this name.
+     * <p>
+     * Must be called before the container is started.
+     *
+     * @param extensionName the extension to wait for
+     * @return self
+     */
     public @NotNull SELF waitForExtension(final @NotNull String extensionName) {
         final String regEX = "(.*)Extension \"" + extensionName + "\" version (.*) started successfully(.*)";
         waitStrategy.withRegEx(regEX);
         return self();
     }
 
+    /**
+     * Adds a wait condition for this {@link HiveMQExtension}
+     * <p>
+     * Must be called before the container is started.
+     *
+     * @param extension the extension to wait for
+     * @return self
+     */
     public @NotNull SELF waitForExtension(final @NotNull HiveMQExtension extension) {
         return this.waitForExtension(extension.getName());
     }
