@@ -16,8 +16,8 @@ This enables testing MQTT client applications and integration testing of custom 
 
 ## Features
 - [load user defined HiveMQ images and tags](#add-to-your-project)
-- [test your MQTT 3 and MQTT 5 client applications](#test-your-mqtt-3-and-mqtt-5-client-application)
 - [wait strategy](#wait-strategy)
+- [test your MQTT 3 and MQTT 5 client applications](#test-your-mqtt-3-and-mqtt-5-client-application)
 - [add a custom hivemq config](#add-a-custom-hivemq-configuration)
 - [load an extension from a maven project](#load-an-extension-from-a-maven-project)
 - [load an extension from a folder](#load-an-extension-from-a-folder)
