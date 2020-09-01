@@ -134,7 +134,6 @@ wait conditions for your HiveMQ Extensions:
         .id("extension-1")
         .name("my-extension")
         .version("1.0")
-        .disabledOnStartup(true)
         .mainClass(MyExtension.class).build();
     
     @Rule
@@ -149,7 +148,6 @@ wait conditions for your HiveMQ Extensions:
         .id("extension-1")
         .name("my-extension")
         .version("1.0")
-        .disabledOnStartup(true)
         .mainClass(MyExtension.class).build();
     
     @RegisterExtension
