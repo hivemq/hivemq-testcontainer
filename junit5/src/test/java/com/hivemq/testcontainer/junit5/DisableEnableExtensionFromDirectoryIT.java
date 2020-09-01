@@ -37,6 +37,7 @@ public class DisableEnableExtensionFromDirectoryIT {
         final HiveMQTestContainerExtension extension =
                 new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
                         .withExtension(new File("src/test/resources/modifier-extension"))
+                        .waitForExtension("Modifier Extension")
                         .withLogLevel(Level.DEBUG);
 
         extension.beforeEach(null);

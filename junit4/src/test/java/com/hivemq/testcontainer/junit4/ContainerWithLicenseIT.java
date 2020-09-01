@@ -39,13 +39,16 @@ public class ContainerWithLicenseIT {
 
     @Test(timeout = 200_000)
     public void test() throws Exception {
+        final HiveMQExtension hiveMQExtension = HiveMQExtension.builder()
+                .id("extension-1")
+                .name("my-extension")
+                .version("1.0")
+                .mainClass(LicenceCheckerExtension.class).build();
+
         final HiveMQTestContainerRule rule =
                 new HiveMQTestContainerRule()
-                        .withExtension(HiveMQExtension.builder()
-                                .id("extension-1")
-                                .name("my-extension")
-                                .version("1.0")
-                                .mainClass(LicenceCheckerExtension.class).build())
+                        .waitForExtension(hiveMQExtension)
+                        .withExtension(hiveMQExtension)
                         .withLicense(new File("src/test/resources/myLicense.lic"))
                         .withLicense(new File("src/test/resources/myExtensionLicense.elic"))
                         .withDebugging();

@@ -40,6 +40,7 @@ public class DisableEnableMavenExtensionIT {
 
         final HiveMQTestContainerRule rule =
                 new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
+                        .waitForExtension("Maven Extension")
                         .withExtension(extensionDir);
 
         rule.start();

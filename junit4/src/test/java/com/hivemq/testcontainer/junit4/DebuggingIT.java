@@ -33,13 +33,15 @@ public class DebuggingIT {
 
     @Test(timeout = 200_000)
     public void test() throws IOException {
+        final HiveMQExtension hiveMQExtension = HiveMQExtension.builder()
+                .id("extension-1")
+                .name("my-extension")
+                .version("1.0")
+                .mainClass(MyExtension.class).build();
+
         final HiveMQTestContainerRule rule =
                 new HiveMQTestContainerRule()
-                        .withExtension(HiveMQExtension.builder()
-                                .id("extension-1")
-                                .name("my-extension")
-                                .version("1.0")
-                                .mainClass(MyExtension.class).build())
+                        .withExtension(hiveMQExtension)
                         .withDebugging(DEBUGGING_PORT_HOST);
         rule.start();
         final Socket localhost = new Socket("localhost", 9000);

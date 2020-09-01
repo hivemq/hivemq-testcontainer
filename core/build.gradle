@@ -9,7 +9,6 @@ ext {
 
 dependencies {
     api group: 'org.testcontainers', name: 'testcontainers', version: testContainersVersion
-    implementation group: 'com.hivemq', name: 'hivemq-mqtt-client', version: hmcVersion
     implementation group: 'commons-io', name: 'commons-io', version: commonsIoVersion
     implementation group: 'org.javassist', name: 'javassist', version: javassistVersion
     implementation group: 'org.jboss.shrinkwrap', name: 'shrinkwrap-api', version: shrinkWrapVersion
@@ -30,6 +29,7 @@ dependencies {
     compileOnly group: 'com.hivemq', name: 'hivemq-extension-sdk', version: extensionSDKVersion
 
     testImplementation group: 'com.hivemq', name: 'hivemq-extension-sdk', version: extensionSDKVersion
+    testImplementation group: 'com.hivemq', name: 'hivemq-mqtt-client', version: hmcVersion
     testImplementation group: 'com.google.dagger', name: 'dagger', version: daggerVersion
     testAnnotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: daggerVersion
 }

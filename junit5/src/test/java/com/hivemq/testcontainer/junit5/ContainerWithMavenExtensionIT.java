@@ -37,6 +37,7 @@ public class ContainerWithMavenExtensionIT {
                 .addProperty("HIVEMQ_EXTENSION_SDK_VERSION", "4.3.0")
                 .get();
         final HiveMQTestContainerExtension extension = new HiveMQTestContainerExtension()
+                .waitForExtension("Maven Extension")
                 .withExtension(mavenExtension);
 
         extension.beforeEach(null);
