@@ -68,6 +68,8 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     private final @NotNull ConcurrentHashMap<String, CountDownLatch> containerOutputLatches = new ConcurrentHashMap<>();
     private volatile boolean silent = false;
 
+    private final @NotNull MultiLogMessageWaitStrategy waitStrategy = new MultiLogMessageWaitStrategy();
+
     public HiveMQTestContainerCore() {
         this(DEFAULT_HIVEMQ_IMAGE, DEFAULT_HIVEMQ_TAG);
     }
@@ -76,8 +78,8 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
         super(image + ":" + tag);
         withExposedPorts(MQTT_PORT);
 
-        final MqttWaitStrategy mqttWaitStrategy = new MqttWaitStrategy();
-        waitingFor(mqttWaitStrategy);
+        waitStrategy.withRegEx("(.*)Started HiveMQ in(.*)");
+        waitingFor(waitStrategy);
 
         withLogConsumer(outputFrame -> {
             if (!silent) {
@@ -96,6 +98,16 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
                 });
             }
         });
+    }
+
+    public @NotNull SELF waitForExtension(final @NotNull String extensionName) {
+        final String regEX = "(.*)Extension \"" + extensionName + "\" version (.*) started successfully(.*)";
+        waitStrategy.withRegEx(regEX);
+        return self();
+    }
+
+    public @NotNull SELF waitForExtension(final @NotNull HiveMQExtension extension) {
+        return this.waitForExtension(extension.getName());
     }
 
     /**
