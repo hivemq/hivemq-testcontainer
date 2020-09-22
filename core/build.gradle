@@ -14,7 +14,7 @@ dependencies {
     implementation group: 'org.jboss.shrinkwrap', name: 'shrinkwrap-api', version: shrinkWrapVersion
     implementation group: 'org.jboss.shrinkwrap', name: 'shrinkwrap-impl-base', version: shrinkWrapVersion
     implementation group: 'net.lingala.zip4j', name: 'zip4j', version: zip4jVersion
-    implementation group: 'org.jetbrains', name: 'annotations', version: jetbrainsAnnotationsVerison
+    implementation group: 'org.jetbrains', name: 'annotations', version: jetbrainsAnnotationsVersion
 
     /*  This dependency needs to be explicitly added, because shrinkwrap-resolver-api-maven-embedded
         and shrinkwrap-resolver-impl-maven-embedded depend on different versions of it.

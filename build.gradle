@@ -3,11 +3,10 @@ plugins {
     id 'com.github.hierynomus.license' version '0.15.0' apply false
 }
 
-
 /* ******************** metadata ******************** */
 
 allprojects {
-    version '1.2.0'
+    version '1.3.0'
     group 'com.hivemq'
     description 'Testcontainers for testing HiveMQ Extensions and Java MQTT Applications.'
 
@@ -30,8 +29,8 @@ allprojects {
 
 allprojects {
     plugins.withType(JavaPlugin) {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
 
         tasks.withType(JavaCompile) {
             options.encoding = 'UTF-8'
@@ -53,6 +52,7 @@ allprojects {
         hmcVersion = '1.2.1'
         junit4Version = '4.13'
         junit5Version = '5.6.2'
+        jetbrainsAnnotationsVersion = '20.1.0'
         commonsIoVersion = '2.7'
         javassistVersion = '3.27.0-GA'
         jetbrainsAnnotationsVersion = '20.1.0'
