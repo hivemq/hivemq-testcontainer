@@ -55,6 +55,7 @@ allprojects {
         junit5Version = '5.6.2'
         commonsIoVersion = '2.7'
         javassistVersion = '3.27.0-GA'
+        jetbrainsAnnotationsVersion = '20.1.0'
         shrinkWrapVersion = '1.2.6'
         shrinkwrapResolverDepchainVersion = '3.1.4'
         zip4jVersion = '2.6.2'

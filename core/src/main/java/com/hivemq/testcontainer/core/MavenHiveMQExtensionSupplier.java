@@ -15,7 +15,7 @@
  */
 package com.hivemq.testcontainer.core;
 
-import com.hivemq.extension.sdk.api.annotations.NotNull;
+import org.jetbrains.annotations.NotNull;
 import net.lingala.zip4j.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 import org.jboss.shrinkwrap.resolver.api.maven.embedded.BuiltProject;

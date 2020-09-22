@@ -15,7 +15,7 @@
  */
 package com.hivemq.testcontainer.junit4;
 
-import com.hivemq.extension.sdk.api.annotations.NotNull;
+import org.jetbrains.annotations.NotNull;
 import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.util.MyExtension;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;

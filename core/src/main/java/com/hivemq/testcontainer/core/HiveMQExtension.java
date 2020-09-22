@@ -16,8 +16,8 @@
 package com.hivemq.testcontainer.core;
 
 import com.hivemq.extension.sdk.api.ExtensionMain;
-import com.hivemq.extension.sdk.api.annotations.NotNull;
-import com.hivemq.extension.sdk.api.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
 
 /**
