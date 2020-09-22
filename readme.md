@@ -43,7 +43,6 @@ This enables testing MQTT client applications and integration testing of custom 
 add these dependencies to your `build.gradle`:
 
 ````groovy
-compile "com.hivemq:hivemq-extension-sdk:4.4.0"
 testCompile "com.hivemq:hivemq-testcontainer-junit4:1.3.0"
 testCompile "junit:junit:4.13"
 ````
@@ -51,7 +50,6 @@ testCompile "junit:junit:4.13"
 ### Gradle + JUnit 5
 
 ````groovy
-compile "com.hivemq:hivemq-extension-sdk:4.4.0"
 testCompile "com.hivemq:hivemq-testcontainer-junit5:1.3.0"
 testCompile "org.junit.jupiter:junit-jupiter-engine:5.6.1"
 testCompile "org.junit.jupiter:junit-jupiter-api:5.6.1"
@@ -63,11 +61,6 @@ testCompile "org.junit.jupiter:junit-jupiter-api:5.6.1"
 add these dependencies to your `pom.xml`:
 
 ```xml
-<dependency>
-    <groupId>com.hivemq</groupId>
-    <artifactId>hivemq-extension-sdk</artifactId>
-    <version>4.4.0</version>
-</dependency>
 <dependency>
     <groupId>com.hivemq</groupId>
     <artifactId>hivemq-testcontainer-junit4</artifactId>
@@ -87,11 +80,6 @@ add these dependencies to your `pom.xml`:
 add these dependencies to your `pom.xml`:
 
 ```xml
-<dependency>
-    <groupId>com.hivemq</groupId>
-    <artifactId>hivemq-extension-sdk</artifactId>
-    <version>4.4.0</version>
-</dependency>
 <dependency>
     <groupId>com.hivemq</groupId>
     <artifactId>hivemq-testcontainer-junit5</artifactId>
