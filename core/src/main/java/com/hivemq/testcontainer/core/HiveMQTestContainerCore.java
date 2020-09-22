@@ -181,7 +181,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
             final MountableFile mountableExtension = MountableFile.forHostPath(extension.getPath(), MODE);
             withCopyFileToContainer(mountableExtension, "/opt/hivemq/extensions/" + hiveMQExtension.getId());
         } catch (final Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return self();
     }
@@ -210,7 +210,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
             withCopyFileToContainer(mountableExtension, containerPath);
             logger.info("Putting extension {} into {}", extensionDir.getName(), containerPath);
         } catch (final Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         return self();
     }
@@ -243,13 +243,10 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
                 ShrinkWrap.create(JavaArchive.class)
                         .addAsServiceProviderAndClasses(ExtensionMain.class, hiveMQExtension.getMainClass());
 
-        try {
-            putSubclassesIntoJar(hiveMQExtension.getId(), hiveMQExtension.getMainClass(), javaArchive);
-            for (final Class<?> additionalClass : hiveMQExtension.getAdditionalClasses()) {
-                putSubclassesIntoJar(hiveMQExtension.getId(), additionalClass, javaArchive);
-            }
-        } catch (final Exception e) {
-            //ignore
+        putSubclassesIntoJar(hiveMQExtension.getId(), hiveMQExtension.getMainClass(), javaArchive);
+        for (final Class<?> additionalClass : hiveMQExtension.getAdditionalClasses()) {
+            javaArchive.addClass(additionalClass);
+            putSubclassesIntoJar(hiveMQExtension.getId(), additionalClass, javaArchive);
         }
 
         javaArchive.as(ZipExporter.class).exportTo(new File(extensionDir, "extension.jar"));
@@ -272,8 +269,13 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
                     ClassPool.getDefault().get(clazz.getName()).getClassFile().getConstPool().getClassNames();
             for (final String subClassName : subClassNames) {
                 final String className = subClassName.replaceAll("/", ".");
-                logger.debug("Packaging subclass {} into extension {}.", className, extensionId);
-                javaArchive.addClass(className);
+
+                if (!className.startsWith("[L")) {
+                    logger.debug("Trying to package subclass {} into extension {}.", className, extensionId);
+                    javaArchive.addClass(className);
+                } else {
+                    logger.debug("Class {} will be ignored.", className);
+                }
             }
         }
     }
@@ -402,9 +404,9 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * <p>
      * This can only be called once the container is started.
      *
-     * @param extensionName the name of the extension to disable
+     * @param extensionName      the name of the extension to disable
      * @param extensionDirectory the name of the extension's directory
-     * @param timeout the timeout
+     * @param timeout            the timeout
      * @return self
      * @since 1.1.0
      */
@@ -444,7 +446,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * <p>
      * This can only be called once the container is started.
      *
-     * @param extensionName the name of the extension to disable
+     * @param extensionName      the name of the extension to disable
      * @param extensionDirectory the name of the extension's directory
      * @return self
      * @since 1.1.0
@@ -463,7 +465,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * This can only be called once the container is started.
      *
      * @param hiveMQExtension the extension
-     * @param timeout the timeout
+     * @param timeout         the timeout
      * @return self
      */
     public @NotNull SELF disableExtension(
@@ -490,12 +492,12 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * Enables the extension with the given name and extension directory name.
      * This method blocks until the HiveMQ log for successful enabling is consumed or it times out after {timeOut}.
      * Note: Enabling Extensions is a HiveMQ Enterprise feature, it will not work when using the HiveMQ Community Edition.
-     *
+     * <p>
      * This can only be called once the container is started.
      *
-     * @param extensionName the name of the extension to disable
+     * @param extensionName      the name of the extension to disable
      * @param extensionDirectory the name of the extension's directory
-     * @param timeout the timeout
+     * @param timeout            the timeout
      * @return self
      * @since 1.1.0
      */
@@ -532,10 +534,10 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * Enables the extension with the given name and extension directory name.
      * This method blocks until the HiveMQ log for successful enabling is consumed or it times out after 60 seconds.
      * Note: Enabling Extensions is a HiveMQ Enterprise feature, it will not work when using the HiveMQ Community Edition.
-     *
+     * <p>
      * This can only be called once the container is started.
      *
-     * @param extensionName the name of the extension to disable
+     * @param extensionName      the name of the extension to disable
      * @param extensionDirectory the name of the extension's directory
      * @return self
      * @since 1.1.0
@@ -550,11 +552,11 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * Enables the extension.
      * This method blocks until the HiveMQ log for successful enabling is consumed or it times out after {timeOut}.
      * Note: Enabling Extensions is a HiveMQ Enterprise feature, it will not work when using the HiveMQ Community Edition.
-     *
+     * <p>
      * This can only be called once the container is started.
      *
      * @param hiveMQExtension the extension
-     * @param timeout the timeout
+     * @param timeout         the timeout
      * @return self
      */
     public @NotNull SELF enableExtension(
@@ -567,7 +569,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * Enables the extension.
      * This method blocks until the HiveMQ log for successful enabling is consumed or it times out after {timeOut}.
      * Note: Enabling Extensions is a HiveMQ Enterprise feature, it will not work when using the HiveMQ Community Edition.
-     *
+     * <p>
      * This can only be called once the container is started.
      *
      * @param hiveMQExtension the extension
@@ -576,7 +578,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     public @NotNull SELF enableExtension(final @NotNull HiveMQExtension hiveMQExtension) {
         return enableExtension(hiveMQExtension, Duration.ofSeconds(60));
     }
-    
+
     /**
      * Determines whether the stdout of the container is printed to System.out.
      *
