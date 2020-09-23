@@ -58,40 +58,4 @@ class GradleHiveMQExtensionSupplierTest {
         final IllegalStateException ex = assertThrows(IllegalStateException.class, supplier::get);
         assertEquals(buildGradle.getAbsolutePath() + " is not readable.", ex.getMessage());
     }
-
-    @Test
-    void test_wrapperNotFound() throws IOException {
-        final File tempDir = Files.createTempDir();
-        final File buildGradle = new File(tempDir, "build.gradle");
-        assertTrue(buildGradle.createNewFile());
-
-        final File wrapper = new File(tempDir, "gradlew");
-
-        final GradleHiveMQExtensionSupplier supplier = new GradleHiveMQExtensionSupplier(
-                buildGradle.getAbsolutePath(),
-                "project.name",
-                "project.version");
-
-        final IllegalStateException ex = assertThrows(IllegalStateException.class, supplier::get);
-        assertEquals("Gradle Wrapper " + wrapper.getAbsolutePath() + " does not exists.", ex.getMessage());
-    }
-
-    @Test
-    void test_wrapperNotExecutable() throws IOException {
-        final File tempDir = Files.createTempDir();
-        final File buildGradle = new File(tempDir, "build.gradle");
-        assertTrue(buildGradle.createNewFile());
-
-        final File wrapper = new File(tempDir, "gradlew");
-        assertTrue(wrapper.createNewFile());
-        assertTrue(wrapper.setExecutable(false));
-
-        final GradleHiveMQExtensionSupplier supplier = new GradleHiveMQExtensionSupplier(
-                buildGradle.getAbsolutePath(),
-                "project.name",
-                "project.version");
-
-        final IllegalStateException ex = assertThrows(IllegalStateException.class, supplier::get);
-        assertEquals("Gradle Wrapper " + wrapper.getAbsolutePath() + " can not be executed.", ex.getMessage());
-    }
 }
