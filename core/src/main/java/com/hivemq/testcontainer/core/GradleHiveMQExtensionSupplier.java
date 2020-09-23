@@ -43,7 +43,6 @@ public class GradleHiveMQExtensionSupplier implements Supplier<File> {
                     "=================================================================";
 
     private static final @NotNull String TASK = "hivemqExtensionZip";
-    private static final @NotNull String GRADLE_WRAPPER_BATCH_COMMAND = "gradlew.bat";
     private static final @NotNull String GRADLE_WRAPPER_BASH_COMMAND = "./gradlew";
 
     private final @NotNull String gradleBuild;
@@ -155,7 +154,7 @@ public class GradleHiveMQExtensionSupplier implements Supplier<File> {
                 if (!gradleWrapperBatFile.canExecute()) {
                     throw new IllegalStateException("Gradle Wrapper " + gradleWrapperBatFile.getAbsolutePath() + " can not be executed.");
                 }
-                return GRADLE_WRAPPER_BATCH_COMMAND;
+                return gradleWrapperBatFile.getAbsolutePath();
             }
         }
         throw new IllegalStateException("Unkown OS Version");
