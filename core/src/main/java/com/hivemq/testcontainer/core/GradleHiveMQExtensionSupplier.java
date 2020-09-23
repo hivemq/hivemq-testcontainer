@@ -121,7 +121,10 @@ public class GradleHiveMQExtensionSupplier implements Supplier<File> {
                 processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
             }
             final Process gradleBuild = processBuilder.start();
-            gradleBuild.onExit().get();
+            final int exitValue = gradleBuild.exitValue();
+            if (exitValue != 0) {
+                throw new IllegalStateException("Gradle build exited with code " + exitValue);
+            }
 
             System.out.printf((BUILD_STOPPED) + "%n", this.gradleBuild);
 
