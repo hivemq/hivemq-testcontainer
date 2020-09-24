@@ -16,14 +16,14 @@
 package com.hivemq.testcontainer.core;
 
 import com.hivemq.extension.sdk.api.ExtensionMain;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import javassist.ClassPool;
 import javassist.NotFoundException;
 import org.apache.commons.io.FileUtils;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
@@ -279,6 +279,49 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
                 }
             }
         }
+    }
+
+    /**
+     * Removes the specified prepackaged extension folders from '/opt/hivemq/extensions' before the container is built.
+     * Note: this creates a custom docker image.
+     * <p>
+     * Must be called before the container is started.
+     *
+     * @param extensionIds the prepackaged extensions to remove
+     * @return self
+     */
+    public @NotNull SELF withoutPrepackagedExtensions(final @NotNull String... extensionIds) {
+        final String dockerImageName = getDockerImageName();
+        setImage(new ImageFromDockerfile(dockerImageName + "-custom")
+                .withDockerfileFromBuilder(builder -> {
+                    builder.from(dockerImageName);
+                    for (final String extensionId : extensionIds) {
+                        builder.run("rm", "-rf", "/opt/hivemq/extensions/" + extensionId);
+                    }
+                }));
+        return self();
+    }
+
+    /**
+     * Removes all prepackaged extension folders from '/opt/hivemq/extensions' before the container is built.
+     * Note: this creates a custom docker image.
+     * <p>
+     * Must be called before the container is started.
+     *
+     * @return self
+     */
+    public @NotNull SELF withoutPrepackagedExtensions() {
+        final String dockerImageName = getDockerImageName();
+        setImage(new ImageFromDockerfile(dockerImageName + "-custom")
+                .withDockerfileFromBuilder(builder ->
+                        builder.from(dockerImageName)
+                                .run("rm", "-rf", "/opt/hivemq/extensions/")));
+        return self();
+    }
+
+    @Override
+    public void start() {
+        super.start();
     }
 
     /**

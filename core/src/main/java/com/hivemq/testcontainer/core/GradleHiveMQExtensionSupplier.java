@@ -26,6 +26,7 @@ import java.util.function.Supplier;
 
 /**
  * This class automates the process of packaging a HiveMQ extension from a gradle project.
+ * It uses ./gradlew on MacOS and Linux and uses gradlew.bat on Windows to execute the gradle task.
  *
  * @author Yannick Weber
  * @since 1.3.0
