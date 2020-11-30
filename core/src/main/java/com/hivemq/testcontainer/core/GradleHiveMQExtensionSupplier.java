@@ -16,13 +16,19 @@
 package com.hivemq.testcontainer.core;
 
 import net.lingala.zip4j.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
 import org.jetbrains.annotations.NotNull;
 import org.testcontainers.shaded.com.google.common.io.Files;
 import org.testcontainers.shaded.org.apache.commons.lang.SystemUtils;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
+import java.util.AbstractMap;
+import java.util.Map;
 import java.util.function.Supplier;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * This class automates the process of packaging a HiveMQ extension from a gradle project.
@@ -32,6 +38,9 @@ import java.util.function.Supplier;
  * @since 1.3.0
  */
 public class GradleHiveMQExtensionSupplier implements Supplier<File> {
+
+    private static final @NotNull Pattern ROOT_PROJECT_PATTERN = Pattern.compile(".*'(.*)'");
+    private static final @NotNull String PROPERTY_REGEX = "(.*): (.*)";
 
     private static final @NotNull String BUILD_STARTED =
             "=================================================================\n" +
@@ -47,43 +56,31 @@ public class GradleHiveMQExtensionSupplier implements Supplier<File> {
     private static final @NotNull String GRADLE_WRAPPER_BASH_COMMAND = "./gradlew";
 
     private final @NotNull String gradleBuild;
-    private final @NotNull String projectName;
-    private final @NotNull String projectVersion;
     private boolean quiet = false;
 
     /**
      * This {@link Supplier} can be used if the current gradle project is the HiveMQ Extension to supply.
      * It uses the build.gradle file and the gradle wrapper of the current gradle project.
      *
-     * @param projectName    the project.name of HiveMQ extension to supply
-     * @param projectVersion the project.version of the HiveMQ extension to supply
      * @return a {@link GradleHiveMQExtensionSupplier} for the current gradle project
      * @since 1.3.0
      */
-    public static @NotNull GradleHiveMQExtensionSupplier direct(
-            final @NotNull String projectName,
-            final @NotNull String projectVersion) {
+    public static @NotNull GradleHiveMQExtensionSupplier direct() {
 
-        return new GradleHiveMQExtensionSupplier("build.gradle", projectName, projectVersion);
+        return new GradleHiveMQExtensionSupplier("build.gradle");
     }
 
     /**
      * Creates a Maven HiveMQ extension {@link Supplier}.
      * It uses the gradle wrapper of the gradle project associated with the given It uses the build.gradle file.
      *
-     * @param gradleBuild    the path of the build.gradle of the HiveMQ extension to supply.
-     * @param projectName    the project.name of HiveMQ extension to supply
-     * @param projectVersion the project.version of the HiveMQ extension to supply
+     * @param gradleBuild the path of the build.gradle of the HiveMQ extension to supply.
      * @since 1.3.0
      */
     public GradleHiveMQExtensionSupplier(
-            final @NotNull String gradleBuild,
-            final @NotNull String projectName,
-            final @NotNull String projectVersion) {
+            final @NotNull String gradleBuild) {
 
         this.gradleBuild = gradleBuild;
-        this.projectName = projectName;
-        this.projectVersion = projectVersion;
     }
 
     /**
@@ -114,23 +111,47 @@ public class GradleHiveMQExtensionSupplier implements Supplier<File> {
                 processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
             }
             final Process gradleBuild = processBuilder.start();
-            final int exitCode = gradleBuild.waitFor();
-            if (exitCode != 0) {
-                throw new IllegalStateException("Gradle build exited with code " + exitCode);
+            final int extensionBuildExitCode = gradleBuild.waitFor();
+            if (extensionBuildExitCode != 0) {
+                throw new IllegalStateException("Gradle build exited with code " + extensionBuildExitCode);
             }
 
+            final ProcessBuilder propertiesTask = new ProcessBuilder();
+            propertiesTask.directory(gradleBuildFile.getParentFile());
+            propertiesTask.command(getCommandForOs(gradleBuildFile), "properties", "-q");
+            propertiesTask.redirectError(ProcessBuilder.Redirect.INHERIT);
+
+            final Process propertiesTaskProcess = propertiesTask.start();
+            final int propertiesExitCode = propertiesTaskProcess.waitFor();
+            if (propertiesExitCode != 0) {
+                throw new IllegalStateException("Gradle build exited with code " + propertiesExitCode);
+            }
+
+            final BufferedReader br = new BufferedReader(new InputStreamReader(propertiesTaskProcess.getInputStream()));
+
+            final Map<String, String> gradleProperties = br.lines()
+                    .filter(s -> s.matches(PROPERTY_REGEX))
+                    .map(s -> {
+                        final String[] splits = s.split(": ");
+                        return new AbstractMap.SimpleEntry<>(splits[0], splits[1]);
+                    })
+                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+
             System.out.printf((BUILD_STOPPED) + "%n", this.gradleBuild);
+
+            final String projectVersion = gradleProperties.get("version");
+            final String rootProject = gradleProperties.get("rootProject");
+            final Matcher matcher = ROOT_PROJECT_PATTERN.matcher(rootProject);
+            final boolean b = matcher.find();
+            final String projectName = matcher.group(1);
 
             final ZipFile zipFile = new ZipFile(
                     new File(gradleBuildFile.getParentFile(),
                             "build/hivemq-extension/" + projectName + "-" + projectVersion + ".zip"));
             final File tempDir = Files.createTempDir();
 
-            try {
-                zipFile.extractAll(tempDir.getAbsolutePath());
-            } catch (final ZipException e) {
-                throw new RuntimeException(e);
-            }
+            zipFile.extractAll(tempDir.getAbsolutePath());
             return new File(tempDir, projectName);
 
         } catch (final Exception e) {

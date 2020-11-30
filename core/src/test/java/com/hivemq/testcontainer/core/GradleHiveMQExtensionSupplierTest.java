@@ -35,9 +35,7 @@ class GradleHiveMQExtensionSupplierTest {
         final File buildGradle = new File(tempDir, "build.gradle");
 
         final GradleHiveMQExtensionSupplier supplier = new GradleHiveMQExtensionSupplier(
-                buildGradle.getAbsolutePath(),
-                "project.name",
-                "project.version");
+                buildGradle.getAbsolutePath());
 
         final IllegalStateException ex = assertThrows(IllegalStateException.class, supplier::get);
         assertEquals(buildGradle.getAbsolutePath() + " does not exist.", ex.getMessage());
@@ -51,9 +49,7 @@ class GradleHiveMQExtensionSupplierTest {
         assertTrue(buildGradle.setReadable(false));
 
         final GradleHiveMQExtensionSupplier supplier = new GradleHiveMQExtensionSupplier(
-                buildGradle.getAbsolutePath(),
-                "project.name",
-                "project.version");
+                buildGradle.getAbsolutePath());
 
         final IllegalStateException ex = assertThrows(IllegalStateException.class, supplier::get);
         assertEquals(buildGradle.getAbsolutePath() + " is not readable.", ex.getMessage());
