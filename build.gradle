@@ -48,7 +48,7 @@ allprojects {
     }
 
     ext {
-        testContainersVersion = '1.14.3'
+        testContainersVersion = '1.15.0'
         extensionSDKVersion = '4.4.0'
         hmcVersion = '1.2.1'
         junit4Version = '4.13'
