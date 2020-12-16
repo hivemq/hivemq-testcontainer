@@ -15,32 +15,30 @@
  */
 package com.hivemq.testcontainer.junit4;
 
-import org.jetbrains.annotations.NotNull;
-import com.hivemq.testcontainer.core.HiveMQExtension;
-import com.hivemq.testcontainer.util.MyExtension;
+import com.hivemq.testcontainer.core.GradleHiveMQExtensionSupplier;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
 import org.junit.Test;
 
+import java.io.File;
+
 /**
  * @author Yannick Weber
+ * @since 1.3.0
  */
-public class ContainerWithExtensionIT {
+public class ContainerWithGradleExtensionIT {
 
     @Test(timeout = 200_000)
     public void test() throws Exception {
-        final HiveMQExtension hiveMQExtension = HiveMQExtension.builder()
-                .id("extension-1")
-                .name("my-extension")
-                .version("1.0")
-                .mainClass(MyExtension.class).build();
+        final File gradleExtension = new GradleHiveMQExtensionSupplier(
+                new File("src/test/resources/gradle-extension/"))
+                .get();
 
-        final @NotNull HiveMQTestContainerRule rule =
-                new HiveMQTestContainerRule()
-                        .waitForExtension(hiveMQExtension)
-                        .withExtension(hiveMQExtension);
+        final HiveMQTestContainerRule container = new HiveMQTestContainerRule()
+                .waitForExtension("Gradle Extension")
+                .withExtension(gradleExtension);
 
-        rule.start();
-        TestPublishModifiedUtil.testPublishModified(rule.getMqttPort());
-        rule.stop();
+        container.start();
+        TestPublishModifiedUtil.testPublishModified(container.getMqttPort());
+        container.stop();
     }
 }

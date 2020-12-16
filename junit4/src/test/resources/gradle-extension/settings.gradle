@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright 2020 HiveMQ and the HiveMQ Community
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,18 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hivemq.testcontainer.util.dagger;
-
-import com.hivemq.extension.sdk.api.annotations.NotNull;
-import dagger.Module;
-import dagger.Provides;
-
-@Module
-public class MyModule {
-
-    @Provides
-    @NotNull PublishModifier providePublishModifier() {
-        return new PublishModifier();
+pluginManagement {
+    plugins {
+        id 'com.hivemq.extension' version '1.0.0'
     }
-
 }
+rootProject.name = 'gradle-extension'

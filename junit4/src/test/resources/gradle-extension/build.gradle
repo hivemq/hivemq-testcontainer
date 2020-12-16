@@ -1,4 +1,4 @@
-/*
+/**
  * Copyright 2020 HiveMQ and the HiveMQ Community
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -13,25 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hivemq.testcontainer.core;
-
-import org.jetbrains.annotations.NotNull;
-
-/**
- * @author Yannick Weber
- */
-class PathUtil {
-
-    static @NotNull String preparePath(@NotNull String pathInExtensionHome) {
-        if ("/".equals(pathInExtensionHome) || pathInExtensionHome.isEmpty()) {
-            return "/";
-        }
-        if (!pathInExtensionHome.startsWith("/")) {
-            pathInExtensionHome = "/" + pathInExtensionHome;
-        }
-        if (!pathInExtensionHome.endsWith("/")) {
-            pathInExtensionHome += "/";
-        }
-        return pathInExtensionHome;
-    }
+plugins {
+    id 'java'
+    id 'com.hivemq.extension'
 }
+
+group 'org.example'
+version '1.0.0'
+
+hivemqExtension {
+    name = 'Gradle Extension'
+    author = 'Example Org'
+    priority = 0
+    startPriority = 1000
+    mainClass = 'com.hivemq.MyExtension'
+    sdkVersion = '4.4.1'
+}
+
