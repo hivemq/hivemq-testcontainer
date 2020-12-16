@@ -13,35 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hivemq.testcontainer.junit5;
+package com.hivemq.testcontainer.junit4;
 
 import com.hivemq.testcontainer.core.GradleHiveMQExtensionSupplier;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
+import org.junit.Test;
 
 import java.io.File;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author Yannick Weber
  * @since 1.3.0
  */
-public class ContainerWithGradleExtension {
+public class ContainerWithGradleExtensionIT {
 
-    @Test
-    @Timeout(value = 3, unit = TimeUnit.MINUTES)
+    @Test(timeout = 200_000)
     public void test() throws Exception {
         final File gradleExtension = new GradleHiveMQExtensionSupplier(
                 "src/test/resources/gradle-extension/build.gradle")
                 .get();
 
-        final HiveMQTestContainerExtension container = new HiveMQTestContainerExtension()
+        final HiveMQTestContainerRule container = new HiveMQTestContainerRule()
                 .waitForExtension("Gradle Extension")
                 .withExtension(gradleExtension);
 
-        container.beforeEach(null);
+        container.start();
         TestPublishModifiedUtil.testPublishModified(container.getMqttPort());
-        container.afterEach(null);
+        container.stop();
     }
 }

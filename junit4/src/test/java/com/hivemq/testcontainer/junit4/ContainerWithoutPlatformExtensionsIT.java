@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hivemq.testcontainer.junit5;
+package com.hivemq.testcontainer.junit4;
 
 import com.hivemq.client.mqtt.MqttClient;
 import com.hivemq.client.mqtt.MqttGlobalPublishFilter;
@@ -29,14 +29,12 @@ import com.hivemq.extension.sdk.api.services.Services;
 import com.hivemq.extension.sdk.api.services.builder.Builders;
 import com.hivemq.testcontainer.core.HiveMQExtension;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
+import org.junit.Test;
 
 import java.io.File;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -45,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * @author Yannick Weber
  */
-public class ContainerWithoutPlatformExtensions {
+public class ContainerWithoutPlatformExtensionsIT {
 
     private final @NotNull HiveMQExtension hiveMQExtension = HiveMQExtension.builder()
             .name("MyExtension")
@@ -54,16 +52,15 @@ public class ContainerWithoutPlatformExtensions {
             .mainClass(CheckerExtension.class).build();
 
 
-    @Test
-    @Timeout(value = 3, unit = TimeUnit.MINUTES)
+    @Test(timeout = 200_000)
     public void removeAllPlatformExtensions() throws InterruptedException {
 
-        final HiveMQTestContainerExtension container = new HiveMQTestContainerExtension("hivemq/hivemq4", "4.4.1")
+        final HiveMQTestContainerRule container = new HiveMQTestContainerRule("hivemq/hivemq4", "4.4.1")
                 .withExtension(hiveMQExtension)
                 .waitForExtension(hiveMQExtension)
                 .withoutPrepackagedExtensions();
 
-        container.beforeEach(null);
+        container.start();
 
         final Mqtt5BlockingClient client = MqttClient.builder()
                 .serverPort(container.getMqttPort())
@@ -83,15 +80,13 @@ public class ContainerWithoutPlatformExtensions {
         assertFalse(extensionInfo.contains("hivemq-bridge-extension"));
         assertFalse(extensionInfo.contains("hivemq-enterprise-security-extension"));
 
-        container.afterEach(null);
+        container.stop();
     }
 
-
-    @Test
-    @Timeout(value = 3, unit = TimeUnit.MINUTES)
+    @Test(timeout = 200_000)
     public void removeKafkaExtensions() throws InterruptedException {
 
-        final HiveMQTestContainerExtension container = new HiveMQTestContainerExtension("hivemq/hivemq4", "4.4.1")
+        final HiveMQTestContainerRule container = new HiveMQTestContainerRule("hivemq/hivemq4", "4.4.1")
                 .withExtension(hiveMQExtension)
                 .waitForExtension(hiveMQExtension)
                 .withoutPrepackagedExtensions("hivemq-kafka-extension");

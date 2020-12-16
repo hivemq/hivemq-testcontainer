@@ -15,30 +15,28 @@
  */
 package com.hivemq.testcontainer.junit4;
 
-import com.hivemq.testcontainer.core.GradleHiveMQExtensionSupplier;
-import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.Test;
 
-import java.io.File;
+public class ContainerWithControlCenterIT {
 
-/**
- * @author Yannick Weber
- * @since 1.3.0
- */
-public class ContainerWithGradleExtension {
+    public static final int CONTROL_CENTER_PORT = 8080;
 
     @Test(timeout = 200_000)
     public void test() throws Exception {
-        final File gradleExtension = new GradleHiveMQExtensionSupplier(
-                "src/test/resources/gradle-extension/build.gradle")
-                .get();
+        final HiveMQTestContainerRule rule =
+                new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
+                        .withControlCenter(CONTROL_CENTER_PORT);
 
-        final HiveMQTestContainerRule container = new HiveMQTestContainerRule()
-                .waitForExtension("Gradle Extension")
-                .withExtension(gradleExtension);
+        rule.start();
 
-        container.start();
-        TestPublishModifiedUtil.testPublishModified(container.getMqttPort());
-        container.stop();
+        final CloseableHttpClient httpClient = HttpClientBuilder.create().build();
+        final HttpUriRequest request = new HttpGet( "http://localhost:" + CONTROL_CENTER_PORT);
+        httpClient.execute(request);
+
+        rule.stop();
     }
 }
