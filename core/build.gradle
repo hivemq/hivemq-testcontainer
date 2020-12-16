@@ -9,12 +9,12 @@ ext {
 
 dependencies {
     api group: 'org.testcontainers', name: 'testcontainers', version: testContainersVersion
+    api group: 'org.jetbrains', name: 'annotations', version: jetbrainsAnnotationsVersion
     implementation group: 'commons-io', name: 'commons-io', version: commonsIoVersion
     implementation group: 'org.javassist', name: 'javassist', version: javassistVersion
     implementation group: 'org.jboss.shrinkwrap', name: 'shrinkwrap-api', version: shrinkWrapVersion
     implementation group: 'org.jboss.shrinkwrap', name: 'shrinkwrap-impl-base', version: shrinkWrapVersion
     implementation group: 'net.lingala.zip4j', name: 'zip4j', version: zip4jVersion
-    implementation group: 'org.jetbrains', name: 'annotations', version: jetbrainsAnnotationsVersion
 
     /*  This dependency needs to be explicitly added, because shrinkwrap-resolver-api-maven-embedded
         and shrinkwrap-resolver-impl-maven-embedded depend on different versions of it.
@@ -31,6 +31,4 @@ dependencies {
 
     testImplementation group: 'com.hivemq', name: 'hivemq-extension-sdk', version: extensionSDKVersion
     testImplementation group: 'com.hivemq', name: 'hivemq-mqtt-client', version: hmcVersion
-    testImplementation group: 'com.google.dagger', name: 'dagger', version: daggerVersion
-    testAnnotationProcessor group: 'com.google.dagger', name: 'dagger-compiler', version: daggerVersion
 }

@@ -47,22 +47,21 @@ allprojects {
     }
 
     ext {
-        testContainersVersion = '1.14.3'
-        extensionSDKVersion = '4.4.0'
+        testContainersVersion = '1.15.0'
+        extensionSDKVersion = '4.4.4'
         hmcVersion = '1.2.1'
-        junit4Version = '4.13'
-        junit5Version = '5.6.2'
+        junit4Version = '4.13.1'
+        junit5Version = '5.7.0'
         jetbrainsAnnotationsVersion = '20.1.0'
-        commonsIoVersion = '2.7'
+        commonsIoVersion = '2.8.0'
         javassistVersion = '3.27.0-GA'
         shrinkWrapVersion = '1.2.6'
         shrinkwrapResolverDepchainVersion = '3.1.4'
-        zip4jVersion = '2.6.2'
+        zip4jVersion = '2.6.4'
 
         // only test
-        httpClientVersion = '4.5.12'
+        httpClientVersion = '4.5.13'
         logbackVersion = '1.2.3'
-        daggerVersion = '2.27'
     }
 }
 
