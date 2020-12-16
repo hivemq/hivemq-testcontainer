@@ -53,9 +53,8 @@ public class GradleHiveMQExtensionSupplier implements Supplier<File> {
                     "=================================================================";
 
     private static final @NotNull String TASK = "hivemqExtensionZip";
-    private static final @NotNull String GRADLE_WRAPPER_BASH_COMMAND = "./gradlew";
 
-    private final @NotNull String gradleBuild;
+    private final @NotNull File gradleProjectDirectory;
     private boolean quiet = false;
 
     /**
@@ -67,20 +66,26 @@ public class GradleHiveMQExtensionSupplier implements Supplier<File> {
      */
     public static @NotNull GradleHiveMQExtensionSupplier direct() {
 
-        return new GradleHiveMQExtensionSupplier("build.gradle");
+        return new GradleHiveMQExtensionSupplier(new File("build.gradle"));
     }
 
     /**
-     * Creates a Maven HiveMQ extension {@link Supplier}.
+     * Creates a Gradle HiveMQ extension {@link Supplier}.
      * It uses the gradle wrapper of the gradle project associated with the given It uses the build.gradle file.
      *
-     * @param gradleBuild the path of the build.gradle of the HiveMQ extension to supply.
+     * @param gradleProjectDirectory the gradle project directory of the HiveMQ extension to supply.
      * @since 1.3.0
      */
     public GradleHiveMQExtensionSupplier(
-            final @NotNull String gradleBuild) {
+            final @NotNull File gradleProjectDirectory) {
 
-        this.gradleBuild = gradleBuild;
+        if (!gradleProjectDirectory.exists()) {
+            throw new IllegalStateException(gradleProjectDirectory + " does not exist.");
+        }
+        if (!gradleProjectDirectory.canRead()) {
+            throw new IllegalStateException(gradleProjectDirectory + " is not readable.");
+        }
+        this.gradleProjectDirectory = gradleProjectDirectory;
     }
 
     /**
@@ -91,43 +96,35 @@ public class GradleHiveMQExtensionSupplier implements Supplier<File> {
      */
     @Override
     public @NotNull File get() {
-        final File gradleBuildFile = new File(gradleBuild);
-        if (!gradleBuildFile.exists()) {
-            throw new IllegalStateException(gradleBuild + " does not exist.");
-        }
-        if (!gradleBuildFile.canRead()) {
-            throw new IllegalStateException(gradleBuild + " is not readable.");
-        }
-
-        System.out.printf((BUILD_STARTED) + "%n", gradleBuild);
+        System.out.printf((BUILD_STARTED) + "%n", gradleProjectDirectory);
 
         try {
-            final ProcessBuilder processBuilder = new ProcessBuilder();
-            processBuilder.directory(gradleBuildFile.getParentFile());
-            processBuilder.command(getCommandForOs(gradleBuildFile), TASK);
-            processBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
+            final ProcessBuilder extensionZipProcessBuilder = new ProcessBuilder();
+            extensionZipProcessBuilder.directory(gradleProjectDirectory);
+            extensionZipProcessBuilder.command(getCommandForOs(gradleProjectDirectory), TASK);
+            extensionZipProcessBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
 
             if (!quiet) {
-                processBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+                extensionZipProcessBuilder.redirectOutput(ProcessBuilder.Redirect.INHERIT);
             }
-            final Process gradleBuild = processBuilder.start();
-            final int extensionBuildExitCode = gradleBuild.waitFor();
-            if (extensionBuildExitCode != 0) {
-                throw new IllegalStateException("Gradle build exited with code " + extensionBuildExitCode);
+            final Process extensionZipProcess = extensionZipProcessBuilder.start();
+            final int extensionZipExitCode = extensionZipProcess.waitFor();
+            if (extensionZipExitCode != 0) {
+                throw new IllegalStateException("Gradle build exited with code " + extensionZipExitCode);
             }
 
-            final ProcessBuilder propertiesTask = new ProcessBuilder();
-            propertiesTask.directory(gradleBuildFile.getParentFile());
-            propertiesTask.command(getCommandForOs(gradleBuildFile), "properties", "-q");
-            propertiesTask.redirectError(ProcessBuilder.Redirect.INHERIT);
+            final ProcessBuilder propertiesProcessBuilder = new ProcessBuilder();
+            propertiesProcessBuilder.directory(gradleProjectDirectory);
+            propertiesProcessBuilder.command(getCommandForOs(gradleProjectDirectory), "properties", "-q");
+            propertiesProcessBuilder.redirectError(ProcessBuilder.Redirect.INHERIT);
 
-            final Process propertiesTaskProcess = propertiesTask.start();
-            final int propertiesExitCode = propertiesTaskProcess.waitFor();
+            final Process propertiesProcess = propertiesProcessBuilder.start();
+            final int propertiesExitCode = propertiesProcess.waitFor();
             if (propertiesExitCode != 0) {
                 throw new IllegalStateException("Gradle build exited with code " + propertiesExitCode);
             }
 
-            final BufferedReader br = new BufferedReader(new InputStreamReader(propertiesTaskProcess.getInputStream()));
+            final BufferedReader br = new BufferedReader(new InputStreamReader(propertiesProcess.getInputStream()));
 
             final Map<String, String> gradleProperties = br.lines()
                     .filter(s -> s.matches(PROPERTY_REGEX))
@@ -138,7 +135,7 @@ public class GradleHiveMQExtensionSupplier implements Supplier<File> {
                     .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
 
-            System.out.printf((BUILD_STOPPED) + "%n", this.gradleBuild);
+            System.out.printf((BUILD_STOPPED) + "%n", this.gradleProjectDirectory);
 
             final String projectVersion = gradleProperties.get("version");
             final String rootProject = gradleProperties.get("rootProject");
@@ -147,7 +144,7 @@ public class GradleHiveMQExtensionSupplier implements Supplier<File> {
             final String projectName = matcher.group(1);
 
             final ZipFile zipFile = new ZipFile(
-                    new File(gradleBuildFile.getParentFile(),
+                    new File(gradleProjectDirectory,
                             "build/hivemq-extension/" + projectName + "-" + projectVersion + ".zip"));
             final File tempDir = Files.createTempDirectory("").toFile();
 
@@ -159,18 +156,18 @@ public class GradleHiveMQExtensionSupplier implements Supplier<File> {
         }
     }
 
-    private @NotNull String getCommandForOs(final @NotNull File gradleBuildFile) {
+    private @NotNull String getCommandForOs(final @NotNull File gradleProjectFile) {
         if (SystemUtils.IS_OS_MAC || SystemUtils.IS_OS_MAC_OSX || SystemUtils.IS_OS_LINUX) {
-            final String gradleWrapper = gradleBuildFile.getParent() + "/gradlew";
+            final String gradleWrapper = gradleProjectFile + "/gradlew";
             final File gradleWrapperBashFile = new File(gradleWrapper);
             if (gradleWrapperBashFile.exists()) {
                 if (!gradleWrapperBashFile.canExecute()) {
                     throw new IllegalStateException("Gradle Wrapper " + gradleWrapperBashFile.getAbsolutePath() + " can not be executed.");
                 }
-                return GRADLE_WRAPPER_BASH_COMMAND;
+                return gradleWrapperBashFile.getAbsolutePath();
             }
         } else if (SystemUtils.IS_OS_WINDOWS) {
-            final String gradleWrapperBat = gradleBuildFile.getParent() + "/gradlew.bat";
+            final String gradleWrapperBat = gradleProjectFile + "/gradlew.bat";
             final File gradleWrapperBatFile = new File(gradleWrapperBat);
             if (gradleWrapperBatFile.exists()) {
                 if (!gradleWrapperBatFile.canExecute()) {

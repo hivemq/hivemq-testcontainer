@@ -319,11 +319,6 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
         return self();
     }
 
-    @Override
-    public void start() {
-        super.start();
-    }
-
     /**
      * Puts the given license into '/opt/hivemq/license/' inside the container.
      * It must end with '.lic' or '.elic'.

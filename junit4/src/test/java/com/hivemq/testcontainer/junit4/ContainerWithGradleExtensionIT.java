@@ -30,7 +30,7 @@ public class ContainerWithGradleExtensionIT {
     @Test(timeout = 200_000)
     public void test() throws Exception {
         final File gradleExtension = new GradleHiveMQExtensionSupplier(
-                "src/test/resources/gradle-extension/build.gradle")
+                new File("src/test/resources/gradle-extension/"))
                 .get();
 
         final HiveMQTestContainerRule container = new HiveMQTestContainerRule()

@@ -89,7 +89,7 @@ public class ContainerWithoutPlatformExtensionsIT {
 
     @Test
     @Timeout(value = 3, unit = TimeUnit.MINUTES)
-    public void removeKafkaExtensions() throws InterruptedException {
+    public void removeKafkaExtension() throws InterruptedException {
 
         final HiveMQTestContainerExtension container = new HiveMQTestContainerExtension("hivemq/hivemq4", "4.4.1")
                 .withExtension(hiveMQExtension)
