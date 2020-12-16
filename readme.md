@@ -26,6 +26,7 @@ This enables testing MQTT client applications and integration testing of custom 
 - [load an extension directly from your code](#load-an-extension-directly-from-code)
 - [enable or disable an extension](#enabledisable-an-extension)
 - [enable or disable an extension loaded from a folder](#enabledisable-an-extension-loaded-from-a-folder)
+- [remove prepackaged HiveMQ Extensions](#remove-prepackaged-hivemq-extensions)
 - [set logging level](#set-logging-level)
 - [set control center port](#set-control-center-port)
 - [debug a directly loaded extension that is running inside the container](#debug-directly-loaded-extensions)
@@ -381,6 +382,38 @@ Note that disabling or enabling of extension during runtime is only supported in
         extension.disableExtension("Modifier Extension", "modifier-extension");
         extension.enableExtension("Modifier Extension", "modifier-extension");
     }
+    
+## Remove prepackaged HiveMQ Extensions
+
+Since HiveMQ's 4.4 release, HiveMQ Docker images come with the HiveMQ Extension for Kafka, the HiveMQ Bridge Extension
+and the HiveMQ Enterprise Security Extension.
+These Extensions are disabled by default, but sometimes you my need to remove them before the container starts.
+
+### JUnit4
+Remove all prepackaged extensions:
+
+    @Rule
+    final HiveMQTestContainerRule container = new HiveMQTestContainerRule("hivemq/hivemq4", "4.4.4")
+        .withoutPrepackagedExtensions();
+
+Remove specific prepackaged extensions: 
+
+    @Rule
+    final HiveMQTestContainerRule container = new HiveMQTestContainerRule("hivemq/hivemq4", "4.4.4")
+        .withoutPrepackagedExtensions("hivemq-kafka-extension");
+
+### JUnit5
+Remove all prepackaged extensions:
+
+    @RegisterExtension
+    final HiveMQTestContainerExtension container = new HiveMQTestContainerExtension("hivemq/hivemq4", "4.4.4")
+        .withoutPrepackagedExtensions();
+
+Remove specific prepackaged extensions: 
+
+    @RegisterExtension
+    final HiveMQTestContainerExtension container = new HiveMQTestContainerExtension("hivemq/hivemq4", "4.4.4")
+        .withoutPrepackagedExtensions("hivemq-kafka-extension");
                     
 ## Set logging level
 
