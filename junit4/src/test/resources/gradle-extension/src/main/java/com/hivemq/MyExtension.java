@@ -13,17 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hivemq.testcontainer.util;
+
+package com.hivemq;
 
 import com.hivemq.extension.sdk.api.ExtensionMain;
-import org.jetbrains.annotations.NotNull;
+import com.hivemq.extension.sdk.api.annotations.NotNull;
+import com.hivemq.extension.sdk.api.events.EventRegistry;
 import com.hivemq.extension.sdk.api.interceptor.publish.PublishInboundInterceptor;
-import com.hivemq.extension.sdk.api.parameter.ExtensionStartInput;
-import com.hivemq.extension.sdk.api.parameter.ExtensionStartOutput;
-import com.hivemq.extension.sdk.api.parameter.ExtensionStopInput;
-import com.hivemq.extension.sdk.api.parameter.ExtensionStopOutput;
+import com.hivemq.extension.sdk.api.parameter.*;
 import com.hivemq.extension.sdk.api.services.Services;
 import com.hivemq.extension.sdk.api.services.intializer.ClientInitializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;

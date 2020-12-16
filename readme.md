@@ -20,11 +20,13 @@ This enables testing MQTT client applications and integration testing of custom 
 - [wait strategy](#wait-strategy)
 - [test your MQTT 3 and MQTT 5 client applications](#test-your-mqtt-3-and-mqtt-5-client-application)
 - [add a custom hivemq config](#add-a-custom-hivemq-configuration)
+- [load an extension from a gradle project](#load-an-extension-from-a-gradle-project)
 - [load an extension from a maven project](#load-an-extension-from-a-maven-project)
 - [load an extension from a folder](#load-an-extension-from-a-folder)
 - [load an extension directly from your code](#load-an-extension-directly-from-code)
 - [enable or disable an extension](#enabledisable-an-extension)
 - [enable or disable an extension loaded from a folder](#enabledisable-an-extension-loaded-from-a-folder)
+- [remove prepackaged HiveMQ Extensions](#remove-prepackaged-hivemq-extensions)
 - [set logging level](#set-logging-level)
 - [set control center port](#set-control-center-port)
 - [debug a directly loaded extension that is running inside the container](#debug-directly-loaded-extensions)
@@ -37,6 +39,24 @@ This enables testing MQTT client applications and integration testing of custom 
     
 ## Add to your project
 
+### Gradle + JUnit 4
+
+add these dependencies to your `build.gradle`:
+
+````groovy
+testImplementation "com.hivemq:hivemq-testcontainer-junit4:1.3.0"
+testImplementation "junit:junit:4.13"
+````
+
+### Gradle + JUnit 5
+
+````groovy
+testImplementation "com.hivemq:hivemq-testcontainer-junit5:1.3.0"
+testImplementation "org.junit.jupiter:junit-jupiter-engine:5.6.1"
+testRuntimeOnly "org.junit.jupiter:junit-jupiter-api:5.6.1"
+````
+
+
 ### Maven + JUnit 4
 
 add these dependencies to your `pom.xml`:
@@ -44,13 +64,8 @@ add these dependencies to your `pom.xml`:
 ```xml
 <dependency>
     <groupId>com.hivemq</groupId>
-    <artifactId>hivemq-extension-sdk</artifactId>
-    <version>4.3.0</version>
-</dependency>
-<dependency>
-    <groupId>com.hivemq</groupId>
     <artifactId>hivemq-testcontainer-junit4</artifactId>
-    <version>1.2.0</version>
+    <version>1.3.0</version>
     <scope>test</scope>
 </dependency>
 <dependency>
@@ -68,13 +83,8 @@ add these dependencies to your `pom.xml`:
 ```xml
 <dependency>
     <groupId>com.hivemq</groupId>
-    <artifactId>hivemq-extension-sdk</artifactId>
-    <version>4.3.0</version>
-</dependency>
-<dependency>
-    <groupId>com.hivemq</groupId>
     <artifactId>hivemq-testcontainer-junit5</artifactId>
-    <version>1.2.0</version>
+    <version>1.3.0</version>
     <scope>test</scope>
 </dependency>
 <dependency>
@@ -205,7 +215,29 @@ wait conditions for your HiveMQ Extensions:
         new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
             .withHiveMQConfig(new File("src/test/resources/config.xml"));
             
-            
+## Load an extension from a gradle project
+
+You can package and load an extension from a Gradle project, by providing the
+location of the Gradle project:
+
+### JUnit 4
+
+    @Rule
+    public final @NotNull HiveMQTestContainerRule rule =
+        new HiveMQTestContainerRule()
+            .withExtension(new GradleHiveMQExtensionSupplier(new File("path/to/extension/")).get());
+
+### JUnit 5
+
+    @RegisterExtension
+    public final @NotNull HiveMQTestContainerExtension extension =
+        new HiveMQTestContainerExtension()
+            .withExtension(new GradleHiveMQExtensionSupplier(new File("path/to/extension/")).get());
+                    
+If your current project is the HiveMQ Extension you want to load into the HiveMQ Testcontainer, you can simply use:
+
+    GradleHiveMQExtensionSupplier.direct()            
+
 ## Load an extension from a maven project
 
 You can package and load an extension from a maven project. 
@@ -350,6 +382,38 @@ Note that disabling or enabling of extension during runtime is only supported in
         extension.disableExtension("Modifier Extension", "modifier-extension");
         extension.enableExtension("Modifier Extension", "modifier-extension");
     }
+    
+## Remove prepackaged HiveMQ Extensions
+
+Since HiveMQ's 4.4 release, HiveMQ Docker images come with the HiveMQ Extension for Kafka, the HiveMQ Enterprise Bridge Extension
+and the HiveMQ Enterprise Security Extension.
+These Extensions are disabled by default, but sometimes you my need to remove them before the container starts.
+
+### JUnit4
+Remove all prepackaged extensions:
+
+    @Rule
+    final HiveMQTestContainerRule container = new HiveMQTestContainerRule("hivemq/hivemq4", "4.4.4")
+        .withoutPrepackagedExtensions();
+
+Remove specific prepackaged extensions: 
+
+    @Rule
+    final HiveMQTestContainerRule container = new HiveMQTestContainerRule("hivemq/hivemq4", "4.4.4")
+        .withoutPrepackagedExtensions("hivemq-kafka-extension");
+
+### JUnit5
+Remove all prepackaged extensions:
+
+    @RegisterExtension
+    final HiveMQTestContainerExtension container = new HiveMQTestContainerExtension("hivemq/hivemq4", "4.4.4")
+        .withoutPrepackagedExtensions();
+
+Remove specific prepackaged extensions: 
+
+    @RegisterExtension
+    final HiveMQTestContainerExtension container = new HiveMQTestContainerExtension("hivemq/hivemq4", "4.4.4")
+        .withoutPrepackagedExtensions("hivemq-kafka-extension");
                     
 ## Set logging level
 

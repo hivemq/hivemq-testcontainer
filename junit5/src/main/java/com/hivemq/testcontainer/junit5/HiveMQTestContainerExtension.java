@@ -15,7 +15,7 @@
  */
 package com.hivemq.testcontainer.junit5;
 
-import com.hivemq.extension.sdk.api.annotations.NotNull;
+import org.jetbrains.annotations.NotNull;
 import com.hivemq.testcontainer.core.HiveMQTestContainerCore;
 import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.extension.AfterEachCallback;

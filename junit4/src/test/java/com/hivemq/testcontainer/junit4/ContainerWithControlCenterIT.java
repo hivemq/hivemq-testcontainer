@@ -13,35 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.hivemq.testcontainer.junit5;
+package com.hivemq.testcontainer.junit4;
 
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
+import org.junit.Test;
 
-import java.util.concurrent.TimeUnit;
-
-public class ContainerWithControlCenter {
+public class ContainerWithControlCenterIT {
 
     public static final int CONTROL_CENTER_PORT = 8080;
 
-    @Test
-    @Timeout(value = 3, unit = TimeUnit.MINUTES)
+    @Test(timeout = 200_000)
     public void test() throws Exception {
-
-        final HiveMQTestContainerExtension extension =
-                new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
+        final HiveMQTestContainerRule rule =
+                new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
                         .withControlCenter(CONTROL_CENTER_PORT);
 
-        extension.beforeEach(null);
+        rule.start();
 
         final CloseableHttpClient httpClient = HttpClientBuilder.create().build();
         final HttpUriRequest request = new HttpGet( "http://localhost:" + CONTROL_CENTER_PORT);
         httpClient.execute(request);
 
-        extension.afterEach(null);
+        rule.stop();
     }
 }

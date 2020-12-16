@@ -16,7 +16,6 @@
 package com.hivemq.testcontainer.junit4;
 
 import com.hivemq.extension.sdk.api.ExtensionMain;
-import com.hivemq.extension.sdk.api.annotations.NotNull;
 import com.hivemq.extension.sdk.api.interceptor.publish.PublishInboundInterceptor;
 import com.hivemq.extension.sdk.api.parameter.ExtensionStartInput;
 import com.hivemq.extension.sdk.api.parameter.ExtensionStartOutput;
@@ -26,13 +25,14 @@ import com.hivemq.extension.sdk.api.services.Services;
 import com.hivemq.extension.sdk.api.services.intializer.ClientInitializer;
 import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
-import org.testcontainers.shaded.com.google.common.io.Files;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -41,8 +41,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class CreateFileInCopiedDirectoryIT {
 
-    private @NotNull File createDirectory() {
-        final File directory = new File(Files.createTempDir(), "directory");
+    private @NotNull File createDirectory() throws IOException {
+        final File directory = new File(Files.createTempDirectory("").toFile(), "directory");
         assertTrue(directory.mkdir());
         final File subdirectory = new File(directory, "sub-directory");
         assertTrue(subdirectory.mkdir());
