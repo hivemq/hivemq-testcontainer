@@ -10,7 +10,7 @@ ext {
 dependencies {
     api group: 'org.testcontainers', name: 'testcontainers', version: testContainersVersion
     api group: 'org.jetbrains', name: 'annotations', version: jetbrainsAnnotationsVersion
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: commonsLangVersion
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: commonsLangVersion
     implementation group: 'com.google.guava', name: 'guava', version: guavaVersion
     implementation group: 'commons-io', name: 'commons-io', version: commonsIoVersion
     implementation group: 'org.javassist', name: 'javassist', version: javassistVersion

@@ -66,7 +66,7 @@ public class GradleHiveMQExtensionSupplier implements Supplier<File> {
      */
     public static @NotNull GradleHiveMQExtensionSupplier direct() {
 
-        return new GradleHiveMQExtensionSupplier(new File("build.gradle"));
+        return new GradleHiveMQExtensionSupplier(new File(""));
     }
 
     /**
@@ -76,8 +76,7 @@ public class GradleHiveMQExtensionSupplier implements Supplier<File> {
      * @param gradleProjectDirectory the gradle project directory of the HiveMQ extension to supply.
      * @since 1.3.0
      */
-    public GradleHiveMQExtensionSupplier(
-            final @NotNull File gradleProjectDirectory) {
+    public GradleHiveMQExtensionSupplier(final @NotNull File gradleProjectDirectory) {
 
         if (!gradleProjectDirectory.exists()) {
             throw new IllegalStateException(gradleProjectDirectory + " does not exist.");

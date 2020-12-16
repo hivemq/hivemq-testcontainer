@@ -385,7 +385,7 @@ Note that disabling or enabling of extension during runtime is only supported in
     
 ## Remove prepackaged HiveMQ Extensions
 
-Since HiveMQ's 4.4 release, HiveMQ Docker images come with the HiveMQ Extension for Kafka, the HiveMQ Bridge Extension
+Since HiveMQ's 4.4 release, HiveMQ Docker images come with the HiveMQ Extension for Kafka, the HiveMQ Enterprise Bridge Extension
 and the HiveMQ Enterprise Security Extension.
 These Extensions are disabled by default, but sometimes you my need to remove them before the container starts.
 
