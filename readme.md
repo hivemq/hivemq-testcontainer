@@ -224,14 +224,14 @@ location of the `build.gradle` file and the `project.name` and `project.version`
     @Rule
     public final @NotNull HiveMQTestContainerRule rule =
         new HiveMQTestContainerRule()
-            .withExtension(new GradleHiveMQExtensionSupplier("path/to/extension/").get());
+            .withExtension(new GradleHiveMQExtensionSupplier(new File("path/to/extension/")).get());
 
 ### JUnit 5
 
     @RegisterExtension
     public final @NotNull HiveMQTestContainerExtension extension =
         new HiveMQTestContainerExtension()
-            .withExtension(new GradleHiveMQExtensionSupplier("path/to/extension/).get());
+            .withExtension(new GradleHiveMQExtensionSupplier(new File("path/to/extension/")).get());
                     
 If your current project is the HiveMQ Extension you want to load into the HiveMQ Testcontainer, you can simply use:
 
