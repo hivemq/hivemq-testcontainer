@@ -217,8 +217,8 @@ wait conditions for your HiveMQ Extensions:
             
 ## Load an extension from a gradle project
 
-You can package and load an extension from a gradle project, by providing the
-location of the `build.gradle` file and the `project.name` and `project.version`:
+You can package and load an extension from a Gradle project, by providing the
+location of the Gradle project:
 
 ### JUnit 4
 
