@@ -16,10 +16,10 @@
 package com.hivemq.testcontainer.core;
 
 import org.junit.jupiter.api.Test;
-import org.testcontainers.shaded.com.google.common.io.Files;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -30,8 +30,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class GradleHiveMQExtensionSupplierTest {
 
     @Test
-    void test_gradleBuildNotFound() {
-        final File tempDir = Files.createTempDir();
+    void test_gradleBuildNotFound() throws IOException {
+        final File tempDir = Files.createTempDirectory("").toFile();
         final File buildGradle = new File(tempDir, "build.gradle");
 
         final GradleHiveMQExtensionSupplier supplier = new GradleHiveMQExtensionSupplier(
@@ -43,7 +43,7 @@ class GradleHiveMQExtensionSupplierTest {
 
     @Test
     void test_gradleBuildNotReadable() throws IOException {
-        final File tempDir = Files.createTempDir();
+        final File tempDir = Files.createTempDirectory("").toFile();
         final File buildGradle = new File(tempDir, "build.gradle");
         assertTrue(buildGradle.createNewFile());
         assertTrue(buildGradle.setReadable(false));

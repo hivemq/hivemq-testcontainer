@@ -54,10 +54,12 @@ allprojects {
         junit5Version = '5.7.0'
         jetbrainsAnnotationsVersion = '20.1.0'
         commonsIoVersion = '2.8.0'
+        commonsLangVersion = '3.11'
         javassistVersion = '3.27.0-GA'
         shrinkWrapVersion = '1.2.6'
         shrinkwrapResolverDepchainVersion = '3.1.4'
         zip4jVersion = '2.6.4'
+        guavaVersion = '30.1-jre'
 
         // only test
         httpClientVersion = '4.5.13'

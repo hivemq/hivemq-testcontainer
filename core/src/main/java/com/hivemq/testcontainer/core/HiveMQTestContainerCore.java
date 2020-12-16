@@ -29,12 +29,12 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
 import org.testcontainers.containers.FixedHostPortGenericContainer;
 import org.testcontainers.images.builder.ImageFromDockerfile;
-import org.testcontainers.shaded.com.google.common.io.Files;
 import org.testcontainers.utility.MountableFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.time.Duration;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -219,7 +219,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     private @NotNull File createExtension(final @NotNull HiveMQExtension hiveMQExtension)
             throws Exception {
 
-        final File tempDir = Files.createTempDir();
+        final File tempDir = Files.createTempDirectory("").toFile();
 
         final File extensionDir = new File(tempDir, hiveMQExtension.getId());
         FileUtils.writeStringToFile(new File(extensionDir, "hivemq-extension.xml"),

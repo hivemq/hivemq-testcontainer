@@ -40,8 +40,8 @@ public class ContainerWithGradleExtension {
                 .waitForExtension("Gradle Extension")
                 .withExtension(gradleExtension);
 
-        container.start();
+        container.beforeEach(null);
         TestPublishModifiedUtil.testPublishModified(container.getMqttPort());
-        container.stop();
+        container.afterEach(null);
     }
 }

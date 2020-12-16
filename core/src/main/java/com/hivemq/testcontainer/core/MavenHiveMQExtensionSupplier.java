@@ -15,15 +15,14 @@
  */
 package com.hivemq.testcontainer.core;
 
-import org.jetbrains.annotations.NotNull;
 import net.lingala.zip4j.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
 import org.jboss.shrinkwrap.resolver.api.maven.embedded.BuiltProject;
 import org.jboss.shrinkwrap.resolver.api.maven.embedded.EmbeddedMaven;
 import org.jboss.shrinkwrap.resolver.api.maven.embedded.pom.equipped.PomEquippedEmbeddedMaven;
-import org.testcontainers.shaded.com.google.common.io.Files;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.Properties;
 import java.util.function.Supplier;
 
@@ -80,14 +79,14 @@ public class MavenHiveMQExtensionSupplier implements Supplier<File> {
         final String artifactId = aPackage.getModel().getArtifactId();
 
         final ZipFile zipFile = new ZipFile(new File(targetDirectory, artifactId + "-" + version + "-distribution.zip"));
-        final File tempDir = Files.createTempDir();
 
         try {
+            final File tempDir = Files.createTempDirectory("").toFile();
             zipFile.extractAll(tempDir.getAbsolutePath());
-        } catch (final ZipException e) {
+            return new File(tempDir, artifactId);
+        } catch (final Exception e) {
             throw new RuntimeException(e);
         }
-        return new File(tempDir, artifactId);
     }
 
     /**
@@ -102,7 +101,8 @@ public class MavenHiveMQExtensionSupplier implements Supplier<File> {
 
     /**
      * Add a custom property for the maven packaging.
-     * @param key the name of the property
+     *
+     * @param key   the name of the property
      * @param value the value of the property
      * @return self
      */

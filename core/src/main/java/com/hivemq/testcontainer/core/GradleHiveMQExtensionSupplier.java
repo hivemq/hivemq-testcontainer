@@ -16,13 +16,13 @@
 package com.hivemq.testcontainer.core;
 
 import net.lingala.zip4j.ZipFile;
+import org.apache.commons.lang3.SystemUtils;
 import org.jetbrains.annotations.NotNull;
-import org.testcontainers.shaded.com.google.common.io.Files;
-import org.testcontainers.shaded.org.apache.commons.lang.SystemUtils;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
 import java.util.AbstractMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -149,7 +149,7 @@ public class GradleHiveMQExtensionSupplier implements Supplier<File> {
             final ZipFile zipFile = new ZipFile(
                     new File(gradleBuildFile.getParentFile(),
                             "build/hivemq-extension/" + projectName + "-" + projectVersion + ".zip"));
-            final File tempDir = Files.createTempDir();
+            final File tempDir = Files.createTempDirectory("").toFile();
 
             zipFile.extractAll(tempDir.getAbsolutePath());
             return new File(tempDir, projectName);

@@ -63,7 +63,7 @@ public class ContainerWithoutPlatformExtensions {
                 .waitForExtension(hiveMQExtension)
                 .withoutPrepackagedExtensions();
 
-        container.start();
+        container.beforeEach(null);
 
         final Mqtt5BlockingClient client = MqttClient.builder()
                 .serverPort(container.getMqttPort())
@@ -83,7 +83,7 @@ public class ContainerWithoutPlatformExtensions {
         assertFalse(extensionInfo.contains("hivemq-bridge-extension"));
         assertFalse(extensionInfo.contains("hivemq-enterprise-security-extension"));
 
-        container.stop();
+        container.afterEach(null);
     }
 
 

@@ -15,10 +15,10 @@
  */
 package com.hivemq.testcontainer.core;
 
+import com.google.common.collect.ImmutableList;
 import com.hivemq.extension.sdk.api.ExtensionMain;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.testcontainers.shaded.com.google.common.collect.ImmutableList;
 
 /**
  * @author Yannick Weber
