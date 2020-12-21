@@ -111,7 +111,7 @@ You can define a custom image and tag in the constructor:
 ```java
 @Rule
 final public @NotNull HiveMQTestContainerRule rule 
-    = new HiveMQTestContainerRule("hivemq/hivemq-ce", "2020.2");
+    = new HiveMQTestContainerRule("hivemq/hivemq-ce", "2020.6");
 ```
 
 ### JUnit 5
@@ -119,7 +119,7 @@ final public @NotNull HiveMQTestContainerRule rule
 ```java    
 @RegisterExtension
 final public @NotNull HiveMQTestContainerExtension extension 
-    = new HiveMQTestContainerExtension("hivemq/hivemq-ce", "2020.2");
+    = new HiveMQTestContainerExtension("hivemq/hivemq-ce", "2020.6");
 ```
         
 ## Wait Strategy
@@ -144,7 +144,7 @@ public final @NotNull HiveMQTestContainerRule rule =
 public final @NotNull HiveMQTestContainerExtension extension =
         new HiveMQTestContainerExtension()
             .withExtension(new File("src/test/resources/modifier-extension"))
-            .waitForExtension("My Extension Name");`
+            .waitForExtension("My Extension Name");
 ```
                 
 ### JUnit 4
@@ -363,7 +363,7 @@ private final @NotNull HiveMQExtension hiveMQExtension = HiveMQExtension.builder
 @Rule
 public final @NotNull HiveMQTestContainerRule rule =
     new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
-    .withExtension(hiveMQExtension);
+        .withExtension(hiveMQExtension);
 
 @Test
 public void test_disable_enable_extension() throws ExecutionException, InterruptedException {
@@ -385,7 +385,7 @@ private final @NotNull HiveMQExtension hiveMQExtension = HiveMQExtension.builder
 @RegisterExtension
 public final @NotNull HiveMQTestContainerExtension extension =
     new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
-    .withExtension(hiveMQExtension);
+        .withExtension(hiveMQExtension);
 
 @Test
 void test_disable_enable_extension() throws ExecutionException, InterruptedException {
@@ -506,7 +506,7 @@ Note that the HiveMQ Control Center is feature of the HiveMQ Enterprise Edition.
 @Rule
 public @NotNull HiveMQTestContainerRule rule = 
     new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
-    .withControlCenter(CONTROL_CENTER_PORT);
+        .withControlCenter(CONTROL_CENTER_PORT);
 ```
         
 ### JUnit 5
@@ -515,7 +515,7 @@ public @NotNull HiveMQTestContainerRule rule =
 @RegisterExtension
 public @NotNull HiveMQTestContainerExtension extension = 
     new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
-    .withControlCenter(CONTROL_CENTER_PORT);
+        .withControlCenter(CONTROL_CENTER_PORT);
 ```
 
 ## Debug directly loaded extensions
@@ -532,7 +532,7 @@ You can debug extensions that are directly loaded from your code.
 @Rule
 public final @NotNull HiveMQTestContainerRule rule =
     new HiveMQTestContainerRule()
-    .withDebugging(9000);
+        .withDebugging(9000);
 ```
 
 ### JUnit 5
@@ -541,7 +541,7 @@ public final @NotNull HiveMQTestContainerRule rule =
 @RegisterExtension
 public final @NotNull HiveMQTestContainerExtension extension =
     new HiveMQTestContainerExtension()
-    .withDebugging(9000);
+        .withDebugging(9000);
 ```
 
 
@@ -563,9 +563,9 @@ public final @NotNull HiveMQTestContainerExtension extension =
 @Rule
 public final @NotNull HiveMQTestContainerRule rule =
     new HiveMQTestContainerRule()
-    .withFileInHomeFolder(
-        new File("src/test/resources/additionalFile.txt"),
-        "/path/in/home/folder");
+        .withFileInHomeFolder(
+            new File("src/test/resources/additionalFile.txt"),
+            "/path/in/home/folder");
 ```
 
 #### JUnit 5
@@ -574,9 +574,9 @@ public final @NotNull HiveMQTestContainerRule rule =
 @RegisterExtension
 public final @NotNull HiveMQTestContainerExtension extension =
     new HiveMQTestContainerExtension()
-    .withFileInHomeFolder(
-        new File("src/test/resources/additionalFile.txt"),
-        "/path/in/home/folder");
+        .withFileInHomeFolder(
+            new File("src/test/resources/additionalFile.txt"),
+            "/path/in/home/folder");
 ```
             
 ### Put files into extension home
@@ -587,15 +587,15 @@ public final @NotNull HiveMQTestContainerExtension extension =
 @Rule
 public final @NotNull HiveMQTestContainerRule rule =
     new HiveMQTestContainerRule()
-    .withExtension(HiveMQExtension.builder()
-        .id("extension-1")
-        .name("my-extension")
-        .version("1.0")
-        .mainClass(MyExtension.class).build())
-    .withFileInExtensionHomeFolder(
-        new File("src/test/resources/additionalFile.txt"),
-        "extension-1",
-        "/path/in/extension/home")`
+        .withExtension(HiveMQExtension.builder()
+            .id("extension-1")
+            .name("my-extension")
+            .version("1.0")
+            .mainClass(MyExtension.class).build())
+        .withFileInExtensionHomeFolder(
+            new File("src/test/resources/additionalFile.txt"),
+            "extension-1",
+            "/path/in/extension/home")`
 ```
 
 #### JUnit 5
@@ -604,15 +604,15 @@ public final @NotNull HiveMQTestContainerRule rule =
 @RegisterExtension
 public final @NotNull HiveMQTestContainerExtension extension =
     new HiveMQTestContainerExtension()
-    .withExtension(HiveMQExtension.builder()
-        .id("extension-1")
-        .name("my-extension")
-        .version("1.0")
-        .mainClass(MyExtension.class).build())
-    .withFileInExtensionHomeFolder(
-        new File("src/test/resources/additionalFile.txt"),
-        "extension-1",
-        "/path/in/extension/home");
+        .withExtension(HiveMQExtension.builder()
+            .id("extension-1")
+            .name("my-extension")
+            .version("1.0")
+            .mainClass(MyExtension.class).build())
+        .withFileInExtensionHomeFolder(
+            new File("src/test/resources/additionalFile.txt"),
+            "extension-1",
+            "/path/in/extension/home");
 ```
             
 ### Put license files into the container
