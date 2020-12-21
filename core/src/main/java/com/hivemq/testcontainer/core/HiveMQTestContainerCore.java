@@ -667,6 +667,12 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
         return this.getMappedPort(MQTT_PORT);
     }
 
+    @Override
+    public void stop() {
+        waitStrategy.reset();
+        super.stop();
+    }
+
     protected void signExtension(final @NotNull String extensionId, final @NotNull File jar) {
         // NOOP
     }
