@@ -159,8 +159,8 @@ private final @NotNull HiveMQExtension hiveMQExtension = HiveMQExtension.builder
 @Rule
 public final @NotNull HiveMQTestContainerRule rule =
     new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
-    .withExtension(hiveMQExtension)
-    .waitForExtension(hiveMQExtension);
+        .withExtension(hiveMQExtension)
+        .waitForExtension(hiveMQExtension);
 ```
 
 ### JUnit 5
