@@ -68,4 +68,9 @@ class MultiLogMessageWaitStrategy extends AbstractWaitStrategy {
         regexes.put(regEx, false);
         return this;
     }
+
+    public @NotNull MultiLogMessageWaitStrategy reset() {
+        regexes.clear();
+        return this;
+    }
 }
