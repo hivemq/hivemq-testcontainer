@@ -15,10 +15,10 @@
  */
 package com.hivemq.testcontainer.junit4;
 
-import org.jetbrains.annotations.NotNull;
 import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.util.MyExtension;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 /**
@@ -38,6 +38,14 @@ public class ContainerWithExtensionIT {
                 new HiveMQTestContainerRule()
                         .waitForExtension(hiveMQExtension)
                         .withExtension(hiveMQExtension);
+
+        rule.start();
+        TestPublishModifiedUtil.testPublishModified(rule.getMqttPort());
+        rule.stop();
+
+        rule.start();
+        TestPublishModifiedUtil.testPublishModified(rule.getMqttPort());
+        rule.stop();
 
         rule.start();
         TestPublishModifiedUtil.testPublishModified(rule.getMqttPort());

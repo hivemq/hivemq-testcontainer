@@ -45,5 +45,13 @@ public class ContainerWithExtensionIT {
         extension.beforeEach(null);
         TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
         extension.afterEach(null);
+
+        extension.beforeEach(null);
+        TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
+        extension.afterEach(null);
+
+        extension.beforeEach(null);
+        TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
+        extension.afterEach(null);
     }
 }
