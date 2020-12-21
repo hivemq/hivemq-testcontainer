@@ -66,7 +66,7 @@ public class GradleHiveMQExtensionSupplier implements Supplier<File> {
      */
     public static @NotNull GradleHiveMQExtensionSupplier direct() {
 
-        return new GradleHiveMQExtensionSupplier(new File(""));
+        return new GradleHiveMQExtensionSupplier(Paths.get("").toAbsolutePath().toFile());
     }
 
     /**
