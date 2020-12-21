@@ -23,6 +23,7 @@ import org.testcontainers.containers.output.WaitingConsumer;
 import org.testcontainers.containers.wait.strategy.AbstractWaitStrategy;
 import org.testcontainers.utility.LogUtils;
 
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -66,6 +67,13 @@ class MultiLogMessageWaitStrategy extends AbstractWaitStrategy {
 
     public @NotNull MultiLogMessageWaitStrategy withRegEx(final @NotNull String regEx) {
         regexes.put(regEx, false);
+        return this;
+    }
+
+    public @NotNull MultiLogMessageWaitStrategy reset() {
+        for (final Map.Entry<String, Boolean> stringBooleanEntry : regexes.entrySet()) {
+            stringBooleanEntry.setValue(false);
+        }
         return this;
     }
 }

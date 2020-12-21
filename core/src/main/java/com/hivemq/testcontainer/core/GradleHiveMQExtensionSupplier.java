@@ -23,6 +23,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.AbstractMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -66,7 +67,7 @@ public class GradleHiveMQExtensionSupplier implements Supplier<File> {
      */
     public static @NotNull GradleHiveMQExtensionSupplier direct() {
 
-        return new GradleHiveMQExtensionSupplier(new File(""));
+        return new GradleHiveMQExtensionSupplier(Paths.get("").toAbsolutePath().toFile());
     }
 
     /**

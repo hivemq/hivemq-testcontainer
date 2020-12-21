@@ -44,14 +44,14 @@ This enables testing MQTT client applications and integration testing of custom 
 add these dependencies to your `build.gradle`:
 
 ````groovy
-testImplementation "com.hivemq:hivemq-testcontainer-junit4:1.3.0"
+testImplementation "com.hivemq:hivemq-testcontainer-junit4:1.3.1"
 testImplementation "junit:junit:4.13"
 ````
 
 ### Gradle + JUnit 5
 
 ````groovy
-testImplementation "com.hivemq:hivemq-testcontainer-junit5:1.3.0"
+testImplementation "com.hivemq:hivemq-testcontainer-junit5:1.3.1"
 testImplementation "org.junit.jupiter:junit-jupiter-engine:5.6.1"
 testRuntimeOnly "org.junit.jupiter:junit-jupiter-api:5.6.1"
 ````
@@ -65,7 +65,7 @@ add these dependencies to your `pom.xml`:
 <dependency>
     <groupId>com.hivemq</groupId>
     <artifactId>hivemq-testcontainer-junit4</artifactId>
-    <version>1.3.0</version>
+    <version>1.3.1</version>
     <scope>test</scope>
 </dependency>
 <dependency>
@@ -84,7 +84,7 @@ add these dependencies to your `pom.xml`:
 <dependency>
     <groupId>com.hivemq</groupId>
     <artifactId>hivemq-testcontainer-junit5</artifactId>
-    <version>1.3.0</version>
+    <version>1.3.1</version>
     <scope>test</scope>
 </dependency>
 <dependency>
@@ -108,15 +108,19 @@ You can define a custom image and tag in the constructor:
 
 ### JUnit 4
 
-    @Rule
-    final public @NotNull HiveMQTestContainerRule rule 
-        = new HiveMQTestContainerRule("hivemq/hivemq-ce", "2020.2");
+```java
+@Rule
+final public @NotNull HiveMQTestContainerRule rule 
+    = new HiveMQTestContainerRule("hivemq/hivemq-ce", "2020.6");
+```
 
 ### JUnit 5
 
-    @RegisterExtension
-    final public @NotNull HiveMQTestContainerExtension extension 
-        = new HiveMQTestContainerExtension("hivemq/hivemq-ce", "2020.2");
+```java    
+@RegisterExtension
+final public @NotNull HiveMQTestContainerExtension extension 
+    = new HiveMQTestContainerExtension("hivemq/hivemq-ce", "2020.6");
+```
         
 ## Wait Strategy
 
@@ -125,95 +129,110 @@ wait conditions for your HiveMQ Extensions:
 
 ### JUnit 4
 
-    @Rule
-    public final @NotNull HiveMQTestContainerRule rule =
-            new HiveMQTestContainerRule()
-                .withExtension(new File("src/test/resources/modifier-extension"))
-                .waitForExtension("My Extension Name");
+```java
+@Rule
+public final @NotNull HiveMQTestContainerRule rule =
+        new HiveMQTestContainerRule()
+            .withExtension(new File("src/test/resources/modifier-extension"))
+            .waitForExtension("My Extension Name");
+```
 
 ### JUnit 5
 
-    @RegisterExtension
-    public final @NotNull HiveMQTestContainerExtension extension =
-            new HiveMQTestContainerExtension()
-                .withExtension(new File("src/test/resources/modifier-extension"))
-                .waitForExtension("My Extension Name");
+```java
+@RegisterExtension
+public final @NotNull HiveMQTestContainerExtension extension =
+        new HiveMQTestContainerExtension()
+            .withExtension(new File("src/test/resources/modifier-extension"))
+            .waitForExtension("My Extension Name");
+```
                 
 ### JUnit 4
 
-    private final @NotNull HiveMQExtension hiveMQExtension = HiveMQExtension.builder()
-        .id("extension-1")
-        .name("my-extension")
-        .version("1.0")
-        .mainClass(MyExtension.class).build();
-    
-    @Rule
-    public final @NotNull HiveMQTestContainerRule rule =
-        new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
+```java
+private final @NotNull HiveMQExtension hiveMQExtension = HiveMQExtension.builder()
+    .id("extension-1")
+    .name("my-extension")
+    .version("1.0")
+    .mainClass(MyExtension.class).build();
+
+@Rule
+public final @NotNull HiveMQTestContainerRule rule =
+    new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
         .withExtension(hiveMQExtension)
         .waitForExtension(hiveMQExtension);
+```
 
 ### JUnit 5
+```java
+private final @NotNull HiveMQExtension hiveMQExtension = HiveMQExtension.builder()
+    .id("extension-1")
+    .name("my-extension")
+    .version("1.0")
+    .mainClass(MyExtension.class).build();
 
-    private final @NotNull HiveMQExtension hiveMQExtension = HiveMQExtension.builder()
-        .id("extension-1")
-        .name("my-extension")
-        .version("1.0")
-        .mainClass(MyExtension.class).build();
-    
-    @RegisterExtension
-    public final @NotNull HiveMQTestContainerExtension extension =
-        new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
+@RegisterExtension
+public final @NotNull HiveMQTestContainerExtension extension =
+    new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
         .withExtension(hiveMQExtension)
         .waitForExtension(hiveMQExtension);
+```
 
 ## Test your MQTT 3 and MQTT 5 client application
 
 ### JUnit 4
 
-    @Rule
-    final public @NotNull HiveMQTestContainerRule rule = new HiveMQTestContainerRule();
+```java
+@Rule
+final @NotNull HiveMQTestContainerRule rule = new HiveMQTestContainerRule();
 
-    @Test
-    public void test_mqtt() {
-        final Mqtt5BlockingClient client = Mqtt5Client.builder()
-            .serverPort(rule.getMqttPort())
-            .buildBlocking();
+@Test
+public void test_mqtt() {
+    final Mqtt5BlockingClient client = Mqtt5Client.builder()
+        .serverPort(rule.getMqttPort())
+        .buildBlocking();
 
-        client.connect();
-        client.disconnect();
-    }
+    client.connect();
+    client.disconnect();
+}
+```
 
 ### JUnit 5
 
-    @RegisterExtension
-    final public @NotNull HiveMQTestContainerExtension extension = new HiveMQTestContainerExtension();
+```java
+@RegisterExtension
+final @NotNull HiveMQTestContainerExtension extension = new HiveMQTestContainerExtension();
 
-    @Test
-    public void test_mqtt() {
-        final Mqtt5BlockingClient client = Mqtt5Client.builder()
-            .serverPort(extension.getMqttPort())
-            .buildBlocking();
+@Test
+public void test_mqtt() {
+    final Mqtt5BlockingClient client = Mqtt5Client.builder()
+        .serverPort(extension.getMqttPort())
+        .buildBlocking();
 
-        client.connect();
-        client.disconnect();
-    }
+    client.connect();
+    client.disconnect();
+}
+```
     
 ## Add a custom HiveMQ configuration
 
 ### JUnit 4
 
-    @Rule
-    final @NotNull HiveMQTestContainerRule rule = 
-        new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
-            .withHiveMQConfig(new File("src/test/resources/config.xml"));
+```java
+@Rule
+final @NotNull HiveMQTestContainerRule rule = 
+    new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
+        .withHiveMQConfig(new File("src/test/resources/config.xml"));
+```
 
 ### JUnit 5
 
-    @RegisterExtension
-    final @NotNull HiveMQTestContainerExtension extension = 
-        new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
-            .withHiveMQConfig(new File("src/test/resources/config.xml"));
+```java
+@RegisterExtension
+final @NotNull HiveMQTestContainerExtension extension = 
+    new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
+        .withHiveMQConfig(new File("src/test/resources/config.xml"));
+```
             
 ## Load an extension from a gradle project
 
@@ -222,21 +241,27 @@ location of the Gradle project:
 
 ### JUnit 4
 
-    @Rule
-    public final @NotNull HiveMQTestContainerRule rule =
-        new HiveMQTestContainerRule()
-            .withExtension(new GradleHiveMQExtensionSupplier(new File("path/to/extension/")).get());
+```java
+@Rule
+public final @NotNull HiveMQTestContainerRule rule =
+    new HiveMQTestContainerRule()
+        .withExtension(new GradleHiveMQExtensionSupplier(new File("path/to/extension/")).get());
+```
 
 ### JUnit 5
 
-    @RegisterExtension
-    public final @NotNull HiveMQTestContainerExtension extension =
-        new HiveMQTestContainerExtension()
-            .withExtension(new GradleHiveMQExtensionSupplier(new File("path/to/extension/")).get());
+```java
+@RegisterExtension
+public final @NotNull HiveMQTestContainerExtension extension =
+    new HiveMQTestContainerExtension()
+        .withExtension(new GradleHiveMQExtensionSupplier(new File("path/to/extension/")).get());
+```
                     
 If your current project is the HiveMQ Extension you want to load into the HiveMQ Testcontainer, you can simply use:
 
-    GradleHiveMQExtensionSupplier.direct()            
+```java
+GradleHiveMQExtensionSupplier.direct()
+```            
 
 ## Load an extension from a maven project
 
@@ -244,21 +269,27 @@ You can package and load an extension from a maven project.
 
 ### JUnit 4
 
-    @Rule
-    public final @NotNull HiveMQTestContainerRule rule =
-        new HiveMQTestContainerRule()
-            .withExtension(new MavenHiveMQExtensionSupplier("path/to/extension/pom.xml").get());
+```java
+@Rule
+public final @NotNull HiveMQTestContainerRule rule =
+    new HiveMQTestContainerRule()
+        .withExtension(new MavenHiveMQExtensionSupplier("path/to/extension/pom.xml").get());
+```
 
 ### JUnit 5
 
-    @RegisterExtension
-    public final @NotNull HiveMQTestContainerExtension extension =
-        new HiveMQTestContainerExtension()
-            .withExtension(new MavenHiveMQExtensionSupplier("path/to/extension/pom.xml").get());
+```java
+@RegisterExtension
+public final @NotNull HiveMQTestContainerExtension extension =
+    new HiveMQTestContainerExtension()
+        .withExtension(new MavenHiveMQExtensionSupplier("path/to/extension/pom.xml").get());
+```
                     
 If your current project is the HiveMQ Extension you want to load into the HiveMQ Testcontainer, you can simply use:
 
-    MavenHiveMQExtensionSupplier.direct()
+```java
+MavenHiveMQExtensionSupplier.direct()
+```
 
 ## Load an extension from a folder
 
@@ -267,17 +298,21 @@ The extension will be placed in the container before startup.
 
 ### JUnit 4
 
-    @Rule
-    public final @NotNull HiveMQTestContainerRule rule =
-            new HiveMQTestContainerRule()
-                .withExtension(new File("src/test/resources/modifier-extension"));
+```java
+@Rule
+public final @NotNull HiveMQTestContainerRule rule =
+        new HiveMQTestContainerRule()
+            .withExtension(new File("src/test/resources/modifier-extension"));
+```
 
 ### JUnit 5
 
-    @RegisterExtension
-    public final @NotNull HiveMQTestContainerExtension extension =
-            new HiveMQTestContainerExtension()
-                .withExtension(new File("src/test/resources/modifier-extension"));
+```java
+@RegisterExtension
+public final @NotNull HiveMQTestContainerExtension extension =
+        new HiveMQTestContainerExtension()
+            .withExtension(new File("src/test/resources/modifier-extension"));
+```
                 
 ## Load an extension directly from code
 
@@ -286,25 +321,29 @@ The extension will be packaged properly und put into the container before startu
 
 ### JUnit 4
 
-    @Rule
-    public final @NotNull HiveMQTestContainerRule rule =
-        new HiveMQTestContainerRule()
-            .withExtension(HiveMQExtension.builder()
-                .id("extension-1")
-                .name("my-extension")
-                .version("1.0")
-                .mainClass(MyExtension.class).build())
+```java
+@Rule
+public final @NotNull HiveMQTestContainerRule rule =
+    new HiveMQTestContainerRule()
+        .withExtension(HiveMQExtension.builder()
+            .id("extension-1")
+            .name("my-extension")
+            .version("1.0")
+            .mainClass(MyExtension.class).build())
+```
 
 ### JUnit 5
 
-    @RegisterExtension
-    public final @NotNull HiveMQTestContainerExtension extension =
-        new HiveMQTestContainerExtension()
-            .withExtension(HiveMQExtension.builder()
-                .id("extension-1")
-                .name("my-extension")
-                .version("1.0")
-                .mainClass(MyExtension.class).build())
+```java
+@RegisterExtension
+public final @NotNull HiveMQTestContainerExtension extension =
+    new HiveMQTestContainerExtension()
+        .withExtension(HiveMQExtension.builder()
+            .id("extension-1")
+            .name("my-extension")
+            .version("1.0")
+            .mainClass(MyExtension.class).build())
+```
                     
 ## Enable/Disable an extension
 
@@ -313,43 +352,47 @@ Note that disabling or enabling of extension during runtime is only supported in
 
 ### JUnit 4
 
-    private final @NotNull HiveMQExtension hiveMQExtension = HiveMQExtension.builder()
-        .id("extension-1")
-        .name("my-extension")
-        .version("1.0")
-        .disabledOnStartup(true)
-        .mainClass(MyExtension.class).build();
-    
-    @Rule
-    public final @NotNull HiveMQTestContainerRule rule =
-        new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
+```java
+private final @NotNull HiveMQExtension hiveMQExtension = HiveMQExtension.builder()
+    .id("extension-1")
+    .name("my-extension")
+    .version("1.0")
+    .disabledOnStartup(true)
+    .mainClass(MyExtension.class).build();
+
+@Rule
+public final @NotNull HiveMQTestContainerRule rule =
+    new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
         .withExtension(hiveMQExtension);
-    
-    @Test
-    public void test_disable_enable_extension() throws ExecutionException, InterruptedException {
-        rule.enableExtension(hiveMQExtension);
-        rule.disableExtension(hiveMQExtension);
-    }
+
+@Test
+public void test_disable_enable_extension() throws ExecutionException, InterruptedException {
+    rule.enableExtension(hiveMQExtension);
+    rule.disableExtension(hiveMQExtension);
+}
+```
 
 ### JUnit 5
 
-    private final @NotNull HiveMQExtension hiveMQExtension = HiveMQExtension.builder()
-        .id("extension-1")
-        .name("my-extension")
-        .version("1.0")
-        .disabledOnStartup(true)
-        .mainClass(MyExtension.class).build();
-    
-    @RegisterExtension
-    public final @NotNull HiveMQTestContainerExtension extension =
-        new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
+```java
+private final @NotNull HiveMQExtension hiveMQExtension = HiveMQExtension.builder()
+    .id("extension-1")
+    .name("my-extension")
+    .version("1.0")
+    .disabledOnStartup(true)
+    .mainClass(MyExtension.class).build();
+
+@RegisterExtension
+public final @NotNull HiveMQTestContainerExtension extension =
+    new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
         .withExtension(hiveMQExtension);
-    
-    @Test
-    void test_disable_enable_extension() throws ExecutionException, InterruptedException {
-        extension.enableExtension(hiveMQExtension);
-        extension.disableExtension(hiveMQExtension);
-    }
+
+@Test
+void test_disable_enable_extension() throws ExecutionException, InterruptedException {
+    extension.enableExtension(hiveMQExtension);
+    extension.disableExtension(hiveMQExtension);
+}
+```
     
 ## Enable/Disable an extension loaded from a folder
 
@@ -359,29 +402,33 @@ Note that disabling or enabling of extension during runtime is only supported in
 
 ### JUnit 4
 
-    @Rule
-    public final @NotNull HiveMQTestContainerRule rule =
-            new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
-                .withExtension(new File("src/test/resources/modifier-extension"));
-                
-    @Test
-    void test_disable_enable_extension() throws ExecutionException, InterruptedException {
-        extension.disableExtension("Modifier Extension", "modifier-extension");
-        extension.enableExtension("Modifier Extension", "modifier-extension");
-    }
+```java
+@Rule
+public final @NotNull HiveMQTestContainerRule rule =
+        new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
+            .withExtension(new File("src/test/resources/modifier-extension"));
+            
+@Test
+void test_disable_enable_extension() throws ExecutionException, InterruptedException {
+    extension.disableExtension("Modifier Extension", "modifier-extension");
+    extension.enableExtension("Modifier Extension", "modifier-extension");
+}
+```
 
 ### JUnit 5
 
-    @RegisterExtension
-    public final @NotNull HiveMQTestContainerExtension extension =
-            new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
-                .withExtension(new File("src/test/resources/modifier-extension"));
-                
-    @Test
-    void test_disable_enable_extension() throws ExecutionException, InterruptedException {
-        extension.disableExtension("Modifier Extension", "modifier-extension");
-        extension.enableExtension("Modifier Extension", "modifier-extension");
-    }
+```java
+@RegisterExtension
+public final @NotNull HiveMQTestContainerExtension extension =
+        new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
+            .withExtension(new File("src/test/resources/modifier-extension"));
+            
+@Test
+void test_disable_enable_extension() throws ExecutionException, InterruptedException {
+    extension.disableExtension("Modifier Extension", "modifier-extension");
+    extension.enableExtension("Modifier Extension", "modifier-extension");
+}
+```
     
 ## Remove prepackaged HiveMQ Extensions
 
@@ -392,28 +439,36 @@ These Extensions are disabled by default, but sometimes you my need to remove th
 ### JUnit4
 Remove all prepackaged extensions:
 
-    @Rule
-    final HiveMQTestContainerRule container = new HiveMQTestContainerRule("hivemq/hivemq4", "4.4.4")
-        .withoutPrepackagedExtensions();
+```java
+@Rule
+final HiveMQTestContainerRule container = new HiveMQTestContainerRule("hivemq/hivemq4", "4.4.4")
+    .withoutPrepackagedExtensions();
+```
 
 Remove specific prepackaged extensions: 
 
-    @Rule
-    final HiveMQTestContainerRule container = new HiveMQTestContainerRule("hivemq/hivemq4", "4.4.4")
-        .withoutPrepackagedExtensions("hivemq-kafka-extension");
+```java
+@Rule
+final HiveMQTestContainerRule container = new HiveMQTestContainerRule("hivemq/hivemq4", "4.4.4")
+    .withoutPrepackagedExtensions("hivemq-kafka-extension");`
+```
 
 ### JUnit5
 Remove all prepackaged extensions:
 
-    @RegisterExtension
-    final HiveMQTestContainerExtension container = new HiveMQTestContainerExtension("hivemq/hivemq4", "4.4.4")
-        .withoutPrepackagedExtensions();
+```java
+@RegisterExtension
+final HiveMQTestContainerExtension container = new HiveMQTestContainerExtension("hivemq/hivemq4", "4.4.4")
+    .withoutPrepackagedExtensions();
+```
 
 Remove specific prepackaged extensions: 
 
-    @RegisterExtension
-    final HiveMQTestContainerExtension container = new HiveMQTestContainerExtension("hivemq/hivemq4", "4.4.4")
-        .withoutPrepackagedExtensions("hivemq-kafka-extension");
+```java
+@RegisterExtension
+final HiveMQTestContainerExtension container = new HiveMQTestContainerExtension("hivemq/hivemq4", "4.4.4")
+    .withoutPrepackagedExtensions("hivemq-kafka-extension");
+```
                     
 ## Set logging level
 
@@ -423,17 +478,21 @@ Note: you can silence the container at any time using the `.silent(true)` method
 
 ### JUnit 4
 
-    @Rule
-    public final @NotNull HiveMQTestContainerRule rule =
-        new HiveMQTestContainerRule()
-            .withLogLevel(Level.DEBUG);
+```java
+@Rule
+public final @NotNull HiveMQTestContainerRule rule =
+    new HiveMQTestContainerRule()
+        .withLogLevel(Level.DEBUG);
+```
 
 ### JUnit 5
 
-    @RegisterExtension
-    public final @NotNull HiveMQTestContainerExtension extension =
-        new HiveMQTestContainerExtension()
-            .withLogLevel(Level.DEBUG);
+```java
+@RegisterExtension
+public final @NotNull HiveMQTestContainerExtension extension =
+    new HiveMQTestContainerExtension()
+        .withLogLevel(Level.DEBUG);
+```
             
 
 ## Set Control Center Port
@@ -443,17 +502,21 @@ Note that the HiveMQ Control Center is feature of the HiveMQ Enterprise Edition.
 
 ### JUnit 4
 
-    @Rule
-    public @NotNull HiveMQTestContainerRule rule = 
-        new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
+```java
+@Rule
+public @NotNull HiveMQTestContainerRule rule = 
+    new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
         .withControlCenter(CONTROL_CENTER_PORT);
+```
         
 ### JUnit 5
 
-    @RegisterExtension
-    public @NotNull HiveMQTestContainerExtension extension = 
-        new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
+```java
+@RegisterExtension
+public @NotNull HiveMQTestContainerExtension extension = 
+    new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
         .withControlCenter(CONTROL_CENTER_PORT);
+```
 
 ## Debug directly loaded extensions
 
@@ -465,17 +528,21 @@ You can debug extensions that are directly loaded from your code.
 
 ### JUnit 4
 
-    @Rule
-    public final @NotNull HiveMQTestContainerRule rule =
-        new HiveMQTestContainerRule()
+```java
+@Rule
+public final @NotNull HiveMQTestContainerRule rule =
+    new HiveMQTestContainerRule()
         .withDebugging(9000);
+```
 
 ### JUnit 5
 
-    @RegisterExtension
-    public final @NotNull HiveMQTestContainerExtension extension =
-        new HiveMQTestContainerExtension()
+```java
+@RegisterExtension
+public final @NotNull HiveMQTestContainerExtension extension =
+    new HiveMQTestContainerExtension()
         .withDebugging(9000);
+```
 
 
 - create a Debug Client run configuration (make sure that the port matches with the code):
@@ -492,29 +559,34 @@ You can debug extensions that are directly loaded from your code.
 
 #### JUnit 4
 
-    @Rule
-    public final @NotNull HiveMQTestContainerRule rule =
-        new HiveMQTestContainerRule()
+```java
+@Rule
+public final @NotNull HiveMQTestContainerRule rule =
+    new HiveMQTestContainerRule()
         .withFileInHomeFolder(
             new File("src/test/resources/additionalFile.txt"),
             "/path/in/home/folder");
+```
 
 #### JUnit 5
 
-    @RegisterExtension
-    public final @NotNull HiveMQTestContainerExtension extension =
-        new HiveMQTestContainerExtension()
+```java
+@RegisterExtension
+public final @NotNull HiveMQTestContainerExtension extension =
+    new HiveMQTestContainerExtension()
         .withFileInHomeFolder(
             new File("src/test/resources/additionalFile.txt"),
             "/path/in/home/folder");
+```
             
 ### Put files into extension home
 
 #### JUnit 4
 
-    @Rule
-    public final @NotNull HiveMQTestContainerRule rule =
-        new HiveMQTestContainerRule()
+```java
+@Rule
+public final @NotNull HiveMQTestContainerRule rule =
+    new HiveMQTestContainerRule()
         .withExtension(HiveMQExtension.builder()
             .id("extension-1")
             .name("my-extension")
@@ -523,13 +595,15 @@ You can debug extensions that are directly loaded from your code.
         .withFileInExtensionHomeFolder(
             new File("src/test/resources/additionalFile.txt"),
             "extension-1",
-            "/path/in/extension/home")
+            "/path/in/extension/home")`
+```
 
 #### JUnit 5
 
-    @RegisterExtension
-    public final @NotNull HiveMQTestContainerExtension extension =
-        new HiveMQTestContainerExtension()
+```java
+@RegisterExtension
+public final @NotNull HiveMQTestContainerExtension extension =
+    new HiveMQTestContainerExtension()
         .withExtension(HiveMQExtension.builder()
             .id("extension-1")
             .name("my-extension")
@@ -539,48 +613,57 @@ You can debug extensions that are directly loaded from your code.
             new File("src/test/resources/additionalFile.txt"),
             "extension-1",
             "/path/in/extension/home");
+```
             
 ### Put license files into the container
 
 #### JUnit 4
     
-    @RegisterRule
-    public final @NotNull HiveMQTestContainerRule rule =
-        new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
-            .withLicense(new File("src/test/resources/myLicense.lic"))
-            .withLicense(new File("src/test/resources/myExtensionLicense.elic"));
+```java
+@Rule
+public final @NotNull HiveMQTestContainerRule rule =
+    new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
+        .withLicense(new File("src/test/resources/myLicense.lic"))
+        .withLicense(new File("src/test/resources/myExtensionLicense.elic"));
+```
     
 #### JUnit 5
 
-    @RegisterExtension
-    public final @NotNull HiveMQTestContainerExtension extension =
-        new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
-            .withLicense(new File("src/test/resources/myLicense.lic"))
-            .withLicense(new File("src/test/resources/myExtensionLicense.elic"));
+```java
+@RegisterExtension
+public final @NotNull HiveMQTestContainerExtension extension =
+    new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
+        .withLicense(new File("src/test/resources/myLicense.lic"))
+        .withLicense(new File("src/test/resources/myExtensionLicense.elic"));
+```
 
 ### Configure Docker resources
 
 #### JUnit 4
-    
-    @RegisterRule
-    public final @NotNull HiveMQTestContainerRule rule =
-        new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
-            .withCreateContainerCmdModifier(createContainerCmd -> {
-                final HostConfig hostConfig = HostConfig.newHostConfig();
-                hostConfig.withCpuCount(2L);
-                hostConfig.withMemory(2 * 1024 * 1024L);
-            });
+
+```java
+@RegisterRule
+public final @NotNull HiveMQTestContainerRule rule =
+    new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
+        .withCreateContainerCmdModifier(createContainerCmd -> {
+            final HostConfig hostConfig = HostConfig.newHostConfig();
+            hostConfig.withCpuCount(2L);
+            hostConfig.withMemory(2 * 1024 * 1024L);
+        });
+```
     
 #### JUnit 5
 
-    @RegisterExtension
-    public final @NotNull HiveMQTestContainerExtension extension =
-        new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
-            .withCreateContainerCmdModifier(createContainerCmd -> {
-                final HostConfig hostConfig = HostConfig.newHostConfig();
-                hostConfig.withCpuCount(2L);
-                hostConfig.withMemory(2 * 1024 * 1024L);
-            });
+```java
+@RegisterExtension
+public final @NotNull HiveMQTestContainerExtension extension =
+    new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
+        .withCreateContainerCmdModifier(createContainerCmd -> {
+            final HostConfig hostConfig = HostConfig.newHostConfig();
+            hostConfig.withCpuCount(2L);
+            hostConfig.withMemory(2 * 1024 * 1024L);
+        });
+```
             
 ### Customize the Container further
 
