@@ -3,6 +3,9 @@ language: java
 jdk:
   - openjdk11
 
+before_install:
+  - echo "$DOCKER_TOKEN" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
 stages:
   - test
   - name: publish
