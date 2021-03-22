@@ -1,5 +1,6 @@
 plugins {
     id 'com.github.hierynomus.license' version '0.15.0' apply false
+    id 'io.github.gradle-nexus.publish-plugin' version '1.0.0'
 }
 
 /* ******************** metadata ******************** */
@@ -138,60 +139,61 @@ allprojects {
 /* ******************** publishing ******************** */
 
 allprojects {
-    project.apply plugin: 'maven'
-    project.apply plugin: 'signing'
+    plugins.withType(JavaLibraryPlugin) {
 
-    uploadArchives {
-        repositories {
-            mavenDeployer {
+        project.apply plugin: 'maven-publish'
+        project.apply plugin: 'signing'
 
-                def ossrhUsername = project.findProperty('sonatypeUsername') ?: System.getenv('SONATYPE_USERNAME')
-                def ossrhPassword = project.findProperty('sonatypePassword') ?: System.getenv('SONATYPE_PASSWORD')
-
-                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                    authentication(userName: ossrhUsername, password: ossrhPassword)
-                }
-
-                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                    authentication(userName: ossrhUsername, password: ossrhPassword)
-                }
-
-                pom.project {
-                    name = project.readableName
-                    description = project.description
-                    url = project.githubUrl
-                    licenses {
-                        license {
-                            name = project.licenseReadableName
-                            url = project.licenseUrl
+        afterEvaluate {
+            publishing {
+                publications {
+                    sonatype(MavenPublication) {
+                        pom {
+                            name = project.readableName
+                            description = project.description
+                            url = project.githubUrl
+                            licenses {
+                                license {
+                                    name = project.licenseReadableName
+                                    url = project.licenseUrl
+                                }
+                            }
+                            developers {
+                                developer {
+                                    id = 'YW'
+                                    name = 'Yannick Weber'
+                                    email = 'yannick.weber@hivemq.com'
+                                    organization = 'HiveMQ GmbH'
+                                    organizationUrl = 'https://www.hivemq.com'
+                                }
+                            }
+                            scm {
+                                connection = project.scmConnection
+                                developerConnection = project.scmDeveloperConnection
+                                url = project.githubUrl
+                            }
                         }
                     }
-                    developers {
-                        developer {
-                            id = 'YW'
-                            name = 'Yannick Weber'
-                            email = 'yannick.weber@hivemq.com'
-                            organization = 'HiveMQ GmbH'
-                            organizationUrl = 'https://www.hivemq.com'
-                        }
-                    }
-                    scm {
-                        connection = project.scmConnection
-                        developerConnection = project.scmDeveloperConnection
-                        url = project.githubUrl
-                    }
+                }
+            }
+
+            signing {
+                sign publishing.publications.sonatype
+                String signingKey = project.findProperty('signKey') ?: System.getenv('SIGN_KEY')
+                String signingPassword = project.findProperty('signKeyPass') ?: System.getenv('SIGN_KEY_PASS')
+                if (signingKey && signingPassword) {
+                    useInMemoryPgpKeys(signingKey, signingPassword)
                 }
             }
         }
     }
+}
 
-    signing {
-        String signingKey = project.findProperty('signKey') ?: System.getenv('SIGN_KEY')
-        String signingPassword = project.findProperty('signKeyPass') ?: System.getenv('SIGN_KEY_PASS')
-        if (signingKey && signingPassword) {
-            useInMemoryPgpKeys(signingKey, signingPassword)
+nexusPublishing {
+    repositories {
+        sonatype {
+            username = project.findProperty('sonatypeUsername') ?: System.getenv('SONATYPE_USERNAME')
+            password = project.findProperty('sonatypePassword') ?: System.getenv('SONATYPE_PASSWORD')
         }
     }
 }
