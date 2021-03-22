@@ -23,5 +23,5 @@ jobs:
           SIGN_KEY_PASS: ${{ secrets.SIGN_KEY_PASS }}
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
-        run: ./gradlew clean uploadArchives
+        run: ./gradlew clean publishToSonatype closeAndReleaseSonatypeStagingRepository
 
