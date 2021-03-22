@@ -1,12 +1,11 @@
 plugins {
-    id 'com.jfrog.bintray' version '1.8.5' apply false
     id 'com.github.hierynomus.license' version '0.15.0' apply false
 }
 
 /* ******************** metadata ******************** */
 
 allprojects {
-    version '1.3.1'
+    version '1.3.2'
     group 'com.hivemq'
     description 'Testcontainers for testing HiveMQ Extensions and Java MQTT Applications.'
 
@@ -47,7 +46,7 @@ allprojects {
     }
 
     ext {
-        testContainersVersion = '1.15.1'
+        testContainersVersion = '1.15.2'
         extensionSDKVersion = '4.4.4'
         hmcVersion = '1.2.1'
         junit4Version = '4.13.1'
@@ -139,79 +138,60 @@ allprojects {
 /* ******************** publishing ******************** */
 
 allprojects {
-    plugins.withType(JavaLibraryPlugin) {
+    project.apply plugin: 'maven'
+    project.apply plugin: 'signing'
 
-        project.apply plugin: 'maven-publish'
+    uploadArchives {
+        repositories {
+            mavenDeployer {
 
-        publishing {
-            publications {
-                maven(MavenPublication) {
-                    from components.java
-                    artifact tasks.javadocJar
-                    artifact tasks.sourcesJar
+                def ossrhUsername = project.findProperty('sonatypeUsername') ?: System.getenv('SONATYPE_USERNAME')
+                def ossrhPassword = project.findProperty('sonatypePassword') ?: System.getenv('SONATYPE_PASSWORD')
+
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
                 }
-            }
-        }
-        afterEvaluate {
-            publishing {
-                publications {
-                    withType(MavenPublication) {
-                        pom {
-                            name = project.readableName
-                            description = project.description
-                            url = project.githubUrl
-                            licenses {
-                                license {
-                                    name = project.licenseReadableName
-                                    url = project.licenseUrl
-                                }
-                            }
-                            developers {
-                                developer {
-                                    id = 'YW'
-                                    name = 'Yannick Weber'
-                                    email = 'yannick.weber@hivemq.com'
-                                    organization = 'HiveMQ GmbH'
-                                    organizationUrl = 'https://www.hivemq.com'
-                                }
-                            }
-                            scm {
-                                connection = project.scmConnection
-                                developerConnection = project.scmDeveloperConnection
-                                url = project.githubUrl
-                            }
+
+                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
+
+                pom.project {
+                    name = project.readableName
+                    description = project.description
+                    url = project.githubUrl
+                    licenses {
+                        license {
+                            name = project.licenseReadableName
+                            url = project.licenseUrl
                         }
                     }
-                }
-            }
-        }
-
-        project.apply plugin: 'com.jfrog.bintray'
-
-        bintray {
-            user = project.findProperty('bintrayUser') ?: System.getenv('BINTRAY_USER')
-            key = project.findProperty('bintrayKey') ?: System.getenv('BINTRAY_KEY')
-            publish = true
-            pkg {
-                userOrg = 'hivemq'
-                repo = 'HiveMQ'
-                name = 'hivemq-testcontainer'
-                desc = project.description
-                websiteUrl = project.githubUrl
-                issueTrackerUrl = project.issuesUrl
-                vcsUrl = project.githubUrl + '.git'
-                licenses = [project.licenseShortName]
-                labels = ['hivemq', 'docker', 'mqtt', 'integration-testing', 'testcontainers', 'junit4', 'junit5']
-                version {
-                    released = new Date()
-                    gpg {
-                        sign = true
+                    developers {
+                        developer {
+                            id = 'YW'
+                            name = 'Yannick Weber'
+                            email = 'yannick.weber@hivemq.com'
+                            organization = 'HiveMQ GmbH'
+                            organizationUrl = 'https://www.hivemq.com'
+                        }
+                    }
+                    scm {
+                        connection = project.scmConnection
+                        developerConnection = project.scmDeveloperConnection
+                        url = project.githubUrl
                     }
                 }
             }
         }
-        afterEvaluate {
-            bintray.publications = publishing.publications.withType(MavenPublication).stream().collect { it.name }
+    }
+
+    signing {
+        String signingKey = project.findProperty('signKey') ?: System.getenv('SIGN_KEY')
+        String signingPassword = project.findProperty('signKeyPass') ?: System.getenv('SIGN_KEY_PASS')
+        if (signingKey && signingPassword) {
+            useInMemoryPgpKeys(signingKey, signingPassword)
         }
     }
 }

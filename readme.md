@@ -44,14 +44,14 @@ This enables testing MQTT client applications and integration testing of custom 
 add these dependencies to your `build.gradle`:
 
 ````groovy
-testImplementation "com.hivemq:hivemq-testcontainer-junit4:1.3.1"
+testImplementation "com.hivemq:hivemq-testcontainer-junit4:1.3.2"
 testImplementation "junit:junit:4.13"
 ````
 
 ### Gradle + JUnit 5
 
 ````groovy
-testImplementation "com.hivemq:hivemq-testcontainer-junit5:1.3.1"
+testImplementation "com.hivemq:hivemq-testcontainer-junit5:1.3.2"
 testImplementation "org.junit.jupiter:junit-jupiter-engine:5.6.1"
 testRuntimeOnly "org.junit.jupiter:junit-jupiter-api:5.6.1"
 ````
@@ -65,7 +65,7 @@ add these dependencies to your `pom.xml`:
 <dependency>
     <groupId>com.hivemq</groupId>
     <artifactId>hivemq-testcontainer-junit4</artifactId>
-    <version>1.3.1</version>
+    <version>1.3.2</version>
     <scope>test</scope>
 </dependency>
 <dependency>
@@ -84,7 +84,7 @@ add these dependencies to your `pom.xml`:
 <dependency>
     <groupId>com.hivemq</groupId>
     <artifactId>hivemq-testcontainer-junit5</artifactId>
-    <version>1.3.1</version>
+    <version>1.3.2</version>
     <scope>test</scope>
 </dependency>
 <dependency>
