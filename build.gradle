@@ -179,8 +179,8 @@ allprojects {
 
             signing {
                 sign publishing.publications.sonatype
-                String signingKey = project.findProperty('signKey') ?: System.getenv('SIGN_KEY')
-                String signingPassword = project.findProperty('signKeyPass') ?: System.getenv('SIGN_KEY_PASS')
+                String signingKey = project.findProperty('signKey')
+                String signingPassword = project.findProperty('signKeyPass')
                 if (signingKey && signingPassword) {
                     useInMemoryPgpKeys(signingKey, signingPassword)
                 }
@@ -191,10 +191,7 @@ allprojects {
 
 nexusPublishing {
     repositories {
-        sonatype {
-            username = project.findProperty('sonatypeUsername') ?: System.getenv('SONATYPE_USERNAME')
-            password = project.findProperty('sonatypePassword') ?: System.getenv('SONATYPE_PASSWORD')
-        }
+        sonatype ()
     }
 }
 
