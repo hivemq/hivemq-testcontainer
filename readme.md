@@ -2,7 +2,7 @@
 
 ![image](https://www.hivemq.com/img/logo-hivemq-testcontainer.png)
 
-[![Build Status](https://travis-ci.com/hivemq/hivemq-testcontainer.svg?token=PkzYtWZuTHcNUHFtmC24&branch=develop)](https://travis-ci.com/hivemq/hivemq-testcontainer)
+![CI Check](https://github.com/hivemq/hivemq-testcontainer/actions/workflows/check.yml/badge.svg)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.hivemq/hivemq-testcontainer-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.hivemq/hivemq-testcontainer-core)
 [![javadoc](https://javadoc.io/badge2/com.hivemq/hivemq-testcontainer-core/javadoc.svg)](https://javadoc.io/doc/com.hivemq/hivemq-testcontainer-core)
 
