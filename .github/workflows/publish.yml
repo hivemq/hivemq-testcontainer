@@ -7,6 +7,7 @@ on:
 
 jobs:
   build:
+    environment: mavenCentralPublish
     runs-on: ubuntu-latest
     steps:
       - name: checkout
@@ -21,7 +22,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_TOKEN }}
       - name: Check
-        run: ./graldew check
+        run: ./gradlew check
       - name: Publish to Maven Central
         env:
           ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGN_KEY }}
