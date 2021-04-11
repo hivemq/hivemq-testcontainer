@@ -1,5 +1,5 @@
 plugins {
-    id("java-library")
+    id("hivemq-testcontainer-module")
 }
 
 description = "JUnit 5 API for testing HiveMQ Extensions and Java MQTT Applications."
