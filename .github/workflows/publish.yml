@@ -6,7 +6,7 @@ on:
       - created
 
 jobs:
-  build:
+  publish:
     environment: mavenCentralPublish
     runs-on: ubuntu-latest
     steps:
