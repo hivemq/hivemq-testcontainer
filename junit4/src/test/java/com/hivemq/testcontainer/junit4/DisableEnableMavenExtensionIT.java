@@ -31,7 +31,8 @@ public class DisableEnableMavenExtensionIT {
 
     @Test(timeout = 200_000)
     public void test() throws Exception {
-        final File extensionDir = new MavenHiveMQExtensionSupplier("src/test/resources/maven-extension/pom.xml")
+        final File extensionDir = new MavenHiveMQExtensionSupplier(
+                getClass().getResource("/maven-extension/pom.xml").getPath())
                 .addProperty("HIVEMQ_GROUP_ID", "com.hivemq")
                 .addProperty("HIVEMQ_EXTENSION_SDK", "hivemq-extension-sdk")
                 .addProperty("HIVEMQ_EXTENSION_SDK_VERSION", "4.3.0")

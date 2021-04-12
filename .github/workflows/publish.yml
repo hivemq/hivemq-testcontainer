@@ -1,0 +1,34 @@
+name: Publish to Maven Central
+
+on:
+  release:
+    types:
+      - created
+
+jobs:
+  publish:
+    environment: mavenCentralPublish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '11'
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+      - name: Check
+        run: ./gradlew check
+      - name: Publish to Maven Central
+        env:
+          ORG_GRADLE_PROJECT_signingKey: ${{ secrets.SIGN_KEY }}
+          ORG_GRADLE_PROJECT_signingPassword: ${{ secrets.SIGN_KEY_PASS }}
+          ORG_GRADLE_PROJECT_sonatypeUsername: ${{ secrets.SONATYPE_USERNAME }}
+          ORG_GRADLE_PROJECT_sonatypePassword: ${{ secrets.SONATYPE_PASSWORD }}
+        run: ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository
+

@@ -31,10 +31,9 @@ public class ContainerWithExtensionFromDirectoryIT {
     @Test
     @Timeout(value = 3, unit = TimeUnit.MINUTES)
     void test() throws Exception {
-
         final HiveMQTestContainerExtension extension =
                 new HiveMQTestContainerExtension()
-                        .withExtension(new File("src/test/resources/modifier-extension"))
+                        .withExtension(new File(getClass().getResource("/modifier-extension").toURI()))
                         .waitForExtension("Modifier Extension")
                         .withLogLevel(Level.DEBUG);
 

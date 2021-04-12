@@ -34,9 +34,9 @@ public class ContainerWithCustomConfigIT {
 
     @Test
     @Timeout(value = 3, unit = TimeUnit.MINUTES)
-    void test() {
+    void test() throws Exception {
         final HiveMQTestContainerExtension extension = new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
-                .withHiveMQConfig(new File("src/test/resources/config.xml"));
+                .withHiveMQConfig(new File(getClass().getResource("/config.xml").toURI()));
 
         extension.beforeEach(null);
 

@@ -2,7 +2,7 @@
 
 ![image](https://www.hivemq.com/img/logo-hivemq-testcontainer.png)
 
-[![Build Status](https://travis-ci.com/hivemq/hivemq-testcontainer.svg?token=PkzYtWZuTHcNUHFtmC24&branch=develop)](https://travis-ci.com/hivemq/hivemq-testcontainer)
+![CI Check](https://github.com/hivemq/hivemq-testcontainer/actions/workflows/check.yml/badge.svg)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.hivemq/hivemq-testcontainer-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.hivemq/hivemq-testcontainer-core)
 [![javadoc](https://javadoc.io/badge2/com.hivemq/hivemq-testcontainer-core/javadoc.svg)](https://javadoc.io/doc/com.hivemq/hivemq-testcontainer-core)
 
@@ -44,14 +44,14 @@ This enables testing MQTT client applications and integration testing of custom 
 add these dependencies to your `build.gradle`:
 
 ````groovy
-testImplementation "com.hivemq:hivemq-testcontainer-junit4:1.3.1"
+testImplementation "com.hivemq:hivemq-testcontainer-junit4:1.3.2"
 testImplementation "junit:junit:4.13"
 ````
 
 ### Gradle + JUnit 5
 
 ````groovy
-testImplementation "com.hivemq:hivemq-testcontainer-junit5:1.3.1"
+testImplementation "com.hivemq:hivemq-testcontainer-junit5:1.3.2"
 testImplementation "org.junit.jupiter:junit-jupiter-engine:5.6.1"
 testRuntimeOnly "org.junit.jupiter:junit-jupiter-api:5.6.1"
 ````
@@ -65,7 +65,7 @@ add these dependencies to your `pom.xml`:
 <dependency>
     <groupId>com.hivemq</groupId>
     <artifactId>hivemq-testcontainer-junit4</artifactId>
-    <version>1.3.1</version>
+    <version>1.3.2</version>
     <scope>test</scope>
 </dependency>
 <dependency>
@@ -84,7 +84,7 @@ add these dependencies to your `pom.xml`:
 <dependency>
     <groupId>com.hivemq</groupId>
     <artifactId>hivemq-testcontainer-junit5</artifactId>
-    <version>1.3.1</version>
+    <version>1.3.2</version>
     <scope>test</scope>
 </dependency>
 <dependency>

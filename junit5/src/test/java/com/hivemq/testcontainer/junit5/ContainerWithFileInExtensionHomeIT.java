@@ -16,7 +16,6 @@
 package com.hivemq.testcontainer.junit5;
 
 import com.hivemq.extension.sdk.api.ExtensionMain;
-import org.jetbrains.annotations.NotNull;
 import com.hivemq.extension.sdk.api.interceptor.publish.PublishInboundInterceptor;
 import com.hivemq.extension.sdk.api.parameter.ExtensionStartInput;
 import com.hivemq.extension.sdk.api.parameter.ExtensionStartOutput;
@@ -26,6 +25,7 @@ import com.hivemq.extension.sdk.api.services.Services;
 import com.hivemq.extension.sdk.api.services.intializer.ClientInitializer;
 import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
@@ -54,7 +54,7 @@ public class ContainerWithFileInExtensionHomeIT {
                         .withExtension(hiveMQExtension)
                         .waitForExtension(hiveMQExtension)
                         .withFileInExtensionHomeFolder(
-                                new File("src/test/resources/additionalFile.txt"),
+                                new File(getClass().getResource("/additionalFile.txt").toURI()),
                                 "extension-1",
                                 "/additionalFiles/")
                         .withDebugging();
