@@ -86,7 +86,6 @@ public class ContainerWithoutPlatformExtensionsIT {
         container.afterEach(null);
     }
 
-
     @Test
     @Timeout(value = 3, unit = TimeUnit.MINUTES)
     public void removeKafkaExtension() throws InterruptedException {

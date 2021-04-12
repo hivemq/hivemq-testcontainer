@@ -59,6 +59,7 @@ public class CreateFileInCopiedDirectoryIT {
                 .name("my-extension")
                 .version("1.0")
                 .mainClass(FileCreatorExtension.class).build();
+
         final HiveMQTestContainerExtension extension =
                 new HiveMQTestContainerExtension()
                         .withExtension(hiveMQExtension)

@@ -30,8 +30,8 @@ public class ContainerWithExtensionFromDirectoryIT {
     public void test() throws Exception {
         final HiveMQTestContainerRule rule =
                 new HiveMQTestContainerRule()
+                        .withExtension(new File(getClass().getResource("/modifier-extension").toURI()))
                         .waitForExtension("Modifier Extension")
-                        .withExtension(new File("src/test/resources/modifier-extension"))
                         .withLogLevel(Level.DEBUG);
 
         rule.start();

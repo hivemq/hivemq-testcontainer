@@ -34,7 +34,7 @@ public class ContainerWithControlCenterIT {
         rule.start();
 
         final CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-        final HttpUriRequest request = new HttpGet( "http://localhost:" + CONTROL_CENTER_PORT);
+        final HttpUriRequest request = new HttpGet("http://localhost:" + CONTROL_CENTER_PORT);
         httpClient.execute(request);
 
         rule.stop();

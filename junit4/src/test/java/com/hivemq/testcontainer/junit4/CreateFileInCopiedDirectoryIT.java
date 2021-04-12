@@ -57,10 +57,10 @@ public class CreateFileInCopiedDirectoryIT {
                 .version("1.0")
                 .mainClass(FileCreatorExtension.class).build();
 
-        final @NotNull HiveMQTestContainerRule rule =
+        final HiveMQTestContainerRule rule =
                 new HiveMQTestContainerRule()
-                        .waitForExtension(hiveMQExtension)
                         .withExtension(hiveMQExtension)
+                        .waitForExtension(hiveMQExtension)
                         .withFileInHomeFolder(createDirectory());
 
         rule.start();

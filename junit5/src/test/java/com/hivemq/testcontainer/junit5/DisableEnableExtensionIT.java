@@ -15,10 +15,10 @@
  */
 package com.hivemq.testcontainer.junit5;
 
-import org.jetbrains.annotations.NotNull;
 import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.util.MyExtension;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.slf4j.event.Level;
@@ -49,6 +49,7 @@ public class DisableEnableExtensionIT {
                         .withLogLevel(Level.DEBUG);
 
         extension.beforeEach(null);
+
         assertThrows(ExecutionException.class, () -> TestPublishModifiedUtil.testPublishModified(extension.getMqttPort()));
         extension.enableExtension(hiveMQExtension);
         TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
@@ -56,6 +57,7 @@ public class DisableEnableExtensionIT {
         assertThrows(ExecutionException.class, () -> TestPublishModifiedUtil.testPublishModified(extension.getMqttPort()));
         extension.enableExtension(hiveMQExtension);
         TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
+
         extension.afterEach(null);
     }
 

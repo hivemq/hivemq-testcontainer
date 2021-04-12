@@ -16,7 +16,6 @@
 package com.hivemq.testcontainer.junit4;
 
 import com.hivemq.extension.sdk.api.ExtensionMain;
-import org.jetbrains.annotations.NotNull;
 import com.hivemq.extension.sdk.api.interceptor.publish.PublishInboundInterceptor;
 import com.hivemq.extension.sdk.api.parameter.ExtensionStartInput;
 import com.hivemq.extension.sdk.api.parameter.ExtensionStartOutput;
@@ -26,6 +25,7 @@ import com.hivemq.extension.sdk.api.services.Services;
 import com.hivemq.extension.sdk.api.services.intializer.ClientInitializer;
 import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import java.io.File;
