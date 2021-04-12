@@ -16,7 +16,6 @@
 package com.hivemq.testcontainer.junit5;
 
 import com.hivemq.extension.sdk.api.ExtensionMain;
-import org.jetbrains.annotations.NotNull;
 import com.hivemq.extension.sdk.api.interceptor.publish.PublishInboundInterceptor;
 import com.hivemq.extension.sdk.api.parameter.ExtensionStartInput;
 import com.hivemq.extension.sdk.api.parameter.ExtensionStartOutput;
@@ -26,6 +25,7 @@ import com.hivemq.extension.sdk.api.services.Services;
 import com.hivemq.extension.sdk.api.services.intializer.ClientInitializer;
 import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 
@@ -47,12 +47,13 @@ public class ContainerWithLicenseIT {
                 .name("my-extension")
                 .version("1.0")
                 .mainClass(LicenceCheckerExtension.class).build();
+
         final HiveMQTestContainerExtension extension =
                 new HiveMQTestContainerExtension()
                         .withExtension(hiveMQExtension)
                         .waitForExtension(hiveMQExtension)
-                        .withLicense(new File("src/test/resources/myLicense.lic"))
-                        .withLicense(new File("src/test/resources/myExtensionLicense.elic"))
+                        .withLicense(new File(getClass().getResource("/myLicense.lic").toURI()))
+                        .withLicense(new File(getClass().getResource("/myExtensionLicense.elic").toURI()))
                         .withDebugging();
 
         extension.beforeEach(null);

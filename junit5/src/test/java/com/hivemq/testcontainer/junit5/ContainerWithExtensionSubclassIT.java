@@ -37,6 +37,7 @@ public class ContainerWithExtensionSubclassIT {
                 .name("my-extension")
                 .version("1.0")
                 .mainClass(MyExtensionWithSubclasses.class).build();
+
         final HiveMQTestContainerExtension extension =
                 new HiveMQTestContainerExtension()
                         .waitForExtension(hiveMQExtension)

@@ -18,7 +18,6 @@ package com.hivemq.testcontainer.junit4;
 import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.util.MyExtension;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
-import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 /**
@@ -34,7 +33,7 @@ public class ContainerWithExtensionIT {
                 .version("1.0")
                 .mainClass(MyExtension.class).build();
 
-        final @NotNull HiveMQTestContainerRule rule =
+        final HiveMQTestContainerRule rule =
                 new HiveMQTestContainerRule()
                         .waitForExtension(hiveMQExtension)
                         .withExtension(hiveMQExtension);

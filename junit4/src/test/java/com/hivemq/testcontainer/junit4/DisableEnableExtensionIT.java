@@ -15,10 +15,10 @@
  */
 package com.hivemq.testcontainer.junit4;
 
-import org.jetbrains.annotations.NotNull;
 import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.util.MyExtension;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
+import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
 import java.util.concurrent.ExecutionException;
@@ -40,7 +40,7 @@ public class DisableEnableExtensionIT {
     @Test(timeout = 200_000)
     public void test() throws Exception {
 
-        final @NotNull HiveMQTestContainerRule rule =
+        final HiveMQTestContainerRule rule =
                 new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
                         .withExtension(hiveMQExtension);
 

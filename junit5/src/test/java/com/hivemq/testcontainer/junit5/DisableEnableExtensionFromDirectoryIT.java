@@ -36,16 +36,18 @@ public class DisableEnableExtensionFromDirectoryIT {
     void test() throws Exception {
         final HiveMQTestContainerExtension extension =
                 new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
-                        .withExtension(new File("src/test/resources/modifier-extension"))
+                        .withExtension(new File(getClass().getResource("/modifier-extension").toURI()))
                         .waitForExtension("Modifier Extension")
                         .withLogLevel(Level.DEBUG);
 
         extension.beforeEach(null);
+
         TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
         extension.disableExtension("Modifier Extension", "modifier-extension");
         assertThrows(ExecutionException.class, () -> TestPublishModifiedUtil.testPublishModified(extension.getMqttPort()));
         extension.enableExtension("Modifier Extension", "modifier-extension");
         TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
+
         extension.afterEach(null);
     }
 
