@@ -1,3 +1,6 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 plugins {
     id("java-library")
     id("maven-publish")
@@ -65,8 +68,8 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
     testLogging {
-        events("failed", "passed")
-        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+        events = setOf(TestLogEvent.PASSED, TestLogEvent.FAILED)
+        exceptionFormat = TestExceptionFormat.FULL
     }
 
     val outputCache = mutableListOf<String>()
