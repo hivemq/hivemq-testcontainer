@@ -80,8 +80,8 @@ tasks.test {
         }
     }
     addTestListener(object : TestListener {
-        override fun afterSuite(suite: TestDescriptor, result: TestResult) {}
         override fun beforeSuite(suite: TestDescriptor) {}
+        override fun afterSuite(suite: TestDescriptor, result: TestResult) {}
         override fun beforeTest(testDescriptor: TestDescriptor) = outputCache.clear()
         override fun afterTest(testDescriptor: TestDescriptor, result: TestResult) {
             if (result.resultType == TestResult.ResultType.FAILURE && outputCache.size > 0) {
