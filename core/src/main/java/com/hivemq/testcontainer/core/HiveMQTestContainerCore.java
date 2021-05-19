@@ -34,12 +34,15 @@ import org.testcontainers.utility.MountableFile;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.time.Duration;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Yannick Weber
@@ -190,6 +193,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     /**
      * Puts the given extension folder into '/opt/hivemq/extensions/{directory-name}' inside the container.
      * It must at least contain a valid hivemq-extension.xml and a valid extension.jar in order to be executed.
+     * The directory-name is taken from the id defined in the hivemq-extension.xml.
      * <p>
      * Must be called before the container is started.
      *
@@ -207,13 +211,26 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
         }
         try {
             final MountableFile mountableExtension = MountableFile.forHostPath(extensionDir.getPath(), MODE);
-            final String containerPath = "/opt/hivemq/extensions/" + extensionDir.getName();
+            final String extensionDirName = getExtensionDirectoryName(extensionDir);
+            final String containerPath = "/opt/hivemq/extensions/" + extensionDirName;
             withCopyFileToContainer(mountableExtension, containerPath);
-            logger.info("Putting extension {} into {}", extensionDir.getName(), containerPath);
+            logger.info("Putting extension {} into {}", extensionDirName, containerPath);
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }
         return self();
+    }
+
+    private @NotNull String getExtensionDirectoryName(final @NotNull File extensionDirectory) throws IOException {
+        final File file = new File(extensionDirectory, "hivemq-extension.xml");
+        final String xml = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
+        final Pattern pattern = Pattern.compile("<id>(.+?)</id>");
+        final Matcher matcher = pattern.matcher(xml);
+
+        if (!matcher.find()) {
+            throw new IllegalStateException("Could not parse extension id from '" + file.getAbsolutePath() + "'");
+        }
+        return matcher.group(1);
     }
 
     private @NotNull File createExtension(final @NotNull HiveMQExtension hiveMQExtension)

@@ -41,4 +41,18 @@ public class ContainerWithExtensionFromDirectoryIT {
         TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
         extension.afterEach(null);
     }
+
+    @Test
+    @Timeout(value = 3, unit = TimeUnit.MINUTES)
+    void test_wrongDirectoryName() throws Exception {
+        final HiveMQTestContainerExtension extension =
+                new HiveMQTestContainerExtension()
+                        .withExtension(new File(getClass().getResource("/modifier-extension-wrong-name").toURI()))
+                        .waitForExtension("Modifier Extension")
+                        .withLogLevel(Level.DEBUG);
+
+        extension.beforeEach(null);
+        TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());
+        extension.afterEach(null);
+    }
 }
