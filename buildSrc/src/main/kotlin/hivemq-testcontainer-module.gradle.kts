@@ -1,3 +1,6 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+import org.gradle.api.tasks.testing.logging.TestLogEvent
+
 plugins {
     id("java-library")
     id("maven-publish")
@@ -65,8 +68,8 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
     testLogging {
-        events("failed", "passed")
-        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+        events = setOf(TestLogEvent.PASSED, TestLogEvent.FAILED)
+        exceptionFormat = TestExceptionFormat.FULL
     }
 
     val outputCache = mutableListOf<String>()
@@ -77,8 +80,8 @@ tasks.test {
         }
     }
     addTestListener(object : TestListener {
-        override fun afterSuite(suite: TestDescriptor, result: TestResult) {}
         override fun beforeSuite(suite: TestDescriptor) {}
+        override fun afterSuite(suite: TestDescriptor, result: TestResult) {}
         override fun beforeTest(testDescriptor: TestDescriptor) = outputCache.clear()
         override fun afterTest(testDescriptor: TestDescriptor, result: TestResult) {
             if (result.resultType == TestResult.ResultType.FAILURE && outputCache.size > 0) {
@@ -99,9 +102,9 @@ publishing {
 }
 
 signing {
-    val signingKey: String? by project
-    val signingPassword: String? by project
-    useInMemoryPgpKeys(signingKey, signingPassword)
+    val signKey: String? by project
+    val signKeyPass: String? by project
+    useInMemoryPgpKeys(signKey, signKeyPass)
     sign(publishing.publications["maven"])
 }
 
