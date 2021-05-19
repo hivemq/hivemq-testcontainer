@@ -249,17 +249,25 @@ public final @NotNull HiveMQTestContainerRule rule =
 ```
 
 If your current project is the HiveMQ Extension you want to load into the HiveMQ Testcontainer, you can do it by:
-* making the test task dependent on the `hivemqExtensionZip` / `hivemqEnterpriseExtensionZip` task
+* adapting your `build.gradle.kts`:
 
-```
-tasks.test {
-    dependsOn("hivemqExtensionZip")
+```kotlin
+val prepareExtensionTest by tasks.registering(Sync::class) {
+    group = "hivemq extension"
+    description = "Prepares the extension for integration testing."
+
+    from(tasks.hivemqExtensionZip.map { extensionZip -> zipTree(extensionZip.archiveFile) })
+    into(buildDir.resolve("hivemq-extension-test"))
 }
-```
+
+tasks.test {
+    useJUnit()
+    dependsOn("prepareExtensionTest")
+}
+
 * adding the target directory of the `hivemqExtensionZip` / `hivemqEnterpriseExtensionZip` task
 
-```
-
+```java
 @Rule
 public final @NotNull HiveMQTestContainerRule rule =
         new HiveMQTestContainerRule()
@@ -277,22 +285,29 @@ public final @NotNull HiveMQTestContainerExtension extension =
 ```
                     
 If your current project is the HiveMQ Extension you want to load into the HiveMQ Testcontainer, you can do it by:
-* making the test task dependent on the `hivemqExtensionZip` / `hivemqEnterpriseExtensionZip` task
+* adapting your `build.gradle.kts`:
 
-```
+```kotlin
+val prepareExtensionTest by tasks.registering(Sync::class) {
+    group = "hivemq extension"
+    description = "Prepares the extension for integration testing."
+
+    from(tasks.hivemqExtensionZip.map { extensionZip -> zipTree(extensionZip.archiveFile) })
+    into(buildDir.resolve("hivemq-extension-test"))
+}
+
 tasks.test {
     useJUnitPlatform()
-    dependsOn("hivemqExtensionZip")
+    dependsOn("prepareExtensionTest")
 }
 ```
 * adding the target directory of the `hivemqExtensionZip` / `hivemqEnterpriseExtensionZip` task
 
-```
-
+```java
 @RegisterExtension
 public final @NotNull HiveMQTestContainerExtension extension =
         new HiveMQTestContainerExtension()
-                .withExtension(new File("build/hivemq-extension"));
+            .withExtension(new File("build/hivemq-extension-test/<extension-id>"));
 ```
 
 

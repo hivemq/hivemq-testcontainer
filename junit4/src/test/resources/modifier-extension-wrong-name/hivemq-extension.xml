@@ -20,6 +20,6 @@
     <id>modifier-extension</id>
     <version>1.0-SNAPSHOT</version>
     <name>Modifier Extension</name>
-    <author>dc-square GmbH</author>
+    <author>HiveMQ GmbH</author>
     <priority>1000</priority>
 </hivemq-extension>

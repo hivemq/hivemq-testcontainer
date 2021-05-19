@@ -68,6 +68,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     public static final int MQTT_PORT = 1883;
     public static final int CONTROL_CENTER_PORT = 8080;
     public static final int MODE = 0777;
+    public static final @NotNull Pattern EXTENSION_ID_PATTERN = Pattern.compile("<id>(.+?)</id>");
 
     private final @NotNull ConcurrentHashMap<String, CountDownLatch> containerOutputLatches = new ConcurrentHashMap<>();
     private volatile boolean silent = false;
@@ -224,8 +225,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     private @NotNull String getExtensionDirectoryName(final @NotNull File extensionDirectory) throws IOException {
         final File file = new File(extensionDirectory, "hivemq-extension.xml");
         final String xml = FileUtils.readFileToString(file, StandardCharsets.UTF_8);
-        final Pattern pattern = Pattern.compile("<id>(.+?)</id>");
-        final Matcher matcher = pattern.matcher(xml);
+        final Matcher matcher = EXTENSION_ID_PATTERN.matcher(xml);
 
         if (!matcher.find()) {
             throw new IllegalStateException("Could not parse extension id from '" + file.getAbsolutePath() + "'");
