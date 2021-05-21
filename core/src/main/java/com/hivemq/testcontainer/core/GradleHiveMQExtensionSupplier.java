@@ -63,7 +63,7 @@ public class GradleHiveMQExtensionSupplier implements Supplier<File> {
      * It uses the build.gradle file and the gradle wrapper of the current gradle project.
      *
      * @deprecated It is advisable not to invoke gradle from test code.
-     * The test-task should depend on the gradle task that builds the HiveMQ Extension (e.g. hivemqExtensionZip).
+     * The test task should depend on the Gradle task that builds the HiveMQ extension (e.g. hivemqExtensionZip).
      * The extension can be loaded by passing the destination path of the hivemqExtensionZip to {@link HiveMQTestContainerCore#withExtension(File)}
      * @return a {@link GradleHiveMQExtensionSupplier} for the current gradle project
      * @since 1.3.0
