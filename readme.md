@@ -234,7 +234,7 @@ final @NotNull HiveMQTestContainerExtension extension =
         .withHiveMQConfig(new File("src/test/resources/config.xml"));
 ```
             
-## Load an extension from a gradle project
+## Load an extension from a Gradle project
 
 You can package and load an extension from a Gradle project, by providing the
 location of the Gradle project:
@@ -264,6 +264,7 @@ tasks.test {
     useJUnit()
     dependsOn("prepareExtensionTest")
 }
+```
 
 * adding the target directory of the `hivemqExtensionZip` / `hivemqEnterpriseExtensionZip` task
 
@@ -271,7 +272,7 @@ tasks.test {
 @Rule
 public final @NotNull HiveMQTestContainerRule rule =
         new HiveMQTestContainerRule()
-                .withExtension(new File("build/hivemq-extension"));
+                .withExtension(new File("build/hivemq-extension-test/<extension-id>"));
 ```
 
 
