@@ -2,9 +2,9 @@
 
 ![image](https://www.hivemq.com/img/logo-hivemq-testcontainer.png)
 
-[![CI Check](https://github.com/hivemq/hivemq-testcontainer/actions/workflows/check.yml/badge.svg?branch=master)](https://github.com/hivemq/hivemq-testcontainer/actions/workflows/check.yml?query=branch%3Amaster)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.hivemq/hivemq-testcontainer-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.hivemq/hivemq-testcontainer-core)
 [![javadoc](https://javadoc.io/badge2/com.hivemq/hivemq-testcontainer-core/javadoc.svg)](https://javadoc.io/doc/com.hivemq/hivemq-testcontainer-core)
+[![GitHub Workflow Status (branch)](https://img.shields.io/github/workflow/status/hivemq/hivemq-testcontainer/CI%20Check/master)](https://github.com/hivemq/hivemq-testcontainer/actions/workflows/check.yml?query=branch%3Amaster)
 
 Automatic starting HiveMQ docker containers for JUnit4 and JUnit5 tests.
 This enables testing MQTT client applications and integration testing of custom HiveMQ extensions. 
