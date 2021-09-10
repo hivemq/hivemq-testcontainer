@@ -19,8 +19,8 @@ import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.slf4j.event.Level;
+import org.testcontainers.utility.MountableFile;
 
-import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -33,7 +33,7 @@ public class ContainerWithExtensionFromDirectoryIT {
     void test() throws Exception {
         final HiveMQTestContainerExtension extension =
                 new HiveMQTestContainerExtension()
-                        .withExtension(new File(getClass().getResource("/modifier-extension").toURI()))
+                        .withExtension(MountableFile.forClasspathResource("/modifier-extension"))
                         .waitForExtension("Modifier Extension")
                         .withLogLevel(Level.DEBUG);
 
@@ -47,7 +47,7 @@ public class ContainerWithExtensionFromDirectoryIT {
     void test_wrongDirectoryName() throws Exception {
         final HiveMQTestContainerExtension extension =
                 new HiveMQTestContainerExtension()
-                        .withExtension(new File(getClass().getResource("/modifier-extension-wrong-name").toURI()))
+                        .withExtension(MountableFile.forClasspathResource("/modifier-extension-wrong-name"))
                         .waitForExtension("Modifier Extension")
                         .withLogLevel(Level.DEBUG);
 

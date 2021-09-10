@@ -20,8 +20,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.slf4j.event.Level;
 import org.testcontainers.utility.DockerImageName;
+import org.testcontainers.utility.MountableFile;
 
-import java.io.File;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -37,7 +37,7 @@ public class DisableEnableExtensionFromDirectoryIT {
     void test() throws Exception {
         final HiveMQTestContainerExtension extension =
                 new HiveMQTestContainerExtension(DockerImageName.parse("hivemq/hivemq4").withTag("latest"))
-                        .withExtension(new File(getClass().getResource("/modifier-extension").toURI()))
+                        .withExtension(MountableFile.forClasspathResource("/modifier-extension"))
                         .waitForExtension("Modifier Extension")
                         .withLogLevel(Level.DEBUG);
 

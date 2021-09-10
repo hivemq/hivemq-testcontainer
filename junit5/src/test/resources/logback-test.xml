@@ -33,6 +33,7 @@
 
     <logger name="com.hivemq.client" level="OFF"/>
     <logger name="org.testcontainers" level="OFF"/>
+    <logger name="com.github.dockerjava" level="OFF"/>
     <logger name="io.netty" level="OFF"/>
 
 </configuration>

@@ -197,10 +197,11 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * <p>
      * Must be called before the container is started.
      *
-     * @param extensionDir the extension folder on the host machine
+     * @param mountableExtension the extension folder on the host machine
      * @return self
      */
-    public @NotNull SELF withExtension(final @NotNull File extensionDir) {
+    public @NotNull SELF withExtension(final @NotNull MountableFile mountableExtension) {
+        final File extensionDir = new File(mountableExtension.getResolvedPath());
         if (!extensionDir.exists()) {
             logger.warn("Extension {} could not be mounted. It does not exist", extensionDir.getAbsolutePath());
             return self();
@@ -210,11 +211,10 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
             return self();
         }
         try {
-            final MountableFile mountableExtension = MountableFile.forHostPath(extensionDir.getPath(), MODE);
             final String extensionDirName = getExtensionDirectoryName(extensionDir);
             final String containerPath = "/opt/hivemq/extensions/" + extensionDirName;
-            withCopyFileToContainer(mountableExtension, containerPath);
-            logger.info("Putting extension {} into {}", extensionDirName, containerPath);
+            withCopyFileToContainer(cloneWithFileMode(mountableExtension, MODE), containerPath);
+            logger.info("Putting extension '{}' into '{}'", extensionDirName, containerPath);
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }
@@ -669,5 +669,9 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     public void stop() {
         waitStrategy.reset();
         super.stop();
+    }
+
+    private @NotNull MountableFile cloneWithFileMode(final @NotNull MountableFile mountableFile, final int mode) {
+        return MountableFile.forHostPath(mountableFile.getResolvedPath(), mode);
     }
 }
