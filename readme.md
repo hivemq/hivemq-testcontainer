@@ -311,7 +311,7 @@ public final @NotNull HiveMQTestContainerExtension extension =
         .withExtension(new GradleHiveMQExtensionSupplier(new File("path/to/extension/")).get());
 ```
 
-## Load an extension from a maven project
+## Load an extension from a Maven project
 
 You can package and load an extension from a maven project.
 
