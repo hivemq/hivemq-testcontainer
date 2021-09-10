@@ -87,8 +87,11 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
         waitingFor(waitStrategy);
 
         withLogConsumer(outputFrame -> {
-            if (!silent) {
-                System.out.print(outputFrame.getUtf8String());
+            final String utf8String = outputFrame.getUtf8String();
+            if (utf8String.startsWith("Listening for transport dt_socket at address:")) {
+                System.out.println("Listening for transport dt_socket at address: " + getMappedPort(DEBUGGING_PORT));
+            } else if (!silent) {
+                System.out.print(utf8String);
             }
         });
         withLogConsumer((outputFrame) -> {
@@ -136,25 +139,11 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * <p>
      * Must be called before the container is started.
      *
-     * @param debuggingPortHost the host port for debugging clients to connect
-     * @return self
-     */
-    public @NotNull SELF withDebugging(final int debuggingPortHost) {
-        addExposedPorts(DEBUGGING_PORT);
-        addFixedExposedPort(debuggingPortHost, DEBUGGING_PORT);
-        withEnv("JAVA_OPTS", "-agentlib:jdwp=transport=dt_socket,address=0.0.0.0:" + DEBUGGING_PORT + ",server=y,suspend=n");
-        return self();
-    }
-
-    /**
-     * Enables the possibility for remote debugging clients to connect on host port 9000.
-     * <p>
-     * Must be called before the container is started.
-     *
      * @return self
      */
     public @NotNull SELF withDebugging() {
-        withDebugging(DEBUGGING_PORT);
+        addExposedPorts(DEBUGGING_PORT);
+        withEnv("JAVA_OPTS", "-agentlib:jdwp=transport=dt_socket,address=0.0.0.0:" + DEBUGGING_PORT + ",server=y,suspend=y");
         return self();
     }
 

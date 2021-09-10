@@ -581,7 +581,7 @@ You can debug extensions that are directly loaded from your code.
 @Rule
 public final @NotNull HiveMQTestContainerRule rule =
     new HiveMQTestContainerRule()
-        .withDebugging(9000);
+        .withDebugging();
 ```
 
 ### JUnit 5
@@ -590,17 +590,8 @@ public final @NotNull HiveMQTestContainerRule rule =
 @RegisterExtension
 public final @NotNull HiveMQTestContainerExtension extension =
     new HiveMQTestContainerExtension()
-        .withDebugging(9000);
+        .withDebugging();
 ```
-
-
-- create a Debug Client run configuration (make sure that the port matches with the code):
-
-![image](https://www.hivemq.com/img/DEBUGCLIENT.png)
-
-- run the JUnit test that starts your container
-
-- run the DEBUG-CLIENT configuration to attach to the debug server
 
 ## Put files into the container
 
