@@ -19,6 +19,7 @@ import com.hivemq.testcontainer.core.MavenHiveMQExtensionSupplier;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.testcontainers.utility.DockerImageName;
 
 import java.io.File;
 import java.util.concurrent.ExecutionException;
@@ -43,7 +44,7 @@ public class DisableEnableMavenExtensionIT {
                 .get();
 
         final HiveMQTestContainerExtension extension =
-                new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
+                new HiveMQTestContainerExtension(DockerImageName.parse("hivemq/hivemq4").withTag("latest"))
                         .waitForExtension("Maven Extension")
                         .withExtension(extensionDir);
 

@@ -31,6 +31,7 @@ import com.hivemq.testcontainer.core.HiveMQExtension;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.testcontainers.utility.DockerImageName;
 
 import java.io.File;
 import java.nio.ByteBuffer;
@@ -58,7 +59,7 @@ public class ContainerWithoutPlatformExtensionsIT {
     @Timeout(value = 3, unit = TimeUnit.MINUTES)
     public void removeAllPlatformExtensions() throws InterruptedException {
 
-        final HiveMQTestContainerExtension container = new HiveMQTestContainerExtension("hivemq/hivemq4", "4.4.1")
+        final HiveMQTestContainerExtension container = new HiveMQTestContainerExtension(DockerImageName.parse("hivemq/hivemq4").withTag("latest"))
                 .withExtension(hiveMQExtension)
                 .waitForExtension(hiveMQExtension)
                 .withoutPrepackagedExtensions();
@@ -90,7 +91,7 @@ public class ContainerWithoutPlatformExtensionsIT {
     @Timeout(value = 3, unit = TimeUnit.MINUTES)
     public void removeKafkaExtension() throws InterruptedException {
 
-        final HiveMQTestContainerExtension container = new HiveMQTestContainerExtension("hivemq/hivemq4", "4.4.1")
+        final HiveMQTestContainerExtension container = new HiveMQTestContainerExtension(DockerImageName.parse("hivemq/hivemq4").withTag("latest"))
                 .withExtension(hiveMQExtension)
                 .waitForExtension(hiveMQExtension)
                 .withoutPrepackagedExtensions("hivemq-kafka-extension");

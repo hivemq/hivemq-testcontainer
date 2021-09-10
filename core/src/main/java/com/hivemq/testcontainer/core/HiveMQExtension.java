@@ -30,7 +30,6 @@ public class HiveMQExtension {
     private final @NotNull String version;
     private final int priority;
     private final int startPriority;
-    private final boolean sign;
     private final boolean disabledOnStartup;
     private final @NotNull Class<? extends ExtensionMain> mainClass;
     private final @NotNull ImmutableList<Class<?>> additionalClasses;
@@ -41,7 +40,6 @@ public class HiveMQExtension {
             final @NotNull String version,
             final int priority,
             final int startPriority,
-            final boolean sign,
             final boolean disabledOnStartup,
             final @NotNull Class<? extends ExtensionMain> mainClass,
             final @NotNull ImmutableList<Class<?>> additionalClasses) {
@@ -51,16 +49,10 @@ public class HiveMQExtension {
         this.version = version;
         this.priority = priority;
         this.startPriority = startPriority;
-        this.sign = sign;
         this.disabledOnStartup = disabledOnStartup;
         this.mainClass = mainClass;
         this.additionalClasses = additionalClasses;
     }
-
-    public static Builder newHiveMQExtension() {
-        return new Builder();
-    }
-
 
     public @NotNull String getId() {
         return id;
@@ -80,10 +72,6 @@ public class HiveMQExtension {
 
     public int getStartPriority() {
         return startPriority;
-    }
-
-    public boolean sign() {
-        return sign;
     }
 
     public boolean isDisabledOnStartup() {
@@ -108,7 +96,6 @@ public class HiveMQExtension {
         private @Nullable String version;
         private int priority = 0;
         private int startPriority = 0;
-        private boolean sign = false;
         private boolean disabledOnStartup = false;
         private @Nullable Class<? extends ExtensionMain> mainClass;
         private final @NotNull ImmutableList.Builder<Class<?>> additionalClassesBuilder = ImmutableList.builder();
@@ -132,7 +119,6 @@ public class HiveMQExtension {
                     version,
                     priority,
                     startPriority,
-                    sign,
                     disabledOnStartup,
                     mainClass,
                     additionalClassesBuilder.build()
@@ -166,11 +152,6 @@ public class HiveMQExtension {
 
         public @NotNull Builder disabledOnStartup(final boolean disabledOnStartup) {
             this.disabledOnStartup = disabledOnStartup;
-            return this;
-        }
-
-        public @NotNull Builder sign(final boolean sign) {
-            this.sign = sign;
             return this;
         }
 

@@ -20,6 +20,7 @@ import com.hivemq.client.mqtt.exceptions.MqttSessionExpiredException;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5BlockingClient;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5Client;
 import org.junit.Test;
+import org.testcontainers.utility.DockerImageName;
 
 import java.io.File;
 
@@ -32,7 +33,7 @@ public class ContainerWithCustomConfigIT {
 
     @Test(timeout = 200_000)
     public void test() throws Exception {
-        final HiveMQTestContainerRule rule = new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
+        final HiveMQTestContainerRule rule = new HiveMQTestContainerRule(DockerImageName.parse("hivemq/hivemq4").withTag("latest"))
                 .withHiveMQConfig(new File(getClass().getResource("/config.xml").toURI()));
 
         rule.start();
