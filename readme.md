@@ -20,9 +20,10 @@ This enables testing MQTT client applications and integration testing of custom 
 - [wait strategy](#wait-strategy)
 - [test your MQTT 3 and MQTT 5 client applications](#test-your-mqtt-3-and-mqtt-5-client-application)
 - [add a custom hivemq config](#add-a-custom-hivemq-configuration)
+- [integration testing with gradle](#integration-testing-with-gradle)
+- [load an extension from a folder](#load-an-extension-from-a-folder)
 - [load an extension from a gradle project](#load-an-extension-from-a-gradle-project)
 - [load an extension from a maven project](#load-an-extension-from-a-maven-project)
-- [load an extension from a folder](#load-an-extension-from-a-folder)
 - [load an extension directly from your code](#load-an-extension-directly-from-code)
 - [enable or disable an extension](#enabledisable-an-extension)
 - [enable or disable an extension loaded from a folder](#enabledisable-an-extension-loaded-from-a-folder)
@@ -44,16 +45,16 @@ This enables testing MQTT client applications and integration testing of custom 
 add these dependencies to your `build.gradle`:
 
 ````groovy
-testImplementation "com.hivemq:hivemq-testcontainer-junit4:1.3.2"
-testImplementation "junit:junit:4.13"
+testImplementation "com.hivemq:hivemq-testcontainer-junit4:2.0.0"
+testImplementation "junit:junit:4.13.2"
 ````
 
 ### Gradle + JUnit 5
 
 ````groovy
-testImplementation "com.hivemq:hivemq-testcontainer-junit5:1.3.2"
-testImplementation "org.junit.jupiter:junit-jupiter-engine:5.6.1"
-testRuntimeOnly "org.junit.jupiter:junit-jupiter-api:5.6.1"
+testImplementation "com.hivemq:hivemq-testcontainer-junit5:2.0.0"
+testImplementation "org.junit.jupiter:junit-jupiter-engine:5.7.2"
+testRuntimeOnly "org.junit.jupiter:junit-jupiter-api:5.7.2"
 ````
 
 
@@ -65,13 +66,13 @@ add these dependencies to your `pom.xml`:
 <dependency>
     <groupId>com.hivemq</groupId>
     <artifactId>hivemq-testcontainer-junit4</artifactId>
-    <version>1.3.2</version>
+    <version>2.0.0</version>
     <scope>test</scope>
 </dependency>
 <dependency>
     <groupId>junit</groupId>
     <artifactId>junit</artifactId>
-    <version>4.13</version>
+    <version>4.13.2</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -84,19 +85,19 @@ add these dependencies to your `pom.xml`:
 <dependency>
     <groupId>com.hivemq</groupId>
     <artifactId>hivemq-testcontainer-junit5</artifactId>
-    <version>1.3.2</version>
+    <version>2.0.0</version>
     <scope>test</scope>
 </dependency>
 <dependency>
     <groupId>org.junit.jupiter</groupId>
     <artifactId>junit-jupiter-engine</artifactId>
-    <version>5.6.1</version>
+    <version>5.7.2</version>
     <scope>test</scope>
 </dependency>
 <dependency>
     <groupId>org.junit.jupiter</groupId>
     <artifactId>junit-jupiter-api</artifactId>
-    <version>5.6.1</version>
+    <version>5.7.2</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -233,40 +234,20 @@ final @NotNull HiveMQTestContainerExtension extension =
     new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
         .withHiveMQConfig(new File("src/test/resources/config.xml"));
 ```
-            
-## Load an extension from a Gradle project
 
-You can package and load an extension from a Gradle project, by providing the
-location of the Gradle project:
+## Integration Testing with Gradle
+
+If your current Gradle project is the HiveMQ Extension you want to load into the HiveMQ Testcontainer, you can do it by using 
+the [HiveMQ Extension Gradle Plugin](https://github.com/hivemq/hivemq-extension-gradle-plugin/edit/master/README.md).
+
+This plugin adds an `integrationTest` task which executes tests from the `integrationTest` source set.
+- Integration test source files are defined in `src/integrationTest`.
+- Integration test dependencies are defined via the `integrationTestImplementation`, `integrationTestRuntimeOnly`, etc. configurations.
+
+The `integrationTest` task builds the extension first and unzips it to the `build/hivemq-extension-test` directory.
+The tests can then load the built extension into the HiveMQ Testcontainer:
 
 ### JUnit 4
-
-```java
-@Rule
-public final @NotNull HiveMQTestContainerRule rule =
-    new HiveMQTestContainerRule()
-        .withExtension(new GradleHiveMQExtensionSupplier(new File("path/to/extension/")).get());
-```
-
-If your current project is the HiveMQ Extension you want to load into the HiveMQ Testcontainer, you can do it by:
-* adapting your `build.gradle.kts`:
-
-```kotlin
-val prepareExtensionTest by tasks.registering(Sync::class) {
-    group = "hivemq extension"
-    description = "Prepares the extension for integration testing."
-
-    from(tasks.hivemqExtensionZip.map { extensionZip -> zipTree(extensionZip.archiveFile) })
-    into(buildDir.resolve("hivemq-extension-test"))
-}
-
-tasks.test {
-    useJUnit()
-    dependsOn("prepareExtensionTest")
-}
-```
-
-* adding the target directory of the `hivemqExtensionZip` / `hivemqEnterpriseExtensionZip` task
 
 ```java
 @Rule
@@ -275,69 +256,13 @@ public final @NotNull HiveMQTestContainerRule rule =
                 .withExtension(new File("build/hivemq-extension-test/<extension-id>"));
 ```
 
-
-### JUnit 5
-
-```java
-@RegisterExtension
-public final @NotNull HiveMQTestContainerExtension extension =
-    new HiveMQTestContainerExtension()
-        .withExtension(new GradleHiveMQExtensionSupplier(new File("path/to/extension/")).get());
-```
-                    
-If your current project is the HiveMQ Extension you want to load into the HiveMQ Testcontainer, you can do it by:
-* adapting your `build.gradle.kts`:
-
-```kotlin
-val prepareExtensionTest by tasks.registering(Sync::class) {
-    group = "hivemq extension"
-    description = "Prepares the extension for integration testing."
-
-    from(tasks.hivemqExtensionZip.map { extensionZip -> zipTree(extensionZip.archiveFile) })
-    into(buildDir.resolve("hivemq-extension-test"))
-}
-
-tasks.test {
-    useJUnitPlatform()
-    dependsOn("prepareExtensionTest")
-}
-```
-* adding the target directory of the `hivemqExtensionZip` / `hivemqEnterpriseExtensionZip` task
+### Junit 5
 
 ```java
 @RegisterExtension
 public final @NotNull HiveMQTestContainerExtension extension =
         new HiveMQTestContainerExtension()
             .withExtension(new File("build/hivemq-extension-test/<extension-id>"));
-```
-
-
-## Load an extension from a maven project
-
-You can package and load an extension from a maven project. 
-
-### JUnit 4
-
-```java
-@Rule
-public final @NotNull HiveMQTestContainerRule rule =
-    new HiveMQTestContainerRule()
-        .withExtension(new MavenHiveMQExtensionSupplier("path/to/extension/pom.xml").get());
-```
-
-### JUnit 5
-
-```java
-@RegisterExtension
-public final @NotNull HiveMQTestContainerExtension extension =
-    new HiveMQTestContainerExtension()
-        .withExtension(new MavenHiveMQExtensionSupplier("path/to/extension/pom.xml").get());
-```
-                    
-If your current project is the HiveMQ Extension you want to load into the HiveMQ Testcontainer, you can simply use:
-
-```java
-MavenHiveMQExtensionSupplier.direct()
 ```
 
 ## Load an extension from a folder
@@ -361,6 +286,51 @@ public final @NotNull HiveMQTestContainerRule rule =
 public final @NotNull HiveMQTestContainerExtension extension =
         new HiveMQTestContainerExtension()
             .withExtension(new File("src/test/resources/modifier-extension"));
+```
+
+## Load an extension from a Gradle project
+
+You can package and load an extension from a Gradle project, by providing the
+location of the Gradle project:
+
+### JUnit 4
+
+```java
+@Rule
+public final @NotNull HiveMQTestContainerRule rule =
+    new HiveMQTestContainerRule()
+        .withExtension(new GradleHiveMQExtensionSupplier(new File("path/to/extension/")).get());
+```
+
+### JUnit 5
+
+```java
+@RegisterExtension
+public final @NotNull HiveMQTestContainerExtension extension =
+    new HiveMQTestContainerExtension()
+        .withExtension(new GradleHiveMQExtensionSupplier(new File("path/to/extension/")).get());
+```
+
+## Load an extension from a maven project
+
+You can package and load an extension from a maven project.
+
+### JUnit 4
+
+```java
+@Rule
+public final @NotNull HiveMQTestContainerRule rule =
+    new HiveMQTestContainerRule()
+        .withExtension(new MavenHiveMQExtensionSupplier("path/to/extension/pom.xml").get());
+```
+
+### JUnit 5
+
+```java
+@RegisterExtension
+public final @NotNull HiveMQTestContainerExtension extension =
+    new HiveMQTestContainerExtension()
+        .withExtension(new MavenHiveMQExtensionSupplier("path/to/extension/pom.xml").get());
 ```
                 
 ## Load an extension directly from code
