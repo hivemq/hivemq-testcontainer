@@ -21,6 +21,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.testcontainers.utility.DockerImageName;
 
 import java.util.concurrent.TimeUnit;
 
@@ -33,7 +34,7 @@ public class ContainerWithControlCenterIT {
     public void test() throws Exception {
 
         final HiveMQTestContainerExtension extension =
-                new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
+                new HiveMQTestContainerExtension(DockerImageName.parse("hivemq/hivemq4").withTag("latest"))
                         .withControlCenter();
 
         extension.beforeEach(null);

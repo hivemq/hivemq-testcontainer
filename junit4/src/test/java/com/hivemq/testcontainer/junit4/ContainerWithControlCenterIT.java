@@ -20,6 +20,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.Test;
+import org.testcontainers.utility.DockerImageName;
 
 public class ContainerWithControlCenterIT {
 
@@ -28,7 +29,7 @@ public class ContainerWithControlCenterIT {
     @Test(timeout = 200_000)
     public void test() throws Exception {
         final HiveMQTestContainerRule rule =
-                new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
+                new HiveMQTestContainerRule(DockerImageName.parse("hivemq/hivemq4").withTag("latest"))
                         .withControlCenter();
 
         rule.start();

@@ -21,6 +21,7 @@ import com.hivemq.client.mqtt.mqtt5.Mqtt5BlockingClient;
 import com.hivemq.client.mqtt.mqtt5.Mqtt5Client;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.testcontainers.utility.DockerImageName;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -35,7 +36,7 @@ public class ContainerWithCustomConfigIT {
     @Test
     @Timeout(value = 3, unit = TimeUnit.MINUTES)
     void test() throws Exception {
-        final HiveMQTestContainerExtension extension = new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
+        final HiveMQTestContainerExtension extension = new HiveMQTestContainerExtension(DockerImageName.parse("hivemq/hivemq4").withTag("latest"))
                 .withHiveMQConfig(new File(getClass().getResource("/config.xml").toURI()));
 
         extension.beforeEach(null);
