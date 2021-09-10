@@ -546,7 +546,7 @@ public final @NotNull HiveMQTestContainerExtension extension =
 
 ## Set Control Center Port
 
-You can set the HiveMQ Control Center port on the host machine that is mapped to the control center port inside the container.
+The HiveMQ Testcontainer allows you to access the HiveMQ Control Center.
 Note that the HiveMQ Control Center is feature of the HiveMQ Enterprise Edition.
 
 ### JUnit 4
@@ -555,7 +555,7 @@ Note that the HiveMQ Control Center is feature of the HiveMQ Enterprise Edition.
 @Rule
 public @NotNull HiveMQTestContainerRule rule = 
     new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
-        .withControlCenter(CONTROL_CENTER_PORT);
+        .withControlCenter();
 ```
         
 ### JUnit 5
@@ -564,7 +564,13 @@ public @NotNull HiveMQTestContainerRule rule =
 @RegisterExtension
 public @NotNull HiveMQTestContainerExtension extension = 
     new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
-        .withControlCenter(CONTROL_CENTER_PORT);
+        .withControlCenter();
+```
+
+After startup, you are presented with the URL of the HiveMQ Control Center:
+
+```
+2021-09-10 10:35:53,511 INFO  - The HiveMQ Control Center is reachable under: http://localhost:55032
 ```
 
 ## Debug directly loaded extensions
