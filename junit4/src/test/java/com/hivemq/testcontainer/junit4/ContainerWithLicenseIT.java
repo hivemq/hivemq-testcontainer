@@ -50,8 +50,7 @@ public class ContainerWithLicenseIT {
                         .withExtension(hiveMQExtension)
                         .waitForExtension(hiveMQExtension)
                         .withLicense(new File(getClass().getResource("/myLicense.lic").toURI()))
-                        .withLicense(new File(getClass().getResource("/myExtensionLicense.elic").toURI()))
-                        .withDebugging();
+                        .withLicense(new File(getClass().getResource("/myExtensionLicense.elic").toURI()));
 
         rule.start();
         TestPublishModifiedUtil.testPublishModified(rule.getMqttPort());

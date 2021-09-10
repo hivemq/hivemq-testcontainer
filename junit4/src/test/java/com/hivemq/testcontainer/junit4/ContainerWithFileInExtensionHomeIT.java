@@ -52,8 +52,7 @@ public class ContainerWithFileInExtensionHomeIT {
                         .withFileInExtensionHomeFolder(
                                 new File(getClass().getResource("/additionalFile.txt").toURI()),
                                 "extension-1",
-                                "/additionalFiles/")
-                        .withDebugging();
+                                "/additionalFiles/");
 
         rule.start();
         TestPublishModifiedUtil.testPublishModified(rule.getMqttPort());
