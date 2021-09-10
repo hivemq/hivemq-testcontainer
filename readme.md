@@ -547,7 +547,7 @@ public final @NotNull HiveMQTestContainerExtension extension =
 ## Set Control Center Port
 
 The HiveMQ Testcontainer allows you to access the HiveMQ Control Center.
-Note that the HiveMQ Control Center is feature of the HiveMQ Enterprise Edition.
+Note that the HiveMQ Control Center is a feature of the HiveMQ Enterprise Edition.
 
 ### JUnit 4
 
