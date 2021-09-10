@@ -19,8 +19,8 @@ import com.hivemq.testcontainer.core.MavenHiveMQExtensionSupplier;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
 import org.junit.Test;
 import org.testcontainers.utility.DockerImageName;
+import org.testcontainers.utility.MountableFile;
 
-import java.io.File;
 import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -32,7 +32,7 @@ public class DisableEnableMavenExtensionIT {
 
     @Test(timeout = 200_000)
     public void test() throws Exception {
-        final File extensionDir = new MavenHiveMQExtensionSupplier(
+        final MountableFile extensionDir = new MavenHiveMQExtensionSupplier(
                 getClass().getResource("/maven-extension/pom.xml").getPath())
                 .addProperty("HIVEMQ_GROUP_ID", "com.hivemq")
                 .addProperty("HIVEMQ_EXTENSION_SDK", "hivemq-extension-sdk")

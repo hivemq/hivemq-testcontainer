@@ -18,8 +18,7 @@ package com.hivemq.testcontainer.junit4;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
 import org.junit.Test;
 import org.slf4j.event.Level;
-
-import java.io.File;
+import org.testcontainers.utility.MountableFile;
 
 /**
  * @author Yannick Weber
@@ -30,7 +29,7 @@ public class ContainerWithExtensionFromDirectoryIT {
     public void test() throws Exception {
         final HiveMQTestContainerRule rule =
                 new HiveMQTestContainerRule()
-                        .withExtension(new File(getClass().getResource("/modifier-extension").toURI()))
+                        .withExtension(MountableFile.forClasspathResource("/modifier-extension"))
                         .waitForExtension("Modifier Extension")
                         .withLogLevel(Level.DEBUG);
 
@@ -43,7 +42,7 @@ public class ContainerWithExtensionFromDirectoryIT {
     public void test_wrongDirectoryName() throws Exception {
         final HiveMQTestContainerRule rule =
                 new HiveMQTestContainerRule()
-                        .withExtension(new File(getClass().getResource("/modifier-extension-wrong-name").toURI()))
+                        .withExtension(MountableFile.forClasspathResource("/modifier-extension-wrong-name"))
                         .waitForExtension("Modifier Extension")
                         .withLogLevel(Level.DEBUG);
 

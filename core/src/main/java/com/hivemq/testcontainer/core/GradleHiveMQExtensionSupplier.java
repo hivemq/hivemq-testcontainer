@@ -18,11 +18,13 @@ package com.hivemq.testcontainer.core;
 import net.lingala.zip4j.ZipFile;
 import org.apache.commons.lang3.SystemUtils;
 import org.jetbrains.annotations.NotNull;
+import org.testcontainers.utility.MountableFile;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.AbstractMap;
 import java.util.Map;
 import java.util.function.Supplier;
@@ -37,7 +39,7 @@ import java.util.stream.Collectors;
  * @author Yannick Weber
  * @since 1.3.0
  */
-public class GradleHiveMQExtensionSupplier implements Supplier<File> {
+public class GradleHiveMQExtensionSupplier implements Supplier<MountableFile> {
 
     private static final @NotNull Pattern ROOT_PROJECT_PATTERN = Pattern.compile(".*'(.*)'");
     private static final @NotNull String PROPERTY_REGEX = "(.*): (.*)";
@@ -82,7 +84,7 @@ public class GradleHiveMQExtensionSupplier implements Supplier<File> {
      * @since 1.3.0
      */
     @Override
-    public @NotNull File get() {
+    public @NotNull MountableFile get() {
         System.out.printf((BUILD_STARTED) + "%n", gradleProjectDirectory);
 
         try {
@@ -133,10 +135,10 @@ public class GradleHiveMQExtensionSupplier implements Supplier<File> {
             final ZipFile zipFile = new ZipFile(
                     new File(gradleProjectDirectory,
                             "build/hivemq-extension/" + projectName + "-" + projectVersion + ".zip"));
-            final File tempDir = Files.createTempDirectory("").toFile();
+            final Path tempDirectory = Files.createTempDirectory("");
 
-            zipFile.extractAll(tempDir.getAbsolutePath());
-            return new File(tempDir, projectName);
+            zipFile.extractAll(tempDirectory.toString());
+            return MountableFile.forHostPath(tempDirectory.resolve(projectName));
 
         } catch (final Exception e) {
             throw new RuntimeException("Exception while building the HiveMQ extension with gradle.", e);
