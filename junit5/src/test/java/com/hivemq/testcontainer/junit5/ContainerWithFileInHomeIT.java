@@ -28,6 +28,7 @@ import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.testcontainers.utility.MountableFile;
 
 import java.io.File;
 import java.nio.ByteBuffer;
@@ -52,8 +53,7 @@ public class ContainerWithFileInHomeIT {
                 new HiveMQTestContainerExtension()
                         .withExtension(hiveMQExtension)
                         .waitForExtension(hiveMQExtension)
-                        .withFileInHomeFolder(
-                                new File(getClass().getResource("/additionalFile.txt").toURI()),
+                        .withFileInHomeFolder(MountableFile.forClasspathResource("/additionalFile.txt"),
                                 "/additionalFiles/");
 
         extension.beforeEach(null);

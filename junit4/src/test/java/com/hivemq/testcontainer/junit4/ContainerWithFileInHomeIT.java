@@ -27,6 +27,7 @@ import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
+import org.testcontainers.utility.MountableFile;
 
 import java.io.File;
 import java.nio.ByteBuffer;
@@ -49,9 +50,7 @@ public class ContainerWithFileInHomeIT {
                 new HiveMQTestContainerRule()
                         .withExtension(hiveMQExtension)
                         .waitForExtension(hiveMQExtension)
-                        .withFileInHomeFolder(
-                                new File(getClass().getResource("/additionalFile.txt").toURI()),
-                                "/additionalFiles/");
+                        .withFileInHomeFolder(MountableFile.forClasspathResource("/additionalFile.txt"), "/additionalFiles/");
 
         rule.start();
         TestPublishModifiedUtil.testPublishModified(rule.getMqttPort());
