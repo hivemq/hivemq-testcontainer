@@ -27,6 +27,7 @@ import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
+import org.testcontainers.utility.MountableFile;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,12 +42,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class CreateFileInCopiedDirectoryIT {
 
-    private @NotNull File createDirectory() throws IOException {
+    private @NotNull MountableFile createDirectory() throws IOException {
         final File directory = new File(Files.createTempDirectory("").toFile(), "directory");
         assertTrue(directory.mkdir());
         final File subdirectory = new File(directory, "sub-directory");
         assertTrue(subdirectory.mkdir());
-        return directory;
+        return MountableFile.forHostPath(directory.getPath());
     }
 
     @Test(timeout = 200_000)

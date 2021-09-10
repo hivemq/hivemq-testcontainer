@@ -386,7 +386,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * @return self
      */
     public @NotNull SELF withFileInExtensionHomeFolder(
-            final @NotNull File file,
+            final @NotNull MountableFile file,
             final @NotNull String extensionId) {
 
         return withFileInExtensionHomeFolder(file, extensionId, "");
@@ -404,7 +404,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * @return self
      */
     public @NotNull SELF withFileInExtensionHomeFolder(
-            final @NotNull File file,
+            final @NotNull MountableFile file,
             final @NotNull String extensionId,
             final @NotNull String pathInExtensionHome) {
 
@@ -419,7 +419,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * @param file the file on the host machine
      * @return self
      */
-    public @NotNull SELF withFileInHomeFolder(final @NotNull File file) {
+    public @NotNull SELF withFileInHomeFolder(final @NotNull MountableFile file) {
         return withFileInHomeFolder(file, "");
     }
 
@@ -428,21 +428,22 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * <p>
      * Must be called before the container is started.
      *
-     * @param file             the file on the host machine
+     * @param mountableFile    the file on the host machine
      * @param pathInHomeFolder the path
      * @return self
      */
     public @NotNull SELF withFileInHomeFolder(
-            final @NotNull File file,
+            final @NotNull MountableFile mountableFile,
             final @NotNull String pathInHomeFolder) {
+
+        final File file = new File(mountableFile.getResolvedPath());
 
         if (!file.exists()) {
             logger.warn("File {} does not exist.", file.getAbsolutePath());
             return self();
         }
-        final MountableFile mountableFile = MountableFile.forHostPath(file.getAbsolutePath(), MODE);
         final String containerPath = "/opt/hivemq" + PathUtil.preparePath(pathInHomeFolder) + file.getName();
-        withCopyFileToContainer(mountableFile, containerPath);
+        withCopyFileToContainer(cloneWithFileMode(mountableFile, MODE), containerPath);
         logger.info("Putting file {} into container path {}", file.getAbsolutePath(), containerPath);
         return self();
     }
