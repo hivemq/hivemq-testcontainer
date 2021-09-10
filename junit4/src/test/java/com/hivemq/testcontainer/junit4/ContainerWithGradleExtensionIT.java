@@ -18,6 +18,7 @@ package com.hivemq.testcontainer.junit4;
 import com.hivemq.testcontainer.core.GradleHiveMQExtensionSupplier;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
 import org.junit.Test;
+import org.testcontainers.utility.MountableFile;
 
 import java.io.File;
 
@@ -29,7 +30,7 @@ public class ContainerWithGradleExtensionIT {
 
     @Test(timeout = 200_000)
     public void test() throws Exception {
-        final File gradleExtension = new GradleHiveMQExtensionSupplier(
+        final MountableFile gradleExtension = new GradleHiveMQExtensionSupplier(
                 new File(getClass().getResource("/gradle-extension").toURI()))
                 .get();
 

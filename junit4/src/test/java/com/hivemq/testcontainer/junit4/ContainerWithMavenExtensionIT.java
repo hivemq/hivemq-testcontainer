@@ -18,8 +18,7 @@ package com.hivemq.testcontainer.junit4;
 import com.hivemq.testcontainer.core.MavenHiveMQExtensionSupplier;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
 import org.junit.Test;
-
-import java.io.File;
+import org.testcontainers.utility.MountableFile;
 
 /**
  * @author Yannick Weber
@@ -28,7 +27,7 @@ public class ContainerWithMavenExtensionIT {
 
     @Test(timeout = 200_000)
     public void test() throws Exception {
-        final File mavenExtension = new MavenHiveMQExtensionSupplier(
+        final MountableFile mavenExtension = new MavenHiveMQExtensionSupplier(
                 getClass().getResource("/maven-extension/pom.xml").getPath())
                 .addProperty("HIVEMQ_GROUP_ID", "com.hivemq")
                 .addProperty("HIVEMQ_EXTENSION_SDK", "hivemq-extension-sdk")

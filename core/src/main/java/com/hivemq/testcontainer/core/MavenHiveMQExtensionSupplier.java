@@ -20,9 +20,11 @@ import org.jboss.shrinkwrap.resolver.api.maven.embedded.BuiltProject;
 import org.jboss.shrinkwrap.resolver.api.maven.embedded.EmbeddedMaven;
 import org.jboss.shrinkwrap.resolver.api.maven.embedded.pom.equipped.PomEquippedEmbeddedMaven;
 import org.jetbrains.annotations.NotNull;
+import org.testcontainers.utility.MountableFile;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Properties;
 import java.util.function.Supplier;
 
@@ -32,7 +34,7 @@ import java.util.function.Supplier;
  * @author Yannick Weber
  * @since 1.1.0
  */
-public class MavenHiveMQExtensionSupplier implements Supplier<File> {
+public class MavenHiveMQExtensionSupplier implements Supplier<MountableFile> {
 
     private final @NotNull String pomFile;
     private boolean quiet = false;
@@ -66,7 +68,7 @@ public class MavenHiveMQExtensionSupplier implements Supplier<File> {
      * @since 1.1.0
      */
     @Override
-    public @NotNull File get() {
+    public @NotNull MountableFile get() {
         final PomEquippedEmbeddedMaven embeddedMaven = EmbeddedMaven.forProject(pomFile);
         embeddedMaven
                 .setGoals("package")
@@ -81,9 +83,9 @@ public class MavenHiveMQExtensionSupplier implements Supplier<File> {
         final ZipFile zipFile = new ZipFile(new File(targetDirectory, artifactId + "-" + version + "-distribution.zip"));
 
         try {
-            final File tempDir = Files.createTempDirectory("").toFile();
-            zipFile.extractAll(tempDir.getAbsolutePath());
-            return new File(tempDir, artifactId);
+            final Path tempDirectory = Files.createTempDirectory("");
+            zipFile.extractAll(tempDirectory.toString());
+            return MountableFile.forHostPath(tempDirectory.resolve(artifactId));
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }

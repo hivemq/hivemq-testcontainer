@@ -19,8 +19,8 @@ import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
 import org.junit.Test;
 import org.slf4j.event.Level;
 import org.testcontainers.utility.DockerImageName;
+import org.testcontainers.utility.MountableFile;
 
-import java.io.File;
 import java.util.concurrent.ExecutionException;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -34,7 +34,7 @@ public class DisableEnableExtensionFromDirectoryIT {
     public void test() throws Exception {
         final HiveMQTestContainerRule rule =
                 new HiveMQTestContainerRule(DockerImageName.parse("hivemq/hivemq4").withTag("latest"))
-                        .withExtension(new File(getClass().getResource("/modifier-extension").toURI()))
+                        .withExtension(MountableFile.forClasspathResource("/modifier-extension"))
                         .waitForExtension("Modifier Extension")
                         .withLogLevel(Level.DEBUG);
 

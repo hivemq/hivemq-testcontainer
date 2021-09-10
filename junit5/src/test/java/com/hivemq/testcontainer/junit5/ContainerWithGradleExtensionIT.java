@@ -19,6 +19,7 @@ import com.hivemq.testcontainer.core.GradleHiveMQExtensionSupplier;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.testcontainers.utility.MountableFile;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -32,7 +33,7 @@ public class ContainerWithGradleExtensionIT {
     @Test
     @Timeout(value = 3, unit = TimeUnit.MINUTES)
     public void test() throws Exception {
-        final File gradleExtension = new GradleHiveMQExtensionSupplier(
+        final MountableFile gradleExtension = new GradleHiveMQExtensionSupplier(
                 new File(getClass().getResource("/gradle-extension").toURI()))
                 .get();
 
