@@ -360,17 +360,17 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * <p>
      * Must be called before the container is started.
      *
-     * @param config the config file on the host machine
+     * @param mountableConfig the config file on the host machine
      * @return self
      */
-    public @NotNull SELF withHiveMQConfig(final @NotNull File config) {
+    public @NotNull SELF withHiveMQConfig(final @NotNull MountableFile mountableConfig) {
+        final File config = new File(mountableConfig.getResolvedPath());
         if (!config.exists()) {
             logger.warn("HiveMQ config file {} does not exist.", config.getAbsolutePath());
             return self();
         }
-        final MountableFile mountableFile = MountableFile.forHostPath(config.getAbsolutePath(), MODE);
         final String containerPath = "/opt/hivemq/conf/config.xml";
-        withCopyFileToContainer(mountableFile, containerPath);
+        withCopyFileToContainer(cloneWithFileMode(mountableConfig, MODE), containerPath);
         logger.info("Putting {} into {}", config.getAbsolutePath(), containerPath);
         return self();
     }
