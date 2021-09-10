@@ -56,8 +56,7 @@ public class ContainerWithFileInExtensionHomeIT {
                         .withFileInExtensionHomeFolder(
                                 new File(getClass().getResource("/additionalFile.txt").toURI()),
                                 "extension-1",
-                                "/additionalFiles/")
-                        .withDebugging();
+                                "/additionalFiles/");
 
         extension.beforeEach(null);
         TestPublishModifiedUtil.testPublishModified(extension.getMqttPort());

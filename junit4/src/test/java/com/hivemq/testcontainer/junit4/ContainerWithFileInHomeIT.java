@@ -51,8 +51,7 @@ public class ContainerWithFileInHomeIT {
                         .waitForExtension(hiveMQExtension)
                         .withFileInHomeFolder(
                                 new File(getClass().getResource("/additionalFile.txt").toURI()),
-                                "/additionalFiles/")
-                        .withDebugging();
+                                "/additionalFiles/");
 
         rule.start();
         TestPublishModifiedUtil.testPublishModified(rule.getMqttPort());
