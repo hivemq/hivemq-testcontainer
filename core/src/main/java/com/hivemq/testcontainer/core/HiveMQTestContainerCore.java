@@ -336,22 +336,22 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * <p>
      * Must be called before the container is started.
      *
-     * @param license the license file on the host machine
+     * @param mountableLicense the license file on the host machine
      * @return self
      */
-    public @NotNull SELF withLicense(final @NotNull File license) {
-        if (!license.exists()) {
-            logger.warn("License file {} does not exist.", license.getAbsolutePath());
+    public @NotNull SELF withLicense(final @NotNull MountableFile mountableLicense) {
+        final File licenseFile = new File(mountableLicense.getResolvedPath());
+        if (!licenseFile.exists()) {
+            logger.warn("License file {} does not exist.", licenseFile.getAbsolutePath());
             return self();
         }
-        if (!license.getName().endsWith(".lic") && !license.getName().endsWith(".elic")) {
-            logger.warn("License file {} does not end wit '.lic' or '.elic'", license.getAbsolutePath());
+        if (!licenseFile.getName().endsWith(".lic") && !licenseFile.getName().endsWith(".elic")) {
+            logger.warn("License file {} does not end wit '.lic' or '.elic'", licenseFile.getAbsolutePath());
             return self();
         }
-        final MountableFile mountableFile = MountableFile.forHostPath(license.getAbsolutePath(), MODE);
-        final String containerPath = "/opt/hivemq/license/" + license.getName();
-        withCopyFileToContainer(mountableFile, containerPath);
-        logger.info("Putting license {} into {}", license.getAbsolutePath(), containerPath);
+        final String containerPath = "/opt/hivemq/license/" + licenseFile.getName();
+        withCopyFileToContainer(cloneWithFileMode(mountableLicense, MODE), containerPath);
+        logger.info("Putting license {} into {}", licenseFile.getAbsolutePath(), containerPath);
         return self();
     }
 
