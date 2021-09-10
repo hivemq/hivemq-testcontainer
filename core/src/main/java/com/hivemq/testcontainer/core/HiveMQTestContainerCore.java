@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
+import org.testcontainers.containers.ContainerLaunchException;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.images.builder.ImageFromDockerfile;
 import org.testcontainers.utility.DockerImageName;
@@ -203,12 +204,10 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     public @NotNull SELF withExtension(final @NotNull MountableFile mountableExtension) {
         final File extensionDir = new File(mountableExtension.getResolvedPath());
         if (!extensionDir.exists()) {
-            logger.warn("Extension {} could not be mounted. It does not exist", extensionDir.getAbsolutePath());
-            return self();
+            throw new ContainerLaunchException("Extension '" + mountableExtension.getFilesystemPath() + "' could not be mounted. It does not exist");
         }
         if (!extensionDir.isDirectory()) {
-            logger.warn("Extension {} could not be mounted. It is not a directory.", extensionDir.getAbsolutePath());
-            return self();
+            throw new ContainerLaunchException("Extension '" + mountableExtension.getFilesystemPath() + "' could not be mounted. It is not a directory.");
         }
         try {
             final String extensionDirName = getExtensionDirectoryName(extensionDir);
@@ -342,12 +341,10 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     public @NotNull SELF withLicense(final @NotNull MountableFile mountableLicense) {
         final File licenseFile = new File(mountableLicense.getResolvedPath());
         if (!licenseFile.exists()) {
-            logger.warn("License file {} does not exist.", licenseFile.getAbsolutePath());
-            return self();
+            throw new ContainerLaunchException("License file '" + mountableLicense.getFilesystemPath() + "' does not exist.");
         }
         if (!licenseFile.getName().endsWith(".lic") && !licenseFile.getName().endsWith(".elic")) {
-            logger.warn("License file {} does not end wit '.lic' or '.elic'", licenseFile.getAbsolutePath());
-            return self();
+            throw new ContainerLaunchException("License file '" + mountableLicense.getFilesystemPath() + "' does not end wit '.lic' or '.elic'");
         }
         final String containerPath = "/opt/hivemq/license/" + licenseFile.getName();
         withCopyFileToContainer(cloneWithFileMode(mountableLicense, MODE), containerPath);
@@ -366,8 +363,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     public @NotNull SELF withHiveMQConfig(final @NotNull MountableFile mountableConfig) {
         final File config = new File(mountableConfig.getResolvedPath());
         if (!config.exists()) {
-            logger.warn("HiveMQ config file {} does not exist.", config.getAbsolutePath());
-            return self();
+            throw new ContainerLaunchException("HiveMQ config file '" + mountableConfig.getFilesystemPath() + "' does not exist.");
         }
         final String containerPath = "/opt/hivemq/conf/config.xml";
         withCopyFileToContainer(cloneWithFileMode(mountableConfig, MODE), containerPath);
@@ -439,8 +435,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
         final File file = new File(mountableFile.getResolvedPath());
 
         if (!file.exists()) {
-            logger.warn("File {} does not exist.", file.getAbsolutePath());
-            return self();
+            throw new ContainerLaunchException("File '" + mountableFile.getFilesystemPath() + "‘ does not exist.");
         }
         final String containerPath = "/opt/hivemq" + PathUtil.preparePath(pathInHomeFolder) + file.getName();
         withCopyFileToContainer(cloneWithFileMode(mountableFile, MODE), containerPath);
