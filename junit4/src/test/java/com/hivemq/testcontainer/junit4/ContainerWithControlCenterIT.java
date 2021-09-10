@@ -29,12 +29,12 @@ public class ContainerWithControlCenterIT {
     public void test() throws Exception {
         final HiveMQTestContainerRule rule =
                 new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
-                        .withControlCenter(CONTROL_CENTER_PORT);
+                        .withControlCenter();
 
         rule.start();
 
         final CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-        final HttpUriRequest request = new HttpGet("http://localhost:" + CONTROL_CENTER_PORT);
+        final HttpUriRequest request = new HttpGet("http://localhost:" + rule.getMappedPort(CONTROL_CENTER_PORT));
         httpClient.execute(request);
 
         rule.stop();
