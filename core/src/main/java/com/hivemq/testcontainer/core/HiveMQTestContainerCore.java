@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
-import org.testcontainers.containers.FixedHostPortGenericContainer;
+import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.images.builder.ImageFromDockerfile;
 import org.testcontainers.utility.MountableFile;
 
@@ -49,7 +49,7 @@ import java.util.regex.Pattern;
  */
 @SuppressWarnings("UnusedReturnValue")
 public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
-        extends FixedHostPortGenericContainer<SELF> {
+        extends GenericContainer<SELF> {
 
     private final static @NotNull Logger logger = LoggerFactory.getLogger(HiveMQTestContainerCore.class);
 
@@ -72,6 +72,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
 
     private final @NotNull ConcurrentHashMap<String, CountDownLatch> containerOutputLatches = new ConcurrentHashMap<>();
     private volatile boolean silent = false;
+    private volatile boolean controlCenterEnabled = false;
 
     private final @NotNull MultiLogMessageWaitStrategy waitStrategy = new MultiLogMessageWaitStrategy();
 
@@ -106,6 +107,14 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
                 });
             }
         });
+    }
+
+    @Override
+    public void start() {
+        super.start();
+        if (controlCenterEnabled) {
+            logger.info("The HiveMQ Control Center is reachable under: http://localhost:{}", getMappedPort(CONTROL_CENTER_PORT));
+        }
     }
 
     /**
@@ -644,21 +653,8 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * @return self
      */
     public @NotNull SELF withControlCenter() {
-        return withControlCenter(CONTROL_CENTER_PORT);
-    }
-
-    /**
-     * Enables connection to the HiveMQ Control Center on host port {controlCenterPort}.
-     * Note: the control center is a HiveMQ 4 Enterprise feature.
-     * <p>
-     * Must be called before the container is started.
-     *
-     * @param controlCenterPort the host post
-     * @return self
-     */
-    public @NotNull SELF withControlCenter(final int controlCenterPort) {
         addExposedPorts(CONTROL_CENTER_PORT);
-        addFixedExposedPort(controlCenterPort, CONTROL_CENTER_PORT);
+        controlCenterEnabled = true;
         return self();
     }
 
