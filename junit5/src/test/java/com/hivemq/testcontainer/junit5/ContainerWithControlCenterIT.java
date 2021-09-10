@@ -34,12 +34,12 @@ public class ContainerWithControlCenterIT {
 
         final HiveMQTestContainerExtension extension =
                 new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
-                        .withControlCenter(CONTROL_CENTER_PORT);
+                        .withControlCenter();
 
         extension.beforeEach(null);
 
         final CloseableHttpClient httpClient = HttpClientBuilder.create().build();
-        final HttpUriRequest request = new HttpGet("http://localhost:" + CONTROL_CENTER_PORT);
+        final HttpUriRequest request = new HttpGet("http://localhost:" + extension.getMappedPort(CONTROL_CENTER_PORT));
         httpClient.execute(request);
 
         extension.afterEach(null);
