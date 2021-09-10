@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.images.builder.ImageFromDockerfile;
+import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.utility.MountableFile;
 
 import java.io.File;
@@ -77,11 +78,11 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     private final @NotNull MultiLogMessageWaitStrategy waitStrategy = new MultiLogMessageWaitStrategy();
 
     public HiveMQTestContainerCore() {
-        this(DEFAULT_HIVEMQ_IMAGE, DEFAULT_HIVEMQ_TAG);
+        this(DockerImageName.parse(DEFAULT_HIVEMQ_IMAGE).withTag(DEFAULT_HIVEMQ_TAG));
     }
 
-    public HiveMQTestContainerCore(final @NotNull String image, final @NotNull String tag) {
-        super(image + ":" + tag);
+    public HiveMQTestContainerCore(final @NotNull DockerImageName dockerImageName) {
+        super(dockerImageName);
         addExposedPort(MQTT_PORT);
 
         waitStrategy.withRegEx("(.*)Started HiveMQ in(.*)");
@@ -266,11 +267,6 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
         }
 
         javaArchive.as(ZipExporter.class).exportTo(new File(extensionDir, "extension.jar"));
-
-        final File jar = new File(extensionDir, "extension.jar");
-        if (hiveMQExtension.sign()) {
-            signExtension(hiveMQExtension.getId(), jar);
-        }
 
         return extensionDir;
     }
@@ -674,9 +670,4 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
         waitStrategy.reset();
         super.stop();
     }
-
-    protected void signExtension(final @NotNull String extensionId, final @NotNull File jar) {
-        // NOOP
-    }
-
 }

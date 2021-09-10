@@ -15,8 +15,9 @@
  */
 package com.hivemq.testcontainer.junit4;
 
-import org.jetbrains.annotations.NotNull;
 import com.hivemq.testcontainer.core.HiveMQTestContainerCore;
+import org.jetbrains.annotations.NotNull;
+import org.testcontainers.utility.DockerImageName;
 
 /**
  * @author Yannick Weber
@@ -27,7 +28,7 @@ public class HiveMQTestContainerRule extends HiveMQTestContainerCore<HiveMQTestC
         super();
     }
 
-    public HiveMQTestContainerRule(final @NotNull String image, final @NotNull String tag) {
-        super(image, tag);
+    public HiveMQTestContainerRule(final @NotNull DockerImageName dockerImageName) {
+        super(dockerImageName);
     }
 }

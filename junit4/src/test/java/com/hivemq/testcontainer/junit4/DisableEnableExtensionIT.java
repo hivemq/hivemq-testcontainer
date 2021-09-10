@@ -20,6 +20,7 @@ import com.hivemq.testcontainer.util.MyExtension;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
+import org.testcontainers.utility.DockerImageName;
 
 import java.util.concurrent.ExecutionException;
 
@@ -41,7 +42,7 @@ public class DisableEnableExtensionIT {
     public void test() throws Exception {
 
         final HiveMQTestContainerRule rule =
-                new HiveMQTestContainerRule("hivemq/hivemq4", "latest")
+                new HiveMQTestContainerRule(DockerImageName.parse("hivemq/hivemq4").withTag("latest"))
                         .withExtension(hiveMQExtension);
 
         rule.start();

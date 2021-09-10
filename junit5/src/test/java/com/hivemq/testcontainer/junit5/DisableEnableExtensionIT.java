@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.slf4j.event.Level;
+import org.testcontainers.utility.DockerImageName;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -44,7 +45,7 @@ public class DisableEnableExtensionIT {
     @Timeout(value = 3, unit = TimeUnit.MINUTES)
     void test() throws Exception {
         final HiveMQTestContainerExtension extension =
-                new HiveMQTestContainerExtension("hivemq/hivemq4", "latest")
+                new HiveMQTestContainerExtension(DockerImageName.parse("hivemq/hivemq4").withTag("latest"))
                         .withExtension(hiveMQExtension)
                         .withLogLevel(Level.DEBUG);
 
