@@ -27,6 +27,7 @@ import com.hivemq.testcontainer.core.HiveMQExtension;
 import com.hivemq.testcontainer.util.TestPublishModifiedUtil;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
+import org.testcontainers.utility.MountableFile;
 
 import java.io.File;
 import java.nio.ByteBuffer;
@@ -49,8 +50,8 @@ public class ContainerWithLicenseIT {
                 new HiveMQTestContainerRule()
                         .withExtension(hiveMQExtension)
                         .waitForExtension(hiveMQExtension)
-                        .withLicense(new File(getClass().getResource("/myLicense.lic").toURI()))
-                        .withLicense(new File(getClass().getResource("/myExtensionLicense.elic").toURI()));
+                        .withLicense(MountableFile.forClasspathResource("/myLicense.lic"))
+                        .withLicense(MountableFile.forClasspathResource("/myExtensionLicense.elic"));
 
         rule.start();
         TestPublishModifiedUtil.testPublishModified(rule.getMqttPort());
