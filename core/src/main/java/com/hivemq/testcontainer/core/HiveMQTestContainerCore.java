@@ -43,6 +43,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -453,13 +454,13 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * @param extensionName      the name of the extension to disable
      * @param extensionDirectory the name of the extension's directory
      * @param timeout            the timeout
-     * @return self
+     * @throws TimeoutException if the extension was not disabled within the configured timeout
      * @since 1.1.0
      */
-    public @NotNull SELF disableExtension(
+    public void disableExtension(
             final @NotNull String extensionName,
             final @NotNull String extensionDirectory,
-            final @NotNull Duration timeout) {
+            final @NotNull Duration timeout) throws TimeoutException {
 
         final String regEX = "(.*)Extension \"" + extensionName + "\" version (.*) stopped successfully(.*)";
         try {
@@ -473,16 +474,15 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
 
             final boolean await = latch.await(timeout.getSeconds(), TimeUnit.SECONDS);
             if (!await) {
-                logger.warn("Extension disabling timed out after {} seconds. " +
-                        "Maybe you are using a HiveMQ Community Edition image, " +
-                        "which does not support disabling of extensions", timeout.getSeconds());
+            throw new TimeoutException("Extension disabling timed out after '" + timeout.getSeconds() + "' seconds. " +
+                    "Maybe you are using a HiveMQ Community Edition image, " +
+                    "which does not support disabling of extensions");
             }
         } catch (final InterruptedException | IOException e) {
             throw new RuntimeException(e);
         } finally {
             containerOutputLatches.remove(regEX);
         }
-        return self();
     }
 
     /**
@@ -494,13 +494,13 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      *
      * @param extensionName      the name of the extension to disable
      * @param extensionDirectory the name of the extension's directory
-     * @return self
+     * @throws TimeoutException if the extension was not disabled within 60 seconds
      * @since 1.1.0
      */
-    public @NotNull SELF disableExtension(
+    public void disableExtension(
             final @NotNull String extensionName,
-            final @NotNull String extensionDirectory) {
-        return disableExtension(extensionName, extensionDirectory, Duration.ofSeconds(60));
+            final @NotNull String extensionDirectory) throws TimeoutException {
+        disableExtension(extensionName, extensionDirectory, Duration.ofSeconds(60));
     }
 
     /**
@@ -512,12 +512,13 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      *
      * @param hiveMQExtension the extension
      * @param timeout         the timeout
-     * @return self
+     * @throws TimeoutException if the extension was not disabled within the configured timeout
+     * @since 1.1.0
      */
-    public @NotNull SELF disableExtension(
+    public void disableExtension(
             final @NotNull HiveMQExtension hiveMQExtension,
-            final @NotNull Duration timeout) {
-        return disableExtension(hiveMQExtension.getName(), hiveMQExtension.getId(), timeout);
+            final @NotNull Duration timeout) throws TimeoutException {
+        disableExtension(hiveMQExtension.getName(), hiveMQExtension.getId(), timeout);
     }
 
     /**
@@ -528,10 +529,11 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * This can only be called once the container is started.
      *
      * @param hiveMQExtension the extension
-     * @return self
+     * @throws TimeoutException if the extension was not disabled within 60 seconds
+     * @since 1.1.0
      */
-    public @NotNull SELF disableExtension(final @NotNull HiveMQExtension hiveMQExtension) {
-        return disableExtension(hiveMQExtension, Duration.ofSeconds(60));
+    public void disableExtension(final @NotNull HiveMQExtension hiveMQExtension) throws TimeoutException {
+        disableExtension(hiveMQExtension, Duration.ofSeconds(60));
     }
 
     /**
@@ -544,13 +546,13 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * @param extensionName      the name of the extension to disable
      * @param extensionDirectory the name of the extension's directory
      * @param timeout            the timeout
-     * @return self
+     * @throws TimeoutException if the extension was not enabled within the configured timeout
      * @since 1.1.0
      */
-    public @NotNull SELF enableExtension(
+    public void enableExtension(
             final @NotNull String extensionName,
             final @NotNull String extensionDirectory,
-            final @NotNull Duration timeout) {
+            final @NotNull Duration timeout) throws TimeoutException {
 
         final String regEX = "(.*)Extension \"" + extensionName + "\" version (.*) started successfully(.*)";
         try {
@@ -564,16 +566,15 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
 
             final boolean await = latch.await(timeout.getSeconds(), TimeUnit.SECONDS);
             if (!await) {
-                logger.warn("Extension enabling timed out after {} seconds. " +
+                throw new TimeoutException("Extension enabling timed out after '" + timeout.getSeconds() + "' seconds. " +
                         "Maybe you are using a HiveMQ Community Edition image, " +
-                        "which does not support disabling of extensions", timeout.getSeconds());
+                        "which does not support disabling of extensions");
             }
         } catch (final InterruptedException | IOException e) {
             throw new RuntimeException(e);
         } finally {
             containerOutputLatches.remove(regEX);
         }
-        return self();
     }
 
     /**
@@ -585,13 +586,13 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      *
      * @param extensionName      the name of the extension to disable
      * @param extensionDirectory the name of the extension's directory
-     * @return self
+     * @throws TimeoutException if the extension was not enabled within 60 seconds
      * @since 1.1.0
      */
-    public @NotNull SELF enableExtension(
+    public void enableExtension(
             final @NotNull String extensionName,
-            final @NotNull String extensionDirectory) {
-        return enableExtension(extensionName, extensionDirectory, Duration.ofSeconds(60));
+            final @NotNull String extensionDirectory) throws TimeoutException {
+        enableExtension(extensionName, extensionDirectory, Duration.ofSeconds(60));
     }
 
     /**
@@ -603,12 +604,13 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      *
      * @param hiveMQExtension the extension
      * @param timeout         the timeout
-     * @return self
+     * @throws TimeoutException if the extension was not enabled within the configured timeout
+     * @since 1.1.0
      */
-    public @NotNull SELF enableExtension(
+    public void enableExtension(
             final @NotNull HiveMQExtension hiveMQExtension,
-            final @NotNull Duration timeout) {
-        return enableExtension(hiveMQExtension.getName(), hiveMQExtension.getId(), timeout);
+            final @NotNull Duration timeout) throws TimeoutException {
+        enableExtension(hiveMQExtension.getName(), hiveMQExtension.getId(), timeout);
     }
 
     /**
@@ -619,10 +621,11 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
      * This can only be called once the container is started.
      *
      * @param hiveMQExtension the extension
-     * @return self
+     * @throws TimeoutException if the extension was not enabled within 60 seconds
+     * @since 1.1.0
      */
-    public @NotNull SELF enableExtension(final @NotNull HiveMQExtension hiveMQExtension) {
-        return enableExtension(hiveMQExtension, Duration.ofSeconds(60));
+    public void enableExtension(final @NotNull HiveMQExtension hiveMQExtension) throws TimeoutException {
+        enableExtension(hiveMQExtension, Duration.ofSeconds(60));
     }
 
     /**
