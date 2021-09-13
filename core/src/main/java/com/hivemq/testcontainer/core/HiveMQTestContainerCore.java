@@ -282,10 +282,10 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
                 final String className = subClassName.replaceAll("/", ".");
 
                 if (!className.startsWith("[L")) {
-                    logger.debug("Trying to package subclass {} into extension {}.", className, extensionId);
+                    logger.debug("Trying to package subclass '{}' into extension '{}'.", className, extensionId);
                     javaArchive.addClass(className);
                 } else {
-                    logger.debug("Class {} will be ignored.", className);
+                    logger.debug("Class '{}' will be ignored.", className);
                 }
             }
         }
@@ -348,7 +348,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
         }
         final String containerPath = "/opt/hivemq/license/" + licenseFile.getName();
         withCopyFileToContainer(cloneWithFileMode(mountableLicense, MODE), containerPath);
-        logger.info("Putting license {} into {}", licenseFile.getAbsolutePath(), containerPath);
+        logger.info("Putting license '{}' into '{}'", licenseFile.getAbsolutePath(), containerPath);
         return self();
     }
 
@@ -367,7 +367,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
         }
         final String containerPath = "/opt/hivemq/conf/config.xml";
         withCopyFileToContainer(cloneWithFileMode(mountableConfig, MODE), containerPath);
-        logger.info("Putting {} into {}", config.getAbsolutePath(), containerPath);
+        logger.info("Putting '{}' into '{}'", config.getAbsolutePath(), containerPath);
         return self();
     }
 
@@ -439,7 +439,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
         }
         final String containerPath = "/opt/hivemq" + PathUtil.preparePath(pathInHomeFolder) + file.getName();
         withCopyFileToContainer(cloneWithFileMode(mountableFile, MODE), containerPath);
-        logger.info("Putting file {} into container path {}", file.getAbsolutePath(), containerPath);
+        logger.info("Putting file '{}' into container path '{}'", file.getAbsolutePath(), containerPath);
         return self();
     }
 
@@ -469,7 +469,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
             containerOutputLatches.put(regEX, latch);
 
             execInContainer("touch", containerPath);
-            logger.info("Putting DISABLED file into container path {}", containerPath);
+            logger.info("Putting DISABLED file into container path '{}'", containerPath);
 
             final boolean await = latch.await(timeout.getSeconds(), TimeUnit.SECONDS);
             if (!await) {
@@ -560,7 +560,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
             containerOutputLatches.put(regEX, latch);
 
             execInContainer("rm", "-rf", containerPath);
-            logger.info("Removing DISABLED file in container path {}", containerPath);
+            logger.info("Removing DISABLED file in container path '{}'", containerPath);
 
             final boolean await = latch.await(timeout.getSeconds(), TimeUnit.SECONDS);
             if (!await) {
