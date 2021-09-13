@@ -478,7 +478,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
                         "which does not support disabling of extensions", timeout.getSeconds());
             }
         } catch (final InterruptedException | IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         } finally {
             containerOutputLatches.remove(regEX);
         }
@@ -569,7 +569,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
                         "which does not support disabling of extensions", timeout.getSeconds());
             }
         } catch (final InterruptedException | IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         } finally {
             containerOutputLatches.remove(regEX);
         }
