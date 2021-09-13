@@ -186,7 +186,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
             final MountableFile mountableExtension = MountableFile.forHostPath(extension.getPath(), MODE);
             withCopyFileToContainer(mountableExtension, "/opt/hivemq/extensions/" + hiveMQExtension.getId());
         } catch (final Exception e) {
-            throw new RuntimeException(e);
+            throw new ContainerLaunchException(e.getMessage() == null ? "" : e.getMessage(), e);
         }
         return self();
     }
@@ -215,7 +215,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
             withCopyFileToContainer(cloneWithFileMode(mountableExtension, MODE), containerPath);
             logger.info("Putting extension '{}' into '{}'", extensionDirName, containerPath);
         } catch (final Exception e) {
-            throw new RuntimeException(e);
+            throw new ContainerLaunchException(e.getMessage() == null ? "" : e.getMessage(), e);
         }
         return self();
     }
@@ -251,7 +251,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
             final File disabled = new File(extensionDir, "DISABLED");
             final boolean newFile = disabled.createNewFile();
             if (!newFile) {
-                logger.warn("Could not create DISABLED file {} on host machine", disabled.getAbsolutePath());
+                throw new ContainerLaunchException("Could not create DISABLED file '" + disabled.getAbsolutePath() + "' on host machine");
             }
         }
 
