@@ -474,9 +474,9 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
 
             final boolean await = latch.await(timeout.getSeconds(), TimeUnit.SECONDS);
             if (!await) {
-            throw new TimeoutException("Extension disabling timed out after '" + timeout.getSeconds() + "' seconds. " +
-                    "Maybe you are using a HiveMQ Community Edition image, " +
-                    "which does not support disabling of extensions");
+                throw new TimeoutException("Extension disabling timed out after '" + timeout.getSeconds() + "' seconds. " +
+                        "Maybe you are using a HiveMQ Community Edition image, " +
+                        "which does not support disabling of extensions");
             }
         } catch (final InterruptedException | IOException e) {
             throw new RuntimeException(e);
