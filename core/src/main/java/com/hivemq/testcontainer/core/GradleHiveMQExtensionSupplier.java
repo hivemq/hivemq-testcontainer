@@ -165,7 +165,7 @@ public class GradleHiveMQExtensionSupplier implements Supplier<MountableFile> {
                 return gradleWrapperBatFile.getAbsolutePath();
             }
         }
-        throw new IllegalStateException("Unkown OS Version");
+        throw new IllegalStateException("Unknown OS Version");
 
     }
 
