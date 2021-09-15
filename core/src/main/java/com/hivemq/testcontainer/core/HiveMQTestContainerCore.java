@@ -70,8 +70,9 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     public static final int DEBUGGING_PORT = 9000;
     public static final int MQTT_PORT = 1883;
     public static final int CONTROL_CENTER_PORT = 8080;
-    public static final int MODE = 0777;
-    public static final @NotNull Pattern EXTENSION_ID_PATTERN = Pattern.compile("<id>(.+?)</id>");
+    @SuppressWarnings("OctalInteger")
+    private static final int MODE = 0777;
+    private static final @NotNull Pattern EXTENSION_ID_PATTERN = Pattern.compile("<id>(.+?)</id>");
 
     private final @NotNull ConcurrentHashMap<String, CountDownLatch> containerOutputLatches = new ConcurrentHashMap<>();
     private volatile boolean silent = false;
