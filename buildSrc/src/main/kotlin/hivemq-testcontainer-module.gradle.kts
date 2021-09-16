@@ -22,9 +22,8 @@ metadata {
         apache2()
     }
     developers {
-        developer {
-            id.set("YW")
-            name.set("Yannick Weber")
+        register("YW") {
+            fullName.set("Yannick Weber")
             email.set("yannick.weber@hivemq.com")
         }
     }
