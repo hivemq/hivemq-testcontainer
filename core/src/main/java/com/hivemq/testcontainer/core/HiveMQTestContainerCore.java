@@ -66,6 +66,7 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
                     "</hivemq-extension>";
 
     private static final @NotNull String DEFAULT_HIVEMQ_IMAGE = "hivemq/hivemq-ce";
+    private static final String HIVEMQ_CE_STARTED_LOG_REGEXP = "(.*)Started HiveMQ in(.*)";
     private static final @NotNull String DEFAULT_HIVEMQ_TAG = "latest";
     public static final int DEBUGGING_PORT = 9000;
     public static final int MQTT_PORT = 1883;
@@ -85,10 +86,14 @@ public class HiveMQTestContainerCore<SELF extends HiveMQTestContainerCore<SELF>>
     }
 
     public HiveMQTestContainerCore(final @NotNull DockerImageName dockerImageName) {
+        this(dockerImageName, HIVEMQ_CE_STARTED_LOG_REGEXP);
+    }
+
+    public HiveMQTestContainerCore(final @NotNull DockerImageName dockerImageName, String waitStrategyLogRegExp) {
         super(dockerImageName);
         addExposedPort(MQTT_PORT);
 
-        waitStrategy.withRegEx("(.*)Started HiveMQ in(.*)");
+        waitStrategy.withRegEx(waitStrategyLogRegExp);
         waitingFor(waitStrategy);
 
         withLogConsumer(outputFrame -> {

@@ -15,17 +15,19 @@
  */
 package com.hivemq.testcontainer.core;
 
+import com.github.dockerjava.api.command.InspectContainerResponse;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.testcontainers.containers.ContainerLaunchException;
+import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.utility.MountableFile;
 
 import java.io.File;
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Yannick Weber
@@ -94,5 +96,18 @@ class HiveMQTestContainerCoreTest {
     void withFileInExtensionHomeFolder_fileDoesNotExist_Exception() {
         final MountableFile mountableFile = MountableFile.forHostPath("/this/does/not/exist");
         assertThrows(ContainerLaunchException.class, () -> container.withFileInExtensionHomeFolder(mountableFile, "my-extension"));
+    }
+
+    @Test
+    void customWaitStrategy() {
+        try {
+            HiveMQTestContainerCore container = new HiveMQTestContainerCore(DockerImageName.parse("hivemq/hivemq-edge"), "(.*)Started HiveMQ Edge in(.*)");
+            container.start();
+            InspectContainerResponse containerState = container.getContainerInfo();
+            assertNotNull(containerState.getId());
+
+        } finally {
+            container.stop();
+        }
     }
 }
